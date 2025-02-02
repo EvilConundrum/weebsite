@@ -1,0 +1,163 @@
+@font-face {
+    font-family: "The Last Shuriken";
+    src: url("fonts/the_last_shuriken/The_Last_Shuriken.otf") format("opentype"),
+         url("fonts/the_last_shuriken/The_Last_Shuriken.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Golos Text";
+    src: url("fonts/Golos_Text/GolosText-VariableFont_wght.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body{
+    background: #161A1D;
+}
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    width: 256px;
+    padding: 0px 12px 20px 12px;
+    align-items: flex-start;
+    position: relative;
+}
+.title{
+    background: #161A1D;
+    width: 194px;
+    height: 45px;
+    margin-top: 1%;
+    margin-bottom: 0.01%;
+    padding: 12px 20px 8px 20px;
+    color:  #8C6;
+    font-family: "The Last Shuriken";
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+    justify-content: center;
+    letter-spacing: 4.8px;
+    position: relative;
+}
+.navBar{
+    display: flex;
+    background: #161A1D;
+    width: 100%;
+    margin: 0px;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.searchBarContainer{
+    display: flex;
+    position: relative;
+    margin-right: 22.5%;
+}
+.searchBar{
+    outline: none;
+    border: none;
+    border-radius: 12px;
+    width: 600px;
+    height: 35px;
+    gap: 12px;
+    margin-top: 3%;
+    padding-left: 6.5%;
+    background: #21262C;
+    font-family: "Golos Text";
+    font-size: 16px;    
+    position: relative;
+    color: #FFFFFF;
+    margin-right: 5%;
+}   
+
+.searchIcon{
+    position: absolute;
+    transform: translateY(-50%);
+    pointer-events: none;
+    margin-top: 6.2%;
+    margin-left: 1.5%;
+    color: white;
+}
+
+.navButtons{
+    display: flex;
+    position: relative;
+    margin-top: 1.6%;
+    text-align: center;
+    justify-content: center;
+    color: white;
+    gap: 35px;
+    padding-right: 3%;
+}
+
+.sidebarButton{
+    width: 194px;
+    height: 45px;
+    display: flex;
+    padding: 12px 16px;
+    overflow: visible;
+    justify-content: left;
+    position: relative;
+    background-color: #161A1D;
+    color:#FFF;
+    font-family: "Raleway";
+    font-size: 16px;
+    outline: none;
+    border: none;
+    border-radius: 12px;
+    gap: 16px;
+}
+
+.sidebarButton:hover{
+    background-color: #29363D;
+}
+
+.sidebarButton::selection{
+    color: #8C6;
+}
+
+.sidebarContainer{
+    background: #161A1D;
+    flex-direction: column;
+}
+
+.sidebarDividerContainer{
+    display: flex;
+    padding: 12px 16px;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.sidebarDivider{
+    width: 256px;
+    height: 1px;
+    background: #999;
+}
+
+.sidebarText{
+    display: flex;
+    width: 226px;
+    color: #999;
+    justify-content: space-between;
+    align-items: center; 
+    font-family: "Golos Text";
+    font-size: 14px;
+    margin-left: 18px;
+}
+
+svg {
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+}
+
+button {
+    display: flex;
+    align-items: center; 
+    gap: 5px; 
+    white-space: nowrap;
+}
+  
