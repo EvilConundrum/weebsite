@@ -1,3 +1,4 @@
+/* Fonts */
 @font-face {
   font-family: "The Last Shuriken";
   src: url("fonts/the_last_shuriken/The_Last_Shuriken.otf") format("opentype"),
@@ -7,101 +8,104 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&display=swap');
-
 @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap');
 
-
-
-body{
+/* Global Styles */
+body {
   background: #161A1D;
+  margin: 0;
+  padding: 0;
 }
 
-.sidebar{
+/* Sidebar Styles */
+.sidebarContainer {
+  display: flex;
+  flex-direction: row;
+  background: #161A1D;
+  min-height: 100vh;
+}
+
+.sidebar {
   display: flex;
   flex-direction: column;
   width: 256px;
   padding: 0px 12px 20px 12px;
   align-items: flex-start;
-  position: relative;
+  flex-shrink: 0;
 }
-.title{
+
+.title {
   background: #161A1D;
   width: 194px;
   height: 45px;
   margin-top: 1%;
   margin-bottom: 0.01%;
   padding: 12px 20px 8px 20px;
-  color:  #8C6;
+  color: #8C6;
   font-family: "The Last Shuriken";
   font-size: 24px;
   font-weight: 400;
   text-align: center;
-  justify-content: center;
   letter-spacing: 4.8px;
-  position: relative;
 }
-.navBar{
+
+/* Navbar Styles */
+.navBar {
   display: flex;
   background: #161A1D;
   width: 100%;
   margin: 0px;
   justify-content: space-between;
-  text-align: center;
+  align-items: center;
 }
 
-.searchBarContainer{
+.searchBarContainer {
   display: flex;
   position: relative;
   margin-right: 21.5%;
 }
-.searchBar{
+
+.searchBar {
   outline: none;
   border: none;
   border-radius: 12px;
   width: 600px;
   height: 35px;
   gap: 12px;
-  margin-top: 3%;
   padding-left: 7.5%;
   background: #21262C;
   font-family: "Golos Text";
-  font-size: 16px;    
-  position: relative;
+  font-size: 16px;
   color: #FFFFFF;
   margin-right: 6%;
-}   
+}
 
-.searchIcon{
+.searchIcon {
   position: absolute;
+  top: 50%;
+  left: 1.5%;
   transform: translateY(-50%);
   pointer-events: none;
-  margin-top: 6.2%;
-  margin-left: 1.5%;
   color: white;
 }
 
-
-.navButtons{
+.navButtons {
   display: flex;
-  position: relative;
-  margin-top: 1.6%;
-  text-align: center;
-  justify-content: center;
-  color: white;
+  align-items: center;
   gap: 35px;
   padding-right: 3%;
+  color: white;
 }
 
-.sidebarButton{
+/* Sidebar Buttons */
+.sidebarButton {
   width: 194px;
   height: 45px;
   display: flex;
   padding: 12px 16px;
-  overflow: visible;
   justify-content: left;
-  position: relative;
   background-color: #161A1D;
-  color:#FFF;
+  color: #FFF;
   font-family: "Raleway";
   font-size: 16px;
   outline: none;
@@ -110,21 +114,11 @@ body{
   gap: 16px;
 }
 
-.sidebarButton:hover{
+.sidebarButton:hover {
   background-color: #29363D;
 }
 
-.sidebarButton::selection{
-  color: #8C6;
-}
-
-.sidebarContainer {
-  display: flex;
-  flex-direction: row; 
-  background: #161A1D;
-}
-
-.sidebarDividerContainer{
+.sidebarDividerContainer {
   display: flex;
   padding: 12px 16px;
   align-items: center;
@@ -132,18 +126,18 @@ body{
   align-self: stretch;
 }
 
-.sidebarDivider{
+.sidebarDivider {
   width: 256px;
   height: 1px;
   background: #999;
 }
 
-.sidebarText{
+.sidebarText {
   display: flex;
   width: 226px;
   color: #999;
   justify-content: space-between;
-  align-items: center; 
+  align-items: center;
   font-family: "Golos Text";
   font-size: 14px;
   margin-left: 5%;
@@ -157,42 +151,53 @@ svg {
 
 button {
   display: flex;
-  align-items: center; 
-  gap: 5px; 
+  align-items: center;
+  gap: 5px;
   white-space: nowrap;
 }
 
-/* Existing CSS */
+/* Main Content Styles */
 .mainContent {
-  flex-grow: 1; 
-  max-width: calc(80% - 256px);
+  flex-grow: 1;
   padding: 1px;
   background-color: #1A1A1B;
-
+  min-width: 0;
 }
 
+/* Post Styles */
 .post {
   display: flex;
+  flex-direction: column;
   background: #161A1D;
   border-radius: 8px;
   padding: 12px;
-  margin-bottom: 16px;
+  margin: 16px 0; /* Removes left and right auto margins */
   border: 1px solid #343536;
+  width: 80%; /* Reduced width */
+  box-sizing: border-box;
+}
+
+
+
+.postContent {
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .postTitle {
   color: #FFFFFF;
-  font-size: 18px;
+  font-size: 1.5em;
   font-weight: bolder;
   margin: 0 0 12px 0;
-  margin-top: 2px;
   font-family: 'Golos Text', sans-serif;
 }
 
 .postBody {
   color: #d7dadc8b;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 1em;
+  line-height: 1.6;
   margin-bottom: 20px;
   font-family: 'Hanken Grotesk', sans-serif;
   font-weight: lighter;
@@ -207,7 +212,6 @@ button {
 .voteCount {
   color: #D7DADC;
   font-size: 12px;
-  font-weight: light;
   font-family: 'Golos Text', sans-serif;
 }
 
@@ -217,14 +221,12 @@ button {
 }
 
 /* Action Buttons */
-/* Reactions Container */
 .reactionsContainer {
   display: flex;
   align-items: center;
-  gap: 12px; 
+  gap: 12px;
 }
 
-/* Reaction Box */
 .reactionBox {
   background-color: #313131;
   border-radius: 8px;
@@ -235,7 +237,6 @@ button {
   margin-bottom: 14px;
 }
 
-/* Action Button inside Reaction Box */
 .reactionBox .actionButton {
   padding: 0;
   background: none;
@@ -253,14 +254,12 @@ button {
   transform: scale(0.95);
 }
 
-/* Icon inside Action Button */
 .reactionBox .actionButton svg {
   fill: #D7DADC;
   width: 20px;
   height: 20px;
 }
 
-/* Share Button */
 .actionButton {
   background: none;
   border: none;
@@ -278,61 +277,40 @@ button {
   height: 24px;
 }
 
-.actionButton:hover {
-  background-color: #484A4D;
+
+
+.postUsername {
+  margin: 0 5px;
+  font-family: 'Golos Text', sans-serif;
+  color: #d7dadcef;
+  font-size: 12px;
+  font-weight: bold;
 }
 
-.actionButton:active {
-  background-color: #606468;
-  transform: scale(0.95);
-}
-
-.postUsername{
-margin-right: 5px;
-margin-left: 5px;
-font-family: 'Golos Text', sans-serif;
-color: #d7dadcef;
-font-size: 12px;
-font-weight: bold;
-}
-
-.postTime{
+.postTime {
   font-weight: lighter;
   font-size: 10px;
   font-family: 'Golos Text', sans-serif;
 }
 
-.postContent{
-
-  margin-left: 25px;
-  margin-right: 25px;
-}
-
-
-/* Post Header Styles */
+/* Post Header */
 .postHeader {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   color: #818384;
 }
 
-/* Left Side (User Info) */
 .postHeaderLeft {
   display: flex;
   align-items: center;
-  margin-right: 100px;
 }
 
-.postHeaderLeft .postUsername,
-.postHeaderLeft .postTime {
-  margin-left: 5px;
-}
-
-/* Right Side (Kebab Menu) */
 .postHeaderRight {
   display: flex;
   align-items: center;
+  margin-left: auto;
 }
 
 .kebabMenu {
@@ -349,4 +327,225 @@ font-weight: bold;
 
 .kebabMenu:hover svg {
   fill: #818384;
+}
+/* Image Container Styles */
+.imageContainer {
+  display: flex;
+  flex-direction: row; /* Align images horizontally */
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0 auto;
+  border-radius: 8px;
+  height: 350px; /* Desired height */
+}
+
+/* Ensure images resize together */
+.imageWrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.imageContainer img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  margin: 0;
+  padding: 0;
+  border-radius: 8px;
+}
+
+/* Adjusted Flex Ratios */
+.leftSide,
+.rightSide {
+  flex: 0.5; /* Side images take up half a unit each */
+  overflow: hidden;
+  transform: scale(1.2);
+}
+
+.postImage {
+  flex: 4; /* Main image takes up four units */
+  overflow: hidden;
+}
+
+
+.rightSide{ 
+  background-position: 90% 50%;
+}
+
+.leftSide{ 
+  background-position: 1% 20%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Adjust layout for tablets */
+  .sidebarContainer {
+    flex-direction: column;
+  }
+  .sidebar,
+  .mainContent {
+    width: 100%;
+  }
+  .sidebar {
+    order: 1;
+  }
+  .mainContent {
+    order: 2;
+  }
+  .post {
+    padding: 8px;
+  }
+  .postContent {
+    padding: 0 10px;
+  }
+  .postTitle {
+    font-size: 1.3em;
+  }
+  .postBody {
+    font-size: 0.95em;
+  }
+  .reactionsContainer {
+    flex-wrap: wrap;
+  }
+  /* Ensure images remain side by side */
+  .imageContainer {
+    flex-direction: row;
+    height: auto; /* Adjust height if needed */
+  }
+  .imageWrapper {
+    height: auto;
+  }
+  .imageContainer img {
+    height: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Adjust layout for mobile phones */
+  .postTitle {
+    font-size: 1.1em;
+  }
+  .postBody {
+    font-size: 0.9em;
+  }
+  .post {
+    margin-bottom: 8px;
+  }
+  .postContent {
+    padding: 0 5px;
+  }
+  .actionButton svg,
+  .kebabMenu svg {
+    width: 20px;
+    height: 20px;
+  }
+  /* Adjust images for small screens */
+  .imageContainer {
+    flex-direction: row;
+    height: auto;
+  }
+  .imageWrapper {
+    height: auto;
+  }
+  .imageContainer img {
+    height: auto;
+    width: 100%;
+  }
+  
+}
+
+
+/* Add a grey transparent cover to the left and right images */
+.leftSide::before,
+.rightSide::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent grey */
+  z-index: 1; /* Ensure it sits above the image */
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Ensure the left and right sides are positioned relatively */
+.leftSide,
+.rightSide {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Adjust the z-index of the images to ensure they are below the overlay */
+.leftSide img,
+.rightSide img {
+  position: relative;
+  z-index: 0;
+}
+
+.pfp{
+ height: 25px;
+ width: auto;
+}
+
+
+/* Link Preview Styles */
+.linkPreview {
+  margin-top: 16px;
+  border: 1px solid #343536;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #21262C;
+}
+
+.linkPreview a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.linkPreviewContainer {
+  display: flex;
+  align-items: center;
+}
+
+.linkPreviewImage {
+  width: 120px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.linkPreviewImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.linkPreviewText {
+  padding: 12px;
+  flex-grow: 1;
+}
+
+.linkPreviewTitle {
+  margin: 0;
+  font-size: 16px;
+  font-family: 'Golos Text', sans-serif;
+  color: #FFFFFF;
+}
+
+.linkPreviewDescription {
+  margin: 4px 0;
+  font-size: 14px;
+  font-family: 'Hanken Grotesk', sans-serif;
+  color: #d7dadc8b;
+}
+
+.linkPreviewDomain {
+  font-size: 12px;
+  font-family: 'Golos Text', sans-serif;
+  color: #818384;
 }
