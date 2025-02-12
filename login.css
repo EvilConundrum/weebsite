@@ -1,0 +1,87 @@
+@font-face {
+    font-family: "The Last Shuriken";
+    src: url("fonts/the_last_shuriken/The_Last_Shuriken.otf") format("opentype"),
+         url("fonts/the_last_shuriken/The_Last_Shuriken.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&display=swap');
+  
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap');
+  
+
+.logo-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+    align-items: center;
+    justify-items: center;
+    height: auto;
+}
+
+.logo-container > div {
+    text-align: center;
+  }
+
+.logo-login{
+    font-family: "The Last Shuriken";
+    font-size: 280px;
+    font-weight: bold;
+    color:  #8C6;
+}
+
+.title{
+    display: grid;
+    width: 545px;
+    height: 76px;
+    margin-top: 1%;
+    margin-bottom: 0.01%;
+    padding: 12px 20px 8px 20px;
+    color:  #8C6;
+    font-family: "The Last Shuriken";
+    font-size: 50px;
+    font-weight: 400;
+    align-items: center;
+    justify-items: center;
+    position: relative;
+  }
+
+  .account{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .button{
+    display: grid;
+    width: 300px;
+    height: 40px;
+
+
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0px;
+
+    font-family: "Golos Text";
+    font-size: 15px;
+    font-weight: 400;
+
+    align-items: center;
+    justify-items: center;
+  }
+
+  #signin{
+    border-radius: 9999px;
+    border:#8C6 0.5px solid;
+    color:  #8C6;
+  }
+
+  #create-account{
+    border-radius: 9999px;
+    border:#8C6 0.5px solid;
+    background-color: #8C6;
+    color:  #161A1D;
+    font-weight: bold;
+  }
