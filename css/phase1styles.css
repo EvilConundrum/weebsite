@@ -147,6 +147,7 @@ svg {
   vertical-align: middle;
   width: 24px;
   height: 24px;
+  fill: var(--white);
 }
 
 button {
@@ -171,12 +172,16 @@ button {
   display: flex;
   flex-direction: column;
   background: var(--main-bg);
+  border: 1px solid var(--post-gray);
   border-radius: 8px;
   padding: 12px;
   margin: 16px 0; /* Removes left and right auto margins */
-  border: 1px solid var(--post-gray);
   width: 80%; /* Reduced width */
   box-sizing: border-box;
+}
+
+.postView{
+  width: 90%;
 }
 
 .postContent {
@@ -212,7 +217,7 @@ button {
 .voteCount {
   color: #D7DADC;
   font-size: var(--XS);
-  font-family: var(--seco);
+  font-family: var(--secondary-font);
 }
 
 .separator {
@@ -243,6 +248,7 @@ button {
   border: none;
   cursor: pointer;
   border-radius: 4px;
+  color: var(--white);
 }
 
 .reactionBox .actionButton:hover {
@@ -255,7 +261,7 @@ button {
 }
 
 .reactionBox .actionButton svg {
-  fill: var(--reaction-button);
+  fill: var(--white);
   width: 20px;
   height: 20px;
 }
@@ -547,4 +553,56 @@ button {
   font-size: var(--XS);
   font-family: var(--secondary-font);
   color: var(--grayer);
+}
+
+#commentBox{
+  padding: 10px 10px;
+  font-size: var(--M);
+  font-family: var(--secondary-font);
+  color: var(--grayer);
+  clear: both;
+  border: 1px solid var(--post-gray);
+  border-radius: 8px;
+  width: 78.11%;
+}
+
+#commentText{
+  padding: 15px 15px;
+  background-color: var(--main-bg);
+  font-size: var(--M);
+  font-family: var(--secondary-font);
+  color: var(--grayer);
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.commentUser{
+  margin-top: 10px;
+  margin-left: 15px;
+  gap: 5px;
+}
+
+#commentSection{
+  padding: 10px;
+  margin: 10px;
+  font-size: var(--M);
+  font-family: var(--secondary-font);
+  color: var(--grayer);
+  clear: both;
+  border: 1px solid var(--post-gray);
+  border-radius: 8px;
+  width: 78.11%;
+}
+
+.commentSectionText{
+  padding: 5px 5px;
+  margin-left: 10px;
+  background-color: var(--main-bg);
+  font-size: var(--M);
+  font-family: var(--secondary-font);
+  color: var(--grayer);
+  border: none;
+  outline: none;
+  resize: none;
 }
