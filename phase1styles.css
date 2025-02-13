@@ -61,6 +61,7 @@ body {
   justify-content: space-between;
   align-items: center;
   position: fixed;
+  z-index: 1000;
 }
 
 .searchBarContainer {
@@ -169,7 +170,7 @@ button {
 .mainContent {
   flex-grow: 1;
   top: 100px;
-  padding-top: 60px;
+  padding-top: 70px;
   padding-left: 300px;
   background-color: #1A1A1B;
   min-width: 0;
