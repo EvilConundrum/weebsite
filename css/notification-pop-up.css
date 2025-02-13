@@ -12,6 +12,7 @@ body{
 
     justify-content: center; 
     align-items: center;
+    
 
     top: 0px;
     left: 0px;
@@ -34,7 +35,7 @@ body{
 .popup .popup-content {
     display: flex;
     flex-direction: column;
-    justify-content: center; 
+    justify-content: flex-start center; 
     align-items: center;
     position: absolute;
     width: 400px;
@@ -53,7 +54,7 @@ body{
 
     height: 15px;
     width: 325px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 
     font-family: var(--secondary-font);
     font-size: var(--XL);
@@ -61,73 +62,51 @@ body{
     color: var(--light-green);
 }
 
-.popup textarea {
-    padding: 15px;
-    height: 20px;
-    width: 300px;
-    border-radius: 5px;
+.popup hr{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    color: var(--cyan-gray);
+    width: 400px;
     margin-bottom: 10px;
-    border: 0.5px solid var(--grayer);
-    background: var(--main-bg);
-    text: var(--grayer) var(--secondary-font) var(--M);
-    color: var(--white);
-
 }
 
-.popup textarea::placeholder {
-    font-size: 15px;
-    color: var(--grayer);
-    text: var(--secondary-font);
+.popup .notification-line{
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    height: 30px;
+    font-family: var(--secondary-font);
 }
 
-.popup .login-button{
+.popup #subject{
     display: flex;
     justify-content: center;
     align-items: center;
 
-    border-radius: 9999px;
-    margin-top: 20px;
-    margin-bottom: 50px;
+    position: absolute;
+    left: 30px;
 
-    height: 35px;
-    width: 280px;
-
-    text: var(--secondary-font) var(--S) ;
-    font-weight: bold;
+    height: 30px;
     font-family: var(--secondary-font);
-    font-size: var(--M);
-    background-color: var(--light-green);
-
-    color: var(--main-bg);
-
-    border: solid 1px var(--light-green);
-    cursor: pointer;
+    font-size: var(--S);
+    font-weight: bold;
+    color: var(--light-green);
 }
 
-.popup .login-button:hover{
-    background-color: var(--dark-green);
-    color: var(--main-bg);
-    border: solid 1px var(--dark-green);
-}
-
-.popup .create-account{
+.popup #message{
     display: flex;
     justify-content: center;
 
     position: absolute;
-    bottom: 10%;
+    left: 30%;
+    height: 35px;
+    width: 65%;
 
-    height: 15px;
-    width: 280px;
-    margin-top: 20px;
-
+    overflow: hidden;
     font-family: var(--secondary-font);
     font-size: var(--S);
-    color: var(--grayer);
-}
-
-.popup a{
-    text-decoration: none;
-    color: var(--light-green);
-    font-weight: bold;
+    color: var(--lighter-gray);
 }
