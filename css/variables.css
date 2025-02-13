@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap');
+@font-face {
+    font-family: "The Last Shuriken";
+    src: url("fonts/the_last_shuriken/The_Last_Shuriken.otf") format("opentype"),
+         url("fonts/the_last_shuriken/The_Last_Shuriken.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+:root{
+    --light-green: #88CC66;
+    --dark-green: #689750;
+    --light-blue: #57C5DB;
+    --cyan: #57C5DB;
+    --white: #FFFFFF;
+    --light-gray: #CCCCCC;
+    --gray: #999999;
+    --grayer: #818384;
+    --main-bg: #161A1D;
+    --cyan-light-gray: #21262C;
+    --cyan-gray: #29363D;
+    --cyan-black: #33444D;
+    --cyan-blue: #526E7C;
+    --post-gray: #343536;
+    --reaction-gray: #313131;
+    --reaction-hover: #484A4D;
+    --reaction-active: #606468;
+    --lighter-gray: #D7DADC;
+    --carrot: #FF5319;
+    --maroon: #CC3300;
+    --yellow: #CC3300;
+    --dark-yellow: #C2A30A;
+    --lasalle-green: #1DC980;
+    --emerald-green: #138656;
+
+    --primary-font: "The Last Shuriken", sans-serif;
+    --secondary-font: "Golos Text", sans-serif;
+    --tertiary-font: "Hanken Grotesk", sans-serif;
+    
+    --XXS: 10px;
+    --XS: 12px;
+    --S: 14px;
+    --M: 16px;
+    --L: 18px;
+    --XL: 24px;
+    --XXL: 36px;
+}

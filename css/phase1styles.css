@@ -1,18 +1,8 @@
-/* Fonts */
-@font-face {
-  font-family: "The Last Shuriken";
-  src: url("fonts/the_last_shuriken/The_Last_Shuriken.otf") format("opentype"),
-       url("fonts/the_last_shuriken/The_Last_Shuriken.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap');
+@import url('variables.css');
 
 /* Global Styles */
 body {
-  background: #161A1D;
+  background: var(--main-bg);
   margin: 0;
   padding: 0;
 }
@@ -21,7 +11,7 @@ body {
 .sidebarContainer {
   display: flex;
   flex-direction: row;
-  background: #161A1D;
+  background: var(--main-bg);
   min-height: 100vh;
   position: fixed;
 }
@@ -38,15 +28,15 @@ body {
 }
 
 .title {
-  background: #161A1D;
+  background: var(--main-bg);
   width: 194px;
   height: 45px;
   margin-top: 1%;
   margin-bottom: 0.01%;
   padding: 12px 20px 8px 20px;
-  color: #8C6;
-  font-family: "The Last Shuriken";
-  font-size: 24px;
+  color: var(--light-green);
+  font-family: var(--primary-font);
+  font-size: var(--XL);
   font-weight: 400;
   text-align: center;
   letter-spacing: 4.8px;
@@ -55,7 +45,7 @@ body {
 /* Navbar Styles */
 .navBar {
   display: flex;
-  background: #161A1D;
+  background: var(--main-bg);
   width: 100%;
   margin: 0px;
   justify-content: space-between;
@@ -78,9 +68,9 @@ body {
   height: 35px;
   gap: 12px;
   padding-left: 7.5%;
-  background: #21262C;
-  font-family: "Golos Text";
-  font-size: 16px;
+  background: var(--cyan-light-gray);
+  font-family: var(--secondary-font);
+  font-size: var(--M);
   color: #FFFFFF;
   margin-right: 6%;
 }
@@ -91,7 +81,7 @@ body {
   left: 1.5%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: white;
+  color: var(--white);
 }
 
 .navButtons {
@@ -99,7 +89,7 @@ body {
   align-items: center;
   gap: 35px;
   padding-right: 3%;
-  color: white;
+  color: var(--white);
 }
 
 /* Sidebar Buttons */
@@ -109,10 +99,10 @@ body {
   display: flex;
   padding: 12px 16px;
   justify-content: left;
-  background-color: #161A1D;
-  color: #FFF;
-  font-family: "Raleway";
-  font-size: 16px;
+  background-color: var(--main-bg);
+  color: var(--white);
+  font-family: var(--secondary-font);
+  font-size: var(--M);
   outline: none;
   border: none;
   border-radius: 12px;
@@ -120,12 +110,12 @@ body {
 }
 
 .sidebarButton:hover {
-  background-color: #29363D;
+  background-color: var(--cyan-gray);
 }
 
 .sidebarButton.active{
-  background-color: #29363D;
-  color: #8C6;
+  background-color: var(--cyan-gray);
+  color: var(--light-green);
 }
 
 .sidebarDividerContainer {
@@ -139,7 +129,7 @@ body {
 .sidebarDivider {
   width: 256px;
   height: 1px;
-  background: #999;
+  background: var(--gray);
 }
 
 .sidebarText {
@@ -149,7 +139,7 @@ body {
   justify-content: space-between;
   align-items: center;
   font-family: "Golos Text";
-  font-size: 14px;
+  font-size: var(--S);
   margin-left: 5%;
 }
 
@@ -172,7 +162,7 @@ button {
   top: 100px;
   padding-top: 70px;
   padding-left: 300px;
-  background-color: #1A1A1B;
+  background-color: var(--main-bg);
   min-width: 0;
 }
 
@@ -180,16 +170,14 @@ button {
 .post {
   display: flex;
   flex-direction: column;
-  background: #161A1D;
+  background: var(--main-bg);
   border-radius: 8px;
   padding: 12px;
   margin: 16px 0; /* Removes left and right auto margins */
-  border: 1px solid #343536;
+  border: 1px solid var(--post-gray);
   width: 80%; /* Reduced width */
   box-sizing: border-box;
 }
-
-
 
 .postContent {
   margin: 0 auto;
@@ -203,7 +191,7 @@ button {
   font-size: 1.5em;
   font-weight: bolder;
   margin: 0 0 12px 0;
-  font-family: 'Golos Text', sans-serif;
+  font-family: var(--secondary-font);
 }
 
 .postBody {
@@ -211,7 +199,7 @@ button {
   font-size: 1em;
   line-height: 1.6;
   margin-bottom: 20px;
-  font-family: 'Hanken Grotesk', sans-serif;
+  font-family: var(--tertiary-font);
   font-weight: lighter;
 }
 
@@ -223,12 +211,12 @@ button {
 
 .voteCount {
   color: #D7DADC;
-  font-size: 12px;
-  font-family: 'Golos Text', sans-serif;
+  font-size: var(--XS);
+  font-family: var(--seco);
 }
 
 .separator {
-  color: #343536;
+  color: var(--post-gray);
   margin: 0 8px;
 }
 
@@ -240,7 +228,7 @@ button {
 }
 
 .reactionBox {
-  background-color: #313131;
+  background-color: var(--reaction-gray);
   border-radius: 8px;
   padding: 6px 12px;
   display: flex;
@@ -258,16 +246,16 @@ button {
 }
 
 .reactionBox .actionButton:hover {
-  background-color: #484A4D;
+  background-color: var(--reaction-hover);
 }
 
 .reactionBox .actionButton:active {
-  background-color: #606468;
+  background-color: var(--reaction-active);
   transform: scale(0.95);
 }
 
 .reactionBox .actionButton svg {
-  fill: #D7DADC;
+  fill: var(--reaction-button);
   width: 20px;
   height: 20px;
 }
@@ -284,7 +272,7 @@ button {
 }
 
 .actionButton svg {
-  fill: #D7DADC;
+  fill: var(--reaction-button);
   width: 24px;
   height: 24px;
 }
@@ -293,16 +281,16 @@ button {
 
 .postUsername {
   margin: 0 5px;
-  font-family: 'Golos Text', sans-serif;
-  color: #d7dadcef;
-  font-size: 12px;
+  font-family: var(--secondary-font);
+  color: var(--reaction-button);
+  font-size: var(--XS);
   font-weight: bold;
 }
 
 .postTime {
   font-weight: lighter;
-  font-size: 10px;
-  font-family: 'Golos Text', sans-serif;
+  font-size: var(--XXS);
+  font-family: var(--secondary-font);
 }
 
 /* Post Header */
@@ -311,7 +299,7 @@ button {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  color: #818384;
+  color: var(--grayer);
 }
 
 .postHeaderLeft {
@@ -334,11 +322,11 @@ button {
 .kebabMenu svg {
   width: 20px;
   height: 20px;
-  fill: #D7DADC;
+  fill: var(--lighter-gray);
 }
 
 .kebabMenu:hover svg {
-  fill: #818384;
+  fill: var(--grayer);
 }
 /* Image Container Styles */
 .imageContainer {
@@ -505,14 +493,13 @@ button {
  width: auto;
 }
 
-
 /* Link Preview Styles */
 .linkPreview {
   margin-top: 16px;
-  border: 1px solid #343536;
+  border: 1px solid var(--post-gray);
   border-radius: 8px;
   overflow: hidden;
-  background: #21262C;
+  background: var(--cyan-light-gray);
 }
 
 .linkPreview a {
@@ -544,20 +531,20 @@ button {
 
 .linkPreviewTitle {
   margin: 0;
-  font-size: 16px;
-  font-family: 'Golos Text', sans-serif;
-  color: #FFFFFF;
+  font-size: var(--M);
+  font-family: var(--secondary-font);
+  color: var(--white);
 }
 
 .linkPreviewDescription {
   margin: 4px 0;
   font-size: 14px;
-  font-family: 'Hanken Grotesk', sans-serif;
-  color: #d7dadc8b;
+  font-family: var(--tertiary-font);
+  color: var(--lighter-gray);
 }
 
 .linkPreviewDomain {
-  font-size: 12px;
-  font-family: 'Golos Text', sans-serif;
-  color: #818384;
+  font-size: var(--XS);
+  font-family: var(--secondary-font);
+  color: var(--grayer);
 }

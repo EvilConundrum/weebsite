@@ -1,25 +1,17 @@
-@font-face {
-    font-family: "The Last Shuriken";
-    src: url("fonts/the_last_shuriken/The_Last_Shuriken.otf") format("opentype"),
-         url("fonts/the_last_shuriken/The_Last_Shuriken.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap');
+@import url('variables.css');
 
 body{
-  padding: 10px 150px 10px 150px;
+  padding-left: 325px;
+  padding-right: 325px;
 }
 
 .logo-container {
-    display: grid;
-    grid-template-columns: auto auto;
+    display: flex;
     gap: 10px;
     align-items: center;
     justify-items: center;
-    height: auto;
+    height: 100vh; 
+    width: 1000px;
 }
 
 .logo-container > div {
@@ -27,10 +19,12 @@ body{
   }
 
 .logo-login{
-    font-family: "The Last Shuriken";
+    font-family: var(--primary-font);
     font-size: 280px;
     font-weight: bold;
     color:  #8C6;
+    padding-top: 65px;
+    padding-right: 100px;
 }
 
 .title{
@@ -41,7 +35,7 @@ body{
     margin-bottom: 0.01%;
     padding: 12px 20px 8px 20px;
     color:  #8C6;
-    font-family: "The Last Shuriken";
+    font-family: var(--primary-font);
     font-size: 50px;
     font-weight: 400;
     align-items: center;
@@ -61,14 +55,12 @@ body{
     width: 300px;
     height: 40px;
 
-
-
     margin-top: 10px;
     margin-bottom: 10px;
     padding: 0px;
 
-    font-family: "Golos Text";
-    font-size: 15px;
+    font-family: var(--secondary-font);
+    font-size: var(--M);
     font-weight: 400;
 
     align-items: center;
@@ -77,17 +69,16 @@ body{
 
   #signin{
     border-radius: 9999px;
-    border:#8C6 0.5px solid;
-    color:  #8C6;
-    font-family: "Golos Text";
+    border: var(--light-green) 0.5px solid;
+    color:  var(--light-green);
+    font-family: var(--secondary-font);
   }
 
   #create-account{
     border-radius: 9999px;
-    border:#8C6 0.5px solid;
-    background-color: #8C6;
-    color:  #161A1D;
+    border:var(--light-green) 0.5px solid;
+    background-color: var(--light-green);
+    color:  var(--main-bg);
     font-weight: bold;
-    font-family: "Golos Text";
+    font-family: var(--secondary-font);
   }
-
