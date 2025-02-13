@@ -6,10 +6,12 @@
     font-style: normal;
   }
   
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&display=swap');
-  
-@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap');
-  
+  @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;700&display=swap');
+
+body{
+  padding: 10px 150px 10px 150px;
+}
 
 .logo-container {
     display: grid;
@@ -33,7 +35,7 @@
 
 .title{
     display: grid;
-    width: 545px;
+    width: 365px;
     height: 76px;
     margin-top: 1%;
     margin-bottom: 0.01%;
@@ -51,6 +53,7 @@
     display: grid;
     align-items: center;
     justify-items: center;
+    border-left: 1px solid white;
   }
 
   .button{
@@ -76,6 +79,7 @@
     border-radius: 9999px;
     border:#8C6 0.5px solid;
     color:  #8C6;
+    font-family: "Golos Text";
   }
 
   #create-account{
@@ -84,4 +88,6 @@
     background-color: #8C6;
     color:  #161A1D;
     font-weight: bold;
+    font-family: "Golos Text";
   }
+
