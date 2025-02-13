@@ -75,6 +75,12 @@ body {
   margin-right: 6%;
 }
 
+.commentBar{
+  margin-right: 0%;
+  padding-left: 1.5%;
+  width: 95%;
+}
+
 .searchIcon {
   position: absolute;
   top: 50%;
@@ -94,7 +100,7 @@ body {
 
 /* Sidebar Buttons */
 .sidebarButton {
-  width: 194px;
+  width: 250px;
   height: 45px;
   display: flex;
   padding: 12px 16px;
@@ -116,6 +122,15 @@ body {
 .sidebarButton.active{
   background-color: var(--cyan-gray);
   color: var(--light-green);
+}
+
+.spacedOut{
+  justify-content: center;
+  gap: 115px;
+}
+
+.dropdownSidebar{
+  display: flex;
 }
 
 .sidebarDividerContainer {
@@ -144,6 +159,9 @@ body {
 }
 
 svg {
+  display: flex;
+  justify-content: center;
+  text-align: center;
   vertical-align: middle;
   width: 24px;
   height: 24px;
@@ -571,7 +589,7 @@ button {
   background-color: var(--main-bg);
   font-size: var(--M);
   font-family: var(--secondary-font);
-  color: var(--grayer);
+  color: var(--white);
   border: none;
   outline: none;
   resize: none;
@@ -581,6 +599,10 @@ button {
   margin-top: 10px;
   margin-left: 15px;
   gap: 5px;
+}
+
+.yourComment{
+  margin-bottom: 20px;
 }
 
 #commentSection{

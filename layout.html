@@ -5,7 +5,9 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/phase1styles.css">
 
-    <script src="selectedButton.js" defer></script>
+    <script src="button.js" defer></script>
+    <script src="include.js" defer></script>
+    <script src="visibility.js" defer></script>
 
   </head>
   <body>
@@ -118,7 +120,9 @@
           <div class="sidebarDividerContainer">
             <div class="sidebarDivider"></div>
           </div>
-          <div class="sidebarText">
+          <button 
+            class="sidebarButton spacedOut"
+            onclick="toggleSidebarVisibility()">
             CATEGORY
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -132,9 +136,9 @@
                 clip-rule="evenodd"
               />
             </svg>
-          </div>
+          </button>
           <button
-            class="sidebarButton"
+            class="sidebarButton dropdownSidebar"
             onclick="window.open('https://supremevaluelist.com', '_blank')"
           >
             <svg
@@ -152,7 +156,7 @@
             About Weebsite
           </button>
           <button
-            class="sidebarButton"
+            class="sidebarButton dropdownSidebar"
             onclick="window.open('https://supremevaluelist.com', '_blank')"
           >
             <svg
