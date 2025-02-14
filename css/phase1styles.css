@@ -292,8 +292,7 @@ button {
   transform: scale(0.95);
 }
 
-.reactionBox .actionButton svg {
-  fill: var(--text-main);
+.reactionBox .actionButton {
   width: 20px;
   height: 20px;
 }
@@ -307,12 +306,6 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-}
-
-.actionButton svg {
-  fill: var(--text-60);
-  width: 24px;
-  height: 24px;
 }
 
 .postUsername {
@@ -336,6 +329,8 @@ button {
   justify-content: space-between;
   align-items: center;
   color: var(--text-60);
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .postHeaderLeft {
@@ -383,10 +378,8 @@ button {
 }
 
 .dropdown-line-post:hover {
-  fill: var(--Text-60);
-  color: var(--Text-60, #999);
-  background: var(--Background-15, #21262c);
-  opacity: 0.5;
+  background-color: var(--background-15);
+  border-radius: 8px;
 }
 
 .kebabMenu {
@@ -514,7 +507,6 @@ button {
   .postContent {
     padding: 0 5px;
   }
-  .actionButton svg,
   .kebabMenu svg {
     width: 20px;
     height: 20px;
@@ -747,8 +739,14 @@ button {
 }
 
 .dropdown-line-post:hover {
-  fill: var(--Text-60);
-  color: var(--Text-60, #999);
-  background: var(--Background-15, #21262c);
-  opacity: 0.5;
+  background-color: var(--background-15);
+  border-radius: 8px;
+}
+
+.like-button.activeLike svg {
+  fill: var(--primary-70);
+}
+
+.dislike-button.activeDislike svg {
+  fill: var(--semantic-red-main);
 }

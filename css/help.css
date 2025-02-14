@@ -1,0 +1,203 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-main);
+    color: var(--text-main);
+    font-family: var(--secondary-font), sans-serif;
+    line-height: 1.6;
+}
+
+.logo{
+
+    margin-right: 275px;
+
+}
+
+/* Navigation Bar */
+nav {
+display: flex;
+justify-content: center; 
+align-items: center; 
+padding: 20px 10%;
+background-color: var(--background-15);
+position: fixed;
+width: 100%;
+top: 0;
+left: 0;
+z-index: 1000;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+border-bottom: 2px solid var(--primary-main);
+}
+
+nav a {
+    text-decoration: none;
+    display: inline-block; 
+}
+
+nav .logo {
+    font-family: var(--primary-font), sans-serif;
+    font-size: 30px;
+    color: var(--primary-main);
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, color 0.3s ease;
+    position: relative;
+}
+
+nav .logo::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-main);
+    bottom: -5px;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease;
+}
+
+nav .logo:hover {
+    color: var(--text-main);
+    transform: scale(1.05);
+}
+
+nav .logo:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+/* Responsive Nav Bar */
+@media (max-width: 768px) {
+    nav {
+        padding: 15px 5%;
+    }
+
+    nav .logo {
+        font-size: 24px;
+    }
+}
+
+/* Help Container */
+.help-container {
+    max-width: 800px;
+    margin: 120px auto 40px;
+    padding: 20px;
+    text-align: left;
+}
+
+.search-bar {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 40px;
+    display: flex;
+    align-items: center;
+    background-color: var(--background-15);
+    border-radius: 9999px;
+    padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.search-bar:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.search-bar input {
+    border: none;
+    background: none;
+    color: var(--text-main);
+    font-size: var(--M);
+    outline: none;
+    padding: 10px;
+}
+
+.search-bar i {
+    color: var(--text-main);
+    font-size: var(--L);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.search-bar i:hover {
+    color: var(--primary-main);
+}
+
+.search-bar-placeholder {
+
+    width: 100%;
+}
+
+.help-title {
+    font-family: var(--primary-font), sans-serif;
+    font-size: 48px;
+    color: var(--primary-main);
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.help-content {
+    display: grid;
+    gap: 20px;
+}
+
+.help-section {
+    background-color: var(--background-15);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: left;
+}
+
+.help-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.help-section h2 {
+    font-family: var(--tertiary-font), sans-serif;
+    font-size: 24px;
+    color: var(--primary-main);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.help-section h2 i {
+    font-size: 28px;
+    color: var(--primary-main);
+    transition: color 0.3s ease;
+}
+
+.help-section:hover h2 i {
+    color: var(--primary-main);
+}
+
+.help-section p {
+    font-size: var(--M);
+    color: var(--text-80);
+    margin-bottom: 10px;
+}
+
+/* Footer */
+footer {
+    background-color: var(--background-main);
+    color: var(--text-80);
+    padding: 20px;
+    text-align: center;
+    margin-top: 60px;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+}
+
+footer a {
+    color: var(--primary-main);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--primary-main);
+    text-decoration: underline;
+}
