@@ -50,7 +50,7 @@ window.onload = function () {
       if (btn.dataset.page) {
         loadPage(btn.dataset.page);
       } else {
-        loadPage("phase1.html");
+        loadPage("index.html");
       }
     });
   });
@@ -149,11 +149,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (isLoggedIn) {
         logoutBtn.style.display = "flex"; // Show Logout button
         loginBtn.style.display = "none"; // Hide Login button
-        profileImage.src = "pics/pfp.png";
+        profileImage.src = "images/pfp.png";
       } else {
         logoutBtn.style.display = "none"; // Hide Logout button
         loginBtn.style.display = "flex"; // Show Login button
-        profileImage.src = "pics/question_mark.png";
+        profileImage.src = "images/question_mark.png";
       }
     }
   }

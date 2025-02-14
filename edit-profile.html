@@ -2,20 +2,22 @@
 <html>
   <head>
     <title>Weebsite - The Weeb Forum</title>
-    <link rel="stylesheet" href="css/edit-profile.css" />
-    <link rel="stylesheet" href="css/phase1styles.css" />
+    <link rel="stylesheet" href="styles/edit-profile.css" />
+    <link rel="stylesheet" href="styles/indexstyles.css" />
 
-    <script src="button.js" defer></script>
-    <script src="include.js" defer></script>
+    <script src="scripts/button.js" defer></script>
+    <script src="scripts/include.js" defer></script>
   </head>
   <body>
     <div id="popup-container">
       <div id="main-content">
         <div id="profile-pic-submission-container">
-          <img id="current-profile-pic" src="pics/pfp.png" alt="Profile Picture">
+          <img id="current-profile-pic" src="images/pfp.png" alt="Profile Picture">
           <div id="submission-container">
             <p id="uploading-guidelines">Must be jpg, gif or png format. No NSFW allowed. No copyrighted images. Maximum of 225 x 350 pixels (resized automatically).</p>
-            <button id="submit-profile-pic">Upload Profile Picture</button>
+            <button
+              id="submit-profile-pic"
+            >Upload Profile Picture</button>
           </div>
         </div>
         <div id="user-bio-edit-container">
@@ -24,8 +26,8 @@
         </div>
       </div>
       <div class="footer">
-        <button id="cancel-changes">Cancel</button>
-        <button id="confirm-changes">Confirm</button>
+        <button id="cancel-changes" onclick="window.open('profile.html', '_self')">Cancel</button>
+        <button id="confirm-changes" onclick="window.open('profile.html', '_self')">Confirm</button>
       </div>
     </div>
   </body>

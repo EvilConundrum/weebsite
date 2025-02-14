@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore - WEEBSITE</title>
-    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="styles/variables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--main-bg);
-            color: var(--white);
-            font-family: var(--secondary-font);
+            background-color: var(--background-main);
+            color: var(--text-main);
+            font-family: var(--secondary-font), sans-serif;
             line-height: 1.6;
         }
 
@@ -23,7 +23,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 15px 8%;
-    background-color: var(--main-bg);
+    background-color: var(--background-main);
     position: fixed;
     width: 100%;
     top: 0;
@@ -33,9 +33,9 @@ nav {
 }
 
 .logo {
-    font-family: var(--primary-font);
+    font-family: var(--primary-font), sans-serif;
     font-size: 24px;
-    color: var(--light-green); /* Green accent */
+    color: var(--primary-main); /* Green accent */
     font-weight: 500;
     letter-spacing: -0.5px;
     margin-left: 10px;
@@ -54,7 +54,7 @@ nav {
     border: none;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.05);
-    color: var(--white);
+    color: var(--text-main);
     width: 400px;
     font-size: 14px;
     transition: all 0.2s ease;
@@ -69,7 +69,7 @@ nav {
 .search-button {
     background: transparent;
     border: none;
-    color: var(--light-green); /* Green accent */
+    color: var(--primary-main); /* Green accent */
     font-size: 15px;
     cursor: pointer;
     padding: 8px;
@@ -81,7 +81,7 @@ nav {
     justify-content: center;
     gap: 15px;
     padding: 15px;
-    background-color: var(--main-bg);
+    background-color: var(--background-main);
     margin-top: 70px;
     position: sticky;
     top: 70px;
@@ -91,21 +91,21 @@ nav {
 }
 
 .topic {
-    color: var(--gray);
+    color: var(--background-15);
     text-decoration: none;
     font-size: 14px;
     font-weight: 400;
     padding: 8px 16px; 
-    border: 1px solid var(--light-green); /* Green border */
+    border: 1px solid var(--primary-main); /* Green border */
     border-radius: 25px; /* Rounded corners */
     transition: all 0.2s ease;
     background-color: transparent; 
 }
 
 .topic:hover {
-    color: var(--light-green); /* Green text on hover */
+    color: var(--primary-main); /* Green text on hover */
     background-color: rgba(76, 175, 80, 0.1); /* Light green background on hover */
-    border-color: var(--light-green); /* Green border on hover */
+    border-color: var(--primary-main); /* Green border on hover */
 }
 
 /* Explore Container */
@@ -123,7 +123,7 @@ nav {
     position: relative;
     border-radius: 15px;
     overflow: hidden;
-    background-color: var(--cyan-light-gray);
+    background-color: var(--accent-70);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
@@ -149,15 +149,15 @@ nav {
 }
 
 .post-card .post-info h3 {
-    font-family: var(--primary-font);
+    font-family: var(--primary-font), sans-serif;
     font-size: 20px;
-    color: var(--white);
+    color: var(--text-main);
     margin-bottom: 10px;
 }
 
 .post-card .post-info p {
     font-size: 14px;
-    color: var(--gray);
+    color: var(--text-60);
     margin-bottom: 25px;
 }
 
@@ -168,8 +168,8 @@ nav {
 }
 
 .post-card .post-info .tags span {
-    background-color: var(--cyan-black);
-    color: var(--light-green);
+    background-color: var(--background-25);
+    color: var(--primary-main);
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 12px;
@@ -180,14 +180,14 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 10px 15px;
-    background-color: var(--cyan-black);
-    border-top: 1px solid var(--gray);
+    background-color: var(--background-25);
+    border-top: 1px solid var(--background-35);
     margin-top: auto; /* Push the actions to the bottom */
 }
 .post-card .post-actions button {
     background: none;
     border: none;
-    color: var(--gray);
+    color: var(--background-35);
     font-size: 16px;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -197,7 +197,7 @@ nav {
 }
 
 .post-card .post-actions button:hover {
-    color: var(--light-green); /* Green accent */
+    color: var(--primary-main); /* Green accent */
 }
 
 .post-card .post-actions button i {
@@ -250,7 +250,7 @@ nav {
             text-align: center;
             padding: 20px;
             font-size: 18px;
-            color: var(--gray);
+            color: var(--background-35);
             margin-left: 470px;
         }
 
@@ -269,7 +269,7 @@ nav {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 2px solid var(--light-green);
+    border: 2px solid var(--primary-main);
     object-fit: cover;
     transition: transform 0.3s ease;
     margin-right: 90px;
@@ -280,7 +280,7 @@ nav {
 }
 
 .username {
-    color: var(--light-green);
+    color: var(--primary-main);
     font-size: 14px;
     font-weight: 500;
 }
@@ -326,7 +326,7 @@ nav {
     
     <!-- Add Profile Section -->
     <div class="profile-section">
-        <img src="pics/pfp.png" alt="Profile Picture" class="profile-pic">
+        <img src="images/pfp.png" alt="Profile Picture" class="profile-pic">
         <span class="username">OtakuFan93</span>
     </div>
 </nav>
@@ -347,7 +347,7 @@ nav {
 
         <!-- Post Card 1 -->
         <div class="post-card">
-            <img src="pics/animeart.webp" alt="Anime Art">
+            <img src="images/animeart.webp" alt="Anime Art">
             <div class="post-info">
                 <h3>Anime Art Showcase</h3>
                 <p>Check out this amazing fan art of your favorite anime characters!</p>
@@ -367,7 +367,7 @@ nav {
 
         <!-- Post Card 2 -->
         <div class="post-card">
-            <img src="pics/animefood.jpeg" alt="Anime Food">
+            <img src="images/animefood.jpeg" alt="Anime Food">
             <div class="post-info">
                 <h3>Anime-Inspired Food</h3>
                 <p>Delicious dishes inspired by your favorite anime series!</p>
@@ -386,7 +386,7 @@ nav {
 
         <!-- Post Card 3 -->
         <div class="post-card">
-            <img src="pics/animecosplay.jpg" alt="Cosplay" class="">
+            <img src="images/animecosplay.jpg" alt="Cosplay" class="">
             <div class="post-info">
                 <h3>Cosplay Highlights</h3>
                 <p>Amazing cosplay from the latest anime convention! 10/10 would come back soon!</p>
