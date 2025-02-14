@@ -385,10 +385,8 @@ button {
 }
 
 .dropdown-line-post:hover {
-  fill: var(--Text-60);
-  color: var(--Text-60, #999);
-  background: var(--Background-15, #21262c);
-  opacity: 0.5;
+  background-color: var(--background-15);
+  border-radius: 8px;
 }
 
 .kebabMenu {
@@ -749,8 +747,6 @@ button {
 }
 
 .dropdown-line-post:hover {
-  fill: var(--Text-60);
-  color: var(--Text-60, #999);
-  background: var(--Background-15, #21262c);
-  opacity: 0.5;
+  background-color: var(--background-15);
+  border-radius: 8px;
 }
