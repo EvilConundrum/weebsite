@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
- 
         body {
             margin: 0;
             padding: 0;
@@ -16,13 +15,6 @@
             font-family: var(--secondary-font);
             line-height: 1.6;
         }
-
-        .logo{
-
-             margin-right: 275px;
-
-        }
-
 
         nav {
             display: flex;
@@ -52,6 +44,7 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, color 0.3s ease;
             position: relative;
+            margin-right: 270px;
         }
 
         nav .logo::after {
@@ -99,17 +92,19 @@
 
         /* Sidebar */
         .sidebar {
-            width: 250px;
+            width: 100%;
+            max-width: 250px;
             background-color: var(--cyan-light-gray);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
         .sidebar h3 {
             font-family: var(--primary-font);
             font-size: 24px;
-            color: var(--light-green);
+            color: var(--white);
             margin-bottom: 20px;
         }
 
@@ -123,15 +118,21 @@
             margin-bottom: 15px;
         }
 
-        .sidebar ul li a {
-            color: var(--light-blue);
-            text-decoration: none;
+        .sidebar ul li button {
+            background-color: var(--cyan-black);
+            color: var(--white);
+            border: 1px solid var(--gray);
+            border-radius: 5px;
+            padding: 10px 20px;
             font-size: var(--M);
-            transition: color 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .sidebar ul li a:hover {
-            color: var(--light-green);
+        .sidebar ul li button:hover {
+            background-color: var(--white);
+            color: var(--cyan-black);
         }
 
         /* Share Form */
@@ -149,10 +150,17 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
+        .share-form .share-title {
+            font-family: var(--primary-font);
+            font-size: 28px;
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+
         .share-form label {
             font-family: var(--tertiary-font);
             font-size: 18px;
-            color: var(--light-blue);
+            color: var(--gray);
             margin-bottom: 10px;
             display: block;
         }
@@ -173,7 +181,7 @@
 
         .share-form input:focus,
         .share-form textarea:focus {
-            box-shadow: 0 0 0 2px var(--light-green);
+            box-shadow: 0 0 0 2px var(--gray);
         }
 
         .share-form textarea {
@@ -182,7 +190,7 @@
         }
 
         .share-form button {
-            background-color: var(--light-green);
+            background-color: var(--gray);
             color: var(--cyan-black);
             border: none;
             border-radius: 8px;
@@ -215,7 +223,7 @@
         }
 
         footer a:hover {
-            color: var(--light-green);
+            color: var(--gray);
             text-decoration: underline;
         }
     </style>
@@ -231,10 +239,10 @@
         <div class="sidebar">
             <h3>Quick Links</h3>
             <ul>
-                <li><a href="#"><i class="fas fa-info-circle"></i> Sharing Guidelines</a></li>
-                <li><a href="#"><i class="fas fa-star"></i> Support us with a donation</a></li>
-                <li><a href="#"><i class="fas fa-question-circle"></i> FAQs</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><button><i class="fas fa-info-circle"></i> Sharing Guidelines</button></li>
+                <li><button><i class="fas fa-star"></i> Support us with a donation</button></li>
+                <li><button><i class="fas fa-question-circle"></i> FAQs</button></li>
+                <li><button><i class="fas fa-cog"></i> Settings</button></li>
             </ul>
         </div>
 
