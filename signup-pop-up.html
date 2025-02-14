@@ -1,28 +1,55 @@
 <!DOCTYPE html>
 <html>
-    <head>
+  <head>
     <title>Weebsite - The Weeb Forum</title>
-    <link rel="stylesheet" href="css/login-pop-up.css">
-    <link rel="stylesheet" href="css/phase1styles.css">
+    <link rel="stylesheet" href="css/login-pop-up.css" />
+    <link rel="stylesheet" href="css/phase1styles.css" />
 
     <script src="button.js" defer></script>
     <script src="include.js" defer></script>
-    </head>
-    <body>
-        <div class="popup" id="popup">
-            <div class="overlay"></div>
-            <div class="popup-content">
-                <svg class="exit-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                    <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z" clip-rule="evenodd" />
-                  </svg>
-                
-                <div class="header">Sign up</div>
-                <textarea rows="1" placeholder="Username"></textarea>
-                <textarea rows="1" placeholder="Password"></textarea>
-                <div class="password"></div>
-                <button class="login-button">Sign up</button>
-                <div class="create-account">Have an account already?<a style="color:#8C6" href="google.com">&nbsp;Log in&nbsp;</a></div>
-            </div>
+  </head>
+  <body>
+    <div class="popup" id="popup">
+      <div class="overlay"></div>
+      <div class="popup-content">
+        <button
+          class="hiddenButton"
+          onclick="window.open('login.html', '_self')"
+        >
+          <svg
+            class="exit-button"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+
+        <div class="header">Sign up</div>
+        <textarea rows="1" placeholder="Username"></textarea>
+        <textarea rows="1" placeholder="Password"></textarea>
+        <textarea rows="1" placeholder="Confirm Password"></textarea>
+        <div class="password"></div>
+        <button
+          class="login-button"
+          onclick="window.open('phase1.html', '_self')"
+        >
+          Sign up
+        </button>
+        <div class="create-account">
+          Have an account already?<a
+            style="color: #8c6"
+            href="login-pop-up.html"
+            >&nbsp;Log in&nbsp;</a
+          >
         </div>
-    </body>
+      </div>
+    </div>
+  </body>
 </html>
