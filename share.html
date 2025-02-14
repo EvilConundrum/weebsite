@@ -1,50 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Share - WEEBSITE</title>
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/share.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/variables.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="css/share.css" />
+  </head>
+  <body>
     <nav>
-        <a href="index.html">
-            <div class="logo">WEEBSITE</div>
-        </a>
+      <a href="phase1.html">
+        <div class="logo">WEEBSITE</div>
+      </a>
     </nav>
     <div class="share-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><button><i class="fas fa-info-circle"></i> Sharing Guidelines</button></li>
-                <li><button><i class="fas fa-star"></i> Support us with a donation</button></li>
-                <li><button><i class="fas fa-question-circle"></i> FAQs</button></li>
-                <li><button><i class="fas fa-cog"></i> Settings</button></li>
-            </ul>
-        </div>
-
-        <!-- Share Form -->
-        <form class="share-form">
-            <div class="share-title">Share Your Content</div>
-            <label for="title"><b>Title</b></label>
-            <input type="text" id="title" name="title" placeholder="Enter a title for your post..." required>
-
-            <label for="description">Description</label>
-            <textarea id="description" name="description" placeholder="Describe your content..." required></textarea>
-
-            <label for="tags">Tags</label>
-            <input type="text" id="tags" name="tags" placeholder="Add tags (e.g., anime, manga, art)..." required>
-
-            <button type="submit">
-                <i class="fas fa-share"></i> Share Now
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h3>Quick Links</h3>
+        <ul>
+          <li>
+            <button>
+              <i class="fas fa-info-circle"></i> Sharing Guidelines
             </button>
-        </form>
+          </li>
+          <li>
+            <button>
+              <i class="fas fa-star"></i> Support us with a donation
+            </button>
+          </li>
+          <li>
+            <button><i class="fas fa-question-circle"></i> FAQs</button>
+          </li>
+          <li>
+            <button><i class="fas fa-cog"></i> Settings</button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Share Form -->
+      <form class="share-form">
+        <div class="share-title">Share Your Content</div>
+        <label for="title"><b>Title</b></label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Enter a title for your post..."
+          required
+        />
+
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Describe your content..."
+          required
+        ></textarea>
+
+        <label for="tags">Communities</label>
+        <input
+          type="text"
+          id="tags"
+          name="tags"
+          placeholder="Add communities (e.g., Naruto, One Piece, Bleach)..."
+          required
+        />
+
+        <button type="submit"><i class="fas fa-share"></i> Share Now</button>
+      </form>
     </div>
     <footer>
-        <p>© 2025 Weebsite. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+      <p>
+        © 2025 Weebsite. <a href="#">Privacy Policy</a> |
+        <a href="#">Terms of Service</a>
+      </p>
     </footer>
-</body>
+  </body>
 </html>

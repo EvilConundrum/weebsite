@@ -55,7 +55,6 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  margin: 0 16px;
   width: 30%;
   background-color: var(--background-main);
   border: 1px solid var(--background-35);
@@ -74,28 +73,28 @@
   text-wrap: auto;
 }
 
-.stat{
+.stat {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 12px;
 }
 
-.stat-name{
+.stat-name {
   font-family: var(--tertiary-font), sans-serif;
   font-size: var(--XS);
   color: var(--text-60);
   margin: 0;
 }
 
-.stat-value{
+.stat-value {
   font-family: var(--tertiary-font), sans-serif;
   font-size: var(--L);
   color: var(--primary-main);
   margin: 0;
 }
 
-.community-stat{
+.community-stat {
   display: flex;
   align-items: center;
 }
