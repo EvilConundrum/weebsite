@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore - WEEBSITE</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--main-bg);
+            color: var(--white);
+            font-family: var(--secondary-font);
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        /* Navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 8%;
+    background-color: var(--main-bg);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.473);
+}
+
+.logo {
+    font-family: var(--primary-font);
+    font-size: 24px;
+    color: var(--light-green); /* Green accent */
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    margin-left: 10px;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 230px;
+}
+
+.search-input {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    width: 400px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    width: 250px;
+}
+
+.search-button {
+    background: transparent;
+    border: none;
+    color: var(--light-green); /* Green accent */
+    font-size: 15px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+/* Topics Container */
+.topics-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 15px;
+    background-color: var(--main-bg);
+    margin-top: 70px;
+    position: sticky;
+    top: 70px;
+    z-index: 999;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    
+}
+
+.topic {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 8px 16px; 
+    border: 1px solid var(--light-green); /* Green border */
+    border-radius: 25px; /* Rounded corners */
+    transition: all 0.2s ease;
+    background-color: transparent; 
+}
+
+.topic:hover {
+    color: var(--light-green); /* Green text on hover */
+    background-color: rgba(76, 175, 80, 0.1); /* Light green background on hover */
+    border-color: var(--light-green); /* Green border on hover */
+}
+
+/* Explore Container */
+.explore-container {
+    max-width: 1200px;
+    margin: 30px auto 20px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 10px;
+}
+
+/* Post Card */
+.post-card {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: var(--cyan-light-gray);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; 
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.post-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px; /* All corners rounded */
+    overflow: hidden; 
+}
+.post-card .post-info {
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.post-card .post-info h3 {
+    font-family: var(--primary-font);
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 10px;
+}
+
+.post-card .post-info p {
+    font-size: 14px;
+    color: var(--gray);
+    margin-bottom: 25px;
+}
+
+.post-card .post-info .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.post-card .post-info .tags span {
+    background-color: var(--cyan-black);
+    color: var(--light-green);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.post-card .post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--cyan-black);
+    border-top: 1px solid var(--gray);
+    margin-top: auto; /* Push the actions to the bottom */
+}
+.post-card .post-actions button {
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    padding: 8px 12px;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.post-card .post-actions button:hover {
+    color: var(--light-green); /* Green accent */
+}
+
+.post-card .post-actions button i {
+    margin-right: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav {
+        padding: 12px 5%;
+    }
+
+    .search-input {
+        width: 150px;
+        padding: 6px 12px;
+    }
+
+    .search-input:focus {
+        width: 180px;
+    }
+
+    .topics-container {
+        gap: 12px;
+        padding: 12px;
+        justify-content: start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .topic {
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .explore-container {
+        margin: 30px auto 15px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .explore-container {
+        margin: 20px auto 10px;
+        padding: 10px;
+    }
+}
+
+      
+        .loader {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: var(--gray);
+            margin-left: 470px;
+        }
+
+
+
+        /* Profile Section */
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 10px; /* Pushes to the right */
+    padding: 0 20px;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--light-green);
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    margin-right: 90px;
+}
+
+.profile-pic:hover {
+    transform: scale(1.1);
+}
+
+.username {
+    color: var(--light-green);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Adjust search bar positioning */
+.search-bar {
+    margin-right: 300px; 
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .profile-section {
+        padding: 0 10px;
+    }
+    
+    .username {
+        display: none; 
+    }
+    
+    .profile-pic {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .search-bar {
+        margin-right: 20px;
+    }
+}
+        
+
+        
+    </style>
+</head>
+<body>
+   
+<!-- Navbar -->
+<nav>
+    <a href="index.html" class="logo">WEEBSITE</a>
+    <div class="search-bar">
+        <input type="text" placeholder="Search..." class="search-input">
+        <button class="search-button"><i class="fas fa-search"></i></button>
+    </div>
+    
+    <!-- Add Profile Section -->
+    <div class="profile-section">
+        <img src="pics/pfp.png" alt="Profile Picture" class="profile-pic">
+        <span class="username">OtakuFan93</span>
+    </div>
+</nav>
+
+<!-- Topics Container -->
+<div class="topics-container">
+    <a href="#" class="topic">Anime Art</a>
+    <a href="#" class="topic">Cosplay</a>
+    <a href="#" class="topic">Anime Food</a>
+    <a href="#" class="topic">Fan Theories</a>
+    <a href="#" class="topic">Merchandise</a>
+</div>
+
+    <!-- Explore Container -->
+    <div class="explore-container">
+
+
+
+        <!-- Post Card 1 -->
+        <div class="post-card">
+            <img src="pics/animeart.webp" alt="Anime Art">
+            <div class="post-info">
+                <h3>Anime Art Showcase</h3>
+                <p>Check out this amazing fan art of your favorite anime characters!</p>
+                <div class="tags">
+                    <span>#anime</span>
+                    <span>#art</span>
+                    <span>#fanart</span>
+                </div>
+            </div>
+            <div class="post-actions">
+                <button><i class="fas fa-heart"></i> Like</button>
+                <button><i class="fas fa-comment"></i> Comment</button>
+                <button><i class="fas fa-share"></i> Share</button>
+            </div>
+        </div>
+
+
+        <!-- Post Card 2 -->
+        <div class="post-card">
+            <img src="pics/animefood.jpeg" alt="Anime Food">
+            <div class="post-info">
+                <h3>Anime-Inspired Food</h3>
+                <p>Delicious dishes inspired by your favorite anime series!</p>
+                <div class="tags">
+                    <span>#animefood</span>
+                    <span>#foodie</span>
+                    <span>#anime</span>
+                </div>
+            </div>
+            <div class="post-actions">
+                <button><i class="fas fa-heart"></i> Like</button>
+                <button><i class="fas fa-comment"></i> Comment</button>
+                <button><i class="fas fa-share"></i> Share</button>
+            </div>
+        </div>
+
+        <!-- Post Card 3 -->
+        <div class="post-card">
+            <img src="pics/animecosplay.jpg" alt="Cosplay" class="">
+            <div class="post-info">
+                <h3>Cosplay Highlights</h3>
+                <p>Amazing cosplay from the latest anime convention! 10/10 would come back soon!</p>
+                <div class="tags">
+                    <span>#cosplay</span>
+                    <span>#animecon</span>
+                    <span>#otaku</span>
+                </div>
+            </div>
+            <div class="post-actions">
+                <button><i class="fas fa-heart"></i> Like</button>
+                <button><i class="fas fa-comment"></i> Comment</button>
+                <button><i class="fas fa-share"></i> Share</button>
+            </div>
+        </div>
+
+   
+    <div class="loader">
+        <span>Loading&NonBreakingSpace;more&NonBreakingSpace;posts...</span>
+    </div>
+
+   
+</body>
+</html>
