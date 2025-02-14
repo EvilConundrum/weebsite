@@ -19,7 +19,7 @@ body{
   }
 
 .logo-login{
-    font-family: var(--primary-font);
+    font-family: var(--primary-font), sans-serif;
     font-size: 280px;
     font-weight: bold;
     color:  #8C6;
@@ -32,10 +32,9 @@ body{
     width: 365px;
     height: 76px;
     margin-top: 1%;
-    margin-bottom: 0.01%;
     padding: 12px 20px 8px 20px;
     color:  #8C6;
-    font-family: var(--primary-font);
+    font-family: var(--primary-font), sans-serif;
     font-size: 50px;
     font-weight: 400;
     align-items: center;
@@ -57,9 +56,9 @@ body{
 
     margin-top: 10px;
     margin-bottom: 10px;
-    padding: 0px;
+    padding: 0;
 
-    font-family: var(--secondary-font);
+    font-family: var(--secondary-font), sans-serif;
     font-size: var(--M);
     font-weight: 400;
 
@@ -67,18 +66,18 @@ body{
     justify-items: center;
   }
 
-  #signin{
+  #sign-in{
     border-radius: 9999px;
-    border: var(--light-green) 0.5px solid;
-    color:  var(--light-green);
-    font-family: var(--secondary-font);
+    border: var(--primary-main) 1px solid;
+    color:  var(--primary-main);
+    font-family: var(--secondary-font), sans-serif;
   }
 
   #create-account{
     border-radius: 9999px;
-    border:var(--light-green) 0.5px solid;
-    background-color: var(--light-green);
-    color:  var(--main-bg);
+    border:var(--primary-main) 1px solid;
+    background-color: var(--primary-main);
+    color:  var(--background-main);
     font-weight: bold;
-    font-family: var(--secondary-font);
+    font-family: var(--secondary-font), sans-serif;
   }
