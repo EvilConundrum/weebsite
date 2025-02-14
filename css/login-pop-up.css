@@ -54,13 +54,16 @@
     height: 20px;
     width: 20px;
     border-radius: 9999px;
-    background-color: var(--light-green);
     color: var(--main-bg);
-    font-size: var(--S);
-    font-weight: bold;
-    font-family: var(--secondary-font);
+
     cursor: pointer;
     border: solid 1px var(--light-green);
+
+    fill: var(--light-green);
+}
+
+.popup .exit-button:hover{
+    fill: var(--dark-green);
 }
 
 
@@ -173,4 +176,3 @@
     color: var(--light-green);
     font-weight: bold;
 }
-
