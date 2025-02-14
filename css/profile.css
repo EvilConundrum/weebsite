@@ -64,6 +64,10 @@
     line-height: normal;
 }
 
+#edit-profile-button:hover{
+    box-shadow: 0 4px 24px 0 var(--primary-70);
+}
+
 #bio-content > p{
     color: var(--text-60, #999);
     font-family: var(--tertiary-font, "Hanken Grotesk"), sans-serif;
