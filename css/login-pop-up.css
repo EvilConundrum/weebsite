@@ -1,5 +1,7 @@
 @import url('variables.css');
 
+
+
 .popup{
     display: flex;
 
@@ -87,6 +89,7 @@
     background: var(--main-bg);
     text: var(--grayer) var(--secondary-font) var(--M);
     color: var(--white);
+    resize: none;
 
 }
 
