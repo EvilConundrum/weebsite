@@ -1,0 +1,54 @@
+@import url("variables.css");
+
+.communityBanner {
+  margin: 1% auto; /* Centers the banner */
+  margin-right: 250px;
+  position: relative;
+  width: 90%;
+  height: auto; /* Adjust height based on the image */
+  display: flex;
+  justify-content: center; /* Center content */
+  align-items: center;
+  overflow: hidden; /* Prevents overflow issues */
+}
+
+.communityBannerImage {
+  margin-right: 280px;
+  width: 70%; /* Make the image fully responsive */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Ensures proper scaling */
+  border-radius: 99px;
+}
+
+.communityBannerText {
+  background-color: var(--background-main);
+  position: absolute;
+  bottom: 0;
+  width: 70%; /* Adjust as needed */
+  height: 90px; /* Adjust height */
+  border: 1px solid var(--background-35);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  margin-right: 280px;
+}
+
+.communityHeaderImage {
+  position: absolute;
+  border-radius: 999px;
+  width: 15%; /* Adjust size as needed */
+  border: 1px solid var(--background-35);
+  margin-right: 77.5%;
+  margin-top: 17.5%;
+}
+
+.communityTitle {
+  font-family: var(--primary-font);
+  font-size: var(--XL);
+  color: var(--primary-main);
+  margin-left: 35%;
+  margin-top: 4.5%;
+}
+
+.communityHeader {
+  display: flex;
+}
