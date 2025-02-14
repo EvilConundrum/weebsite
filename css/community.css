@@ -1,19 +1,15 @@
 @import url("variables.css");
 
 .communityBanner {
-  margin: 1% auto; /* Centers the banner */
-  margin-right: 250px;
   position: relative;
-  width: 90%;
+  width: 70%; /* Make the image fully responsive */
   height: auto; /* Adjust height based on the image */
   display: flex;
-  justify-content: center; /* Center content */
   align-items: center;
   overflow: hidden; /* Prevents overflow issues */
 }
 
 .communityBannerImage {
-  margin-right: 280px;
   width: 70%; /* Make the image fully responsive */
   height: auto; /* Maintain aspect ratio */
   object-fit: cover; /* Ensures proper scaling */
@@ -29,7 +25,6 @@
   border: 1px solid var(--background-35);
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  margin-right: 280px;
 }
 
 .communityHeaderImage {
@@ -37,27 +32,70 @@
   border-radius: 999px;
   width: 15%; /* Adjust size as needed */
   border: 1px solid var(--background-35);
-  margin-right: 77.5%;
+  margin-left: 4%;
   margin-top: 17.5%;
 }
 
 .communityTitle {
-  font-family: var(--primary-font);
+  font-family: var(--primary-font), sans-serif;
   font-size: var(--XL);
   color: var(--primary-main);
-  margin-left: 35%;
-  margin-top: 4.5%;
+  margin-left: 30%;
+  margin-top: 6%;
 }
 
-.communityHeader {
+.community-header {
   display: flex;
+  gap: 52px;
+  margin: 16px 0 32px 0;
 }
 
-.communityStats {
+.community-metadata {
   display: flex;
-  width: 20%;
-  background-color: white;
-  margin-right: 35%;
-  margin-top: 2%;
-  border-radius: 99px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin: 0 16px;
+  width: 30%;
+  background-color: var(--background-main);
+  border: 1px solid var(--background-35);
+  border-radius: 20px;
+}
+
+.community-description {
+  color: var(--text-80);
+  font-family: var(--tertiary-font), sans-serif;
+  font-size: var(--M, 18px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 40px 24px 24px;
+  text-align: center;
+  text-wrap: auto;
+}
+
+.stat{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 12px;
+}
+
+.stat-name{
+  font-family: var(--tertiary-font), sans-serif;
+  font-size: var(--XS);
+  color: var(--text-60);
+  margin: 0;
+}
+
+.stat-value{
+  font-family: var(--tertiary-font), sans-serif;
+  font-size: var(--L);
+  color: var(--primary-main);
+  margin: 0;
+}
+
+.community-stat{
+  display: flex;
+  align-items: center;
 }

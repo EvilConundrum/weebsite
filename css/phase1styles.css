@@ -181,7 +181,7 @@ button {
 }
 
 /* Main Content Styles */
-.mainContent {
+.main-content {
   flex-grow: 1;
   top: 100px;
   padding-top: 70px;
@@ -455,13 +455,13 @@ button {
     flex-direction: column;
   } */
   .sidebar,
-  .mainContent {
+  .main-content {
     width: 100%;
   }
   .sidebar {
     order: 1;
   }
-  .mainContent {
+  .main-content {
     order: 2;
   }
   .post {
