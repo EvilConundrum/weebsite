@@ -1,0 +1,120 @@
+@import url('variables.css');
+
+body{
+  padding-left: 325px;
+  padding-right: 325px;
+}
+
+.popup{
+    display: flex;
+
+    position: fixed;
+
+    justify-content: center; 
+    align-items: center;
+    
+
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.popup .overlay{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+  
+    background: rgba(0,0,0,0.5);
+    opacity: 1;
+    transition: opacity 100ms ease-in-out 200ms;
+}
+
+.popup .popup-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start center; 
+    align-items: center;
+    position: absolute;
+    width: 400px;
+    height: 500px;
+    background: var(--main-bg);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 2px 2px 5px #fff;
+}
+
+
+.popup .header{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+
+    height: 15px;
+    width: 325px;
+    margin-bottom: 10px;
+
+    font-family: var(--secondary-font);
+    font-size: var(--XL);
+    font-weight: bold;
+    color: var(--light-green);
+}
+
+.popup hr{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    color: var(--cyan-gray);
+    width: 400px;
+    margin-bottom: 10px;
+}
+
+.popup .notification-line{
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    height: 30px;
+    font-family: var(--secondary-font);
+
+    cursor: pointer;
+}
+
+.popup .notification-line:hover{
+    background: rgb(145, 144, 144);
+    opacity: 0.7;
+}
+
+.popup #subject{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    left: 30px;
+
+    height: 30px;
+    font-family: var(--secondary-font);
+    font-size: var(--S);
+    font-weight: bold;
+    color: var(--light-green);
+    
+}
+
+.popup #message{
+    display: flex;
+    justify-content: center;
+
+    position: absolute;
+    left: 40%;
+    height: 35px;
+    width: 50%;
+
+    overflow: hidden;
+    font-family: var(--secondary-font);
+    font-size: var(--S);
+    color: var(--lighter-gray);
+}

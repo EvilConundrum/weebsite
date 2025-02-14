@@ -1,4 +1,5 @@
 function loadComponent(id, file) {
+    console.log("include.js loaded");
     fetch(file)
         .then(response => response.text())
         .then(data => {

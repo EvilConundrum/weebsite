@@ -59,6 +59,12 @@
     font-family: var(--secondary-font), sans-serif;
     cursor: pointer;
     border: solid 1px var(--primary-main);
+
+    fill: var(--primary-main);
+}
+
+.popup .exit-button:hover{
+    fill: var(--primary-70);
 }
 
 .popup .header{
@@ -87,12 +93,36 @@
     font-family: var(--secondary-font), sans-serif;
     font-size: var(--M);
     color: var(--text-60);
+    resize: none;
 }
 
 .popup textarea::placeholder {
     font-size: 15px;
     color: var(--text-60);
     font-family: var(--secondary-font), sans-serif;
+}
+
+
+.popup .remember-me{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    right: 27%;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    height: 15px;
+    width: 300px;
+
+    font-family: var(--secondary-font), sans-serif;
+    font-size: var(--S);
+    color: #ffffff8e;
+}
+
+.popup .remember-me input{
+    margin-right: 5px;
+    accent-color: var(--primary-main);
 }
 
 .popup .login-button{
@@ -127,7 +157,9 @@
 .popup .create-account{
     display: flex;
     justify-content: center;
-    align-items: center;
+
+    position: absolute;
+    bottom: 10%;
 
     height: 15px;
     width: 280px;

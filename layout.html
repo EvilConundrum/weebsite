@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/phase1styles.css">
 
-    <script src="selectedButton.js" defer></script>
+    <script src="include.js" defer></script>
+    <script src="button.js" defer></script>
 
   </head>
   <body>
@@ -62,7 +63,7 @@
           <img src="pics/pfp.png" class="pfp">
         </div>
       </div>
-  
+      
         <div class="sidebar">
           <button
             class="sidebarButton"
@@ -118,7 +119,9 @@
           <div class="sidebarDividerContainer">
             <div class="sidebarDivider"></div>
           </div>
-          <div class="sidebarText">
+          <button 
+            class="sidebarButton spacedOut"
+            onclick="toggleSidebarVisibility()">
             CATEGORY
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -132,9 +135,9 @@
                 clip-rule="evenodd"
               />
             </svg>
-          </div>
+          </button>
           <button
-            class="sidebarButton"
+            class="sidebarButton dropdownSidebar"
             onclick="window.open('https://supremevaluelist.com', '_blank')"
           >
             <svg
@@ -152,7 +155,7 @@
             About Weebsite
           </button>
           <button
-            class="sidebarButton"
+            class="sidebarButton dropdownSidebar"
             onclick="window.open('https://supremevaluelist.com', '_blank')"
           >
             <svg
@@ -190,7 +193,8 @@
           </button>
           <button
             class="sidebarButton"
-            onclick="window.open('https://supremevaluelist.com', '_blank')"
+            id="logoutToggle"
+            onclick="toggleLogout()"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -206,6 +210,16 @@
             </svg>
             Logout
           </button>
-        </div>
+          <button
+            class="sidebarButton disappear"
+            id="loginToggle"
+            onclick="toggleLogin()"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+            <path fill-rule="evenodd" d="M2 8c0 .414.336.75.75.75h8.69l-1.22 1.22a.75.75 0 1 0 1.06 1.06l2.5-2.5a.75.75 0 0 0 0-1.06l-2.5-2.5a.75.75 0 1 0-1.06 1.06l1.22 1.22H2.75A.75.75 0 0 0 2 8Z" clip-rule="evenodd" />
+          </svg>          
+            Login
+          </button>
+        </div>        
   </body>
 
