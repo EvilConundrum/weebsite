@@ -336,6 +336,8 @@ button {
   justify-content: space-between;
   align-items: center;
   color: var(--text-60);
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .postHeaderLeft {
