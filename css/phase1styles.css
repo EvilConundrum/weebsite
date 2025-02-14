@@ -196,6 +196,7 @@ button {
   margin: 16px 0; /* Removes left and right auto margins */
   width: 80%; /* Reduced width */
   box-sizing: border-box;
+  pointer-events: auto;
 }
 
 .postView{
