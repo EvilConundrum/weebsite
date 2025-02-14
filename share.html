@@ -6,15 +6,16 @@
     <title>Share - WEEBSITE</title>
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/share-help.css">
+    <link rel="stylesheet" href="css/help.css">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--main-bg);
-            color: var(--white);
+            background-color: var(--background-main);
             font-family: var(--secondary-font);
             line-height: 1.6;
+            color: var(--text-60);
+
         }
 
         nav {
@@ -22,7 +23,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px 10%;
-            background-color: var(--cyan-black);
+            background-color: var(--background-15);
             position: fixed;
             width: 100%;
             top: 0;
@@ -40,7 +41,7 @@
         nav .logo {
             font-family: var(--primary-font);
             font-size: 30px;
-            color: var(--light-green);
+            color: var(--primary-main);
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, color 0.3s ease;
@@ -57,12 +58,12 @@
             bottom: -5px;
             left: 0;
             transform: scaleX(0);
-            transform-origin: bottom right;
+            transform-origin: --primary-main;
             transition: transform 0.3s ease;
         }
 
         nav .logo:hover {
-            color: var(--white);
+            color: var(--text-main);
             transform: scale(1.05);
         }
 
@@ -95,7 +96,7 @@
         .sidebar {
             width: 100%;
             max-width: 250px;
-            background-color: var(--cyan-light-gray);
+            background-color: var(--background-15);
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -105,7 +106,7 @@
         .sidebar h3 {
             font-family: var(--primary-font);
             font-size: 24px;
-            color: var(--white);
+            color: var(--primary-main);
             margin-bottom: 20px;
         }
 
@@ -120,9 +121,9 @@
         }
 
         .sidebar ul li button {
-            background-color: var(--cyan-black);
+            background-color: var(--background-15);
             color: var(--white);
-            border: 1px solid var(--gray);
+            border: 1px solid var(--background-25);
             border-radius: 5px;
             padding: 10px 20px;
             font-size: var(--M);
@@ -133,17 +134,22 @@
 
         .sidebar ul li button:hover {
             background-color: var(--white);
-            color: var(--cyan-black);
+            color: var(--background-45);
         }
 
         /* Share Form */
         .share-form {
             flex: 1;
-            background-color: var(--cyan-light-gray);
+            background-color: var(--background-15);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .share-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
 
         .share-form:hover {
@@ -173,7 +179,7 @@
             margin-bottom: 20px;
             border: none;
             border-radius: 8px;
-            background-color: var(--cyan-black);
+            background-color: var(--background-15);
             color: var(--white);
             font-size: var(--M);
             outline: none;
@@ -182,17 +188,19 @@
 
         .share-form input:focus,
         .share-form textarea:focus {
-            box-shadow: 0 0 0 2px var(--gray);
+            box-shadow: 0 0 0 2px var(--background-15);
         }
 
         .share-form textarea {
-            resize: vertical;
+            resize: none;
             min-height: 150px;
+            border: 1px solid var(--background-25);
+            width: 800px;
         }
 
         .share-form button {
-            background-color: var(--gray);
-            color: var(--cyan-black);
+            background-color: var(--background-45);
+            color: var(--background-15);
             border: none;
             border-radius: 8px;
             padding: 12px 24px;
@@ -203,28 +211,38 @@
         }
 
         .share-form button:hover {
-            background-color: var(--light-blue);
+            background-color: var(--accent-main);
             transform: translateY(-3px);
         }
 
         /* Footer */
         footer {
-            background-color: var(--cyan-black);
-            color: var(--gray);
-            padding: 20px;
+            display: flex;
+            justify-content: center;
             text-align: center;
+
+            background: var(--background-main);
+            color: var(--text-80);
+            padding-top: 20px;
+            padding-bottom: 20px;
+            border-left: 20px;
+
+            border-right: 20px;
+            
             margin-top: 60px;
             box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+
+            position: absolute;
+            bottom: 0%;
+            width: 100%;
         }
 
         footer a {
-            color: var(--light-blue);
+            color: var(--primary-main);
             text-decoration: none;
-            transition: color 0.3s ease;
         }
 
         footer a:hover {
-            color: var(--gray);
             text-decoration: underline;
         }
     </style>
