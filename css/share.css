@@ -166,15 +166,15 @@ nav .logo:hover::after {
     margin-bottom: 10px;
     display: block;
 }
-
 .share-form input,
 .share-form textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
-    border: none;
     border-radius: 8px;
     background-color: var(--background-15);
+    border: 1px solid var(--background-25);
+    width: 800px;
     color: var(--white);
     font-size: var(--M);
     outline: none;
