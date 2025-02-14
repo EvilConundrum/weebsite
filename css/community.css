@@ -52,3 +52,12 @@
 .communityHeader {
   display: flex;
 }
+
+.communityStats {
+  display: flex;
+  width: 20%;
+  background-color: white;
+  margin-right: 35%;
+  margin-top: 2%;
+  border-radius: 99px;
+}
