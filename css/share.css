@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--background-main);
-    font-family: var(--secondary-font);
+    font-family: var(--secondary-font), sans-serif;
     line-height: 1.6;
     color: var(--text-80);
 
@@ -20,7 +20,7 @@ nav {
     left: 0;
     z-index: 1000;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border-bottom: 2px solid var(--light-green);
+    border-bottom: 2px solid var(--primary-main);
 }
 
 nav a {
@@ -29,7 +29,7 @@ nav a {
 }
 
 nav .logo {
-    font-family: var(--primary-font);
+    font-family: var(--primary-font), sans-serif;
     font-size: 30px;
     color: var(--primary-main);
     font-weight: bold;
@@ -94,7 +94,7 @@ nav .logo:hover::after {
 }
 
 .sidebar h3 {
-    font-family: var(--primary-font);
+    font-family: var(--primary-font), sans-serif;
     font-size: 24px;
     color: var(--primary-main);
     margin-bottom: 20px;
@@ -112,7 +112,7 @@ nav .logo:hover::after {
 
 .sidebar ul li button {
     background-color: var(--background-15);
-    color: var(--white);
+    color: var(--text-main);
     border: 1px solid var(--background-25);
     border-radius: 5px;
     padding: 10px 20px;
@@ -123,8 +123,8 @@ nav .logo:hover::after {
 }
 
 .sidebar ul li button:hover {
-    background-color: var(--white);
-    color: var(--background-45);
+    background-color: var(--background-15);
+    color: var(--primary-main);
 }
 
 /* Share Form */
@@ -152,30 +152,29 @@ nav .logo:hover::after {
 }
 
 .share-title {
-    font-family: var(--primary-font);
+    font-family: var(--primary-font), sans-serif;
     font-weight: bold;
     font-size: 28px;
-    color: var(--white);
+    color: var(--text-main);
     margin-bottom: 20px;
 }
 
 .share-form label {
-    font-family: var(--tertiary-font);
+    font-family: var(--tertiary-font), sans-serif;
     font-size: 18px;
-    color: var(--gray);
+    color: var(--text-80);
     margin-bottom: 10px;
     display: block;
 }
 .share-form input,
 .share-form textarea {
-    width: 100%;
     padding: 10px;
     margin-bottom: 20px;
     border-radius: 8px;
     background-color: var(--background-15);
     border: 1px solid var(--background-25);
     width: 800px;
-    color: var(--white);
+    color: var(--text-main);
     font-size: var(--M);
     outline: none;
     transition: box-shadow 0.3s ease;
@@ -228,7 +227,7 @@ footer {
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
 
     position: absolute;
-    bottom: 0%;
+    bottom: 0;
     width: 100%;
 }
 
