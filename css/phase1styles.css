@@ -583,6 +583,7 @@ button {
 }
 
 #commentBox {
+  display: none;
   padding: 10px 10px;
   font-size: var(--M);
   font-family: var(--secondary-font), sans-serif;
@@ -647,4 +648,47 @@ button {
   border: none;
   padding: 0; /* Removes extra spacing */
   cursor: pointer;
+}
+
+.dropdown-content-post {
+  background: var(--Background-25, #29363d);
+  width: 110px;
+  border-radius: 12px;
+  z-index: 1;
+  position: absolute;
+  top: 17%;
+  right: 17.2%;
+}
+
+.dropdown-line-post {
+  display: flex;
+  padding: 12px 16px;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+
+  font-family: var(--secondary-font);
+
+  fill: var(--text-main);
+
+  cursor: pointer;
+}
+
+.dropdown-line-post span {
+  overflow: hidden;
+  color: var(--text-60);
+  height: 12px;
+  text-overflow: ellipsis;
+  font-family: var(--Font-Header, "Golos Text");
+  font-size: var(--Size-XS, 12px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.dropdown-line-post:hover {
+  fill: var(--Text-60);
+  color: var(--Text-60, #999);
+  background: var(--Background-15, #21262c);
+  opacity: 0.5;
 }
