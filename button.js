@@ -61,6 +61,34 @@ window.onload = function () {
       loadPage(event.state.page);
     }
   };
+
+  const likeButtons = document.querySelectorAll(".like-button");
+  console.log("Like Buttons found:", likeButtons.length);
+
+  likeButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Toggle green background when clicked
+      button.classList.toggle("activeLike");
+      button
+        .closest(".post")
+        .querySelector(".dislike-button")
+        ?.classList.remove("activeDislike");
+    });
+  });
+
+  const dislikeButtons = document.querySelectorAll(".dislike-button");
+  console.log("Dislike Buttons found:", dislikeButtons.length);
+
+  dislikeButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Toggle red background when clicked
+      button.classList.toggle("activeDislike");
+      button
+        .closest(".post")
+        .querySelector(".like-button")
+        ?.classList.remove("activeLike");
+    });
+  });
 };
 
 function toggleCommentVisibility() {
