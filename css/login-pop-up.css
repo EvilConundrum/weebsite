@@ -99,6 +99,29 @@
     text: var(--secondary-font);
 }
 
+
+.popup .remember-me{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    right: 27%;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    height: 15px;
+    width: 300px;
+
+    font-family: var(--secondary-font);
+    font-size: var(--S);
+    color: #ffffff8e;
+}
+
+.popup .remember-me input{
+    margin-right: 5px;
+    accent-color: var(--light-green);
+}
+
 .popup .login-button{
     display: flex;
     justify-content: center;
