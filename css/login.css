@@ -1,83 +1,83 @@
-@import url('variables.css');
+@import url("variables.css");
 
-body{
+body {
   padding-left: 325px;
   padding-right: 325px;
 }
 
 .logo-container {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-items: center;
-    height: 100vh; 
-    width: 1000px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-items: center;
+  height: 100vh;
+  width: 1000px;
 }
 
 .logo-container > div {
-    text-align: center;
-  }
-
-.logo-login{
-    font-family: var(--primary-font), sans-serif;
-    font-size: 280px;
-    font-weight: bold;
-    color:  #8C6;
-    padding-top: 65px;
-    padding-right: 100px;
+  text-align: center;
 }
 
-.title{
-    display: grid;
-    width: 365px;
-    height: 76px;
-    margin-top: 1%;
-    padding: 12px 20px 8px 20px;
-    color:  #8C6;
-    font-family: var(--primary-font), sans-serif;
-    font-size: 50px;
-    font-weight: 400;
-    align-items: center;
-    justify-items: center;
-    position: relative;
-  }
+.logo-login {
+  font-family: var(--primary-font), sans-serif;
+  font-size: 280px;
+  font-weight: bold;
+  color: #8c6;
+  padding-top: 65px;
+  padding-right: 100px;
+}
 
-  .account{
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    border-left: 1px solid white;
-  }
+.title {
+  display: grid;
+  width: 365px;
+  height: 76px;
+  margin-top: 1%;
+  padding: 12px 20px 8px 20px;
+  color: #8c6;
+  font-family: var(--primary-font), sans-serif;
+  font-size: 50px;
+  font-weight: 400;
+  align-items: center;
+  justify-items: center;
+  position: relative;
+}
 
-  .button{
-    display: grid;
-    width: 300px;
-    height: 40px;
+.account {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  border-left: 1px solid white;
+}
 
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 0;
+.button {
+  display: grid;
+  width: 300px;
+  height: 40px;
 
-    font-family: var(--secondary-font), sans-serif;
-    font-size: var(--M);
-    font-weight: 400;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0;
 
-    align-items: center;
-    justify-items: center;
-  }
+  font-family: var(--secondary-font), sans-serif;
+  font-size: var(--M);
+  font-weight: 400;
 
-  #sign-in{
-    border-radius: 9999px;
-    border: var(--primary-main) 1px solid;
-    color:  var(--primary-main);
-    font-family: var(--secondary-font), sans-serif;
-  }
+  align-items: center;
+  justify-items: center;
+}
 
-  #create-account{
-    border-radius: 9999px;
-    border:var(--primary-main) 1px solid;
-    background-color: var(--primary-main);
-    color:  var(--background-main);
-    font-weight: bold;
-    font-family: var(--secondary-font), sans-serif;
-  }
+#signin {
+  border-radius: 9999px;
+  border: var(--primary-main) 1px solid;
+  color: var(--primary-main);
+  font-family: var(--secondary-font), sans-serif;
+}
+
+#create-account {
+  border-radius: 9999px;
+  border: var(--primary-main) 1px solid;
+  background-color: var(--primary-main);
+  color: var(--background-main);
+  font-weight: bold;
+  font-family: var(--secondary-font), sans-serif;
+}
