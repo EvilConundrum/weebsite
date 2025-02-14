@@ -1,10 +1,25 @@
-const currentPage = window.location.pathname.split("/").pop();
+window.onload = function () {
+    console.log("button.js loaded")
+    console.log("Window loaded, searching for buttons...");
+    const buttons = document.querySelectorAll(".sidebarButton");
+    console.log("Buttons found:", buttons.length);
 
-document.querySelectorAll(".sidebarButton").forEach((btn) => {
-    if (btn.getAttribute("data-page") === currentPage) {
-        btn.classList.add("active");
-    }
-});
+    buttons.forEach((btn) => {
+        const currentPage = window.location.pathname.split("/").pop();
+
+        console.log("Found button with data-page:", btn.dataset.page);
+        if (btn.getAttribute("data-page") === currentPage) {
+            btn.classList.add("active");
+        }
+
+        btn.addEventListener("click", function () {
+            console.log("Button clicked:", btn.dataset.page);
+            window.location.href = btn.dataset.page || "phase1.html";
+        });
+    });
+};
+
+
 
 function toggleCommentVisibility() {
     let div = document.getElementById("commentBox");

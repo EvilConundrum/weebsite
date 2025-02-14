@@ -125,6 +125,10 @@ body {
   color: var(--light-green);
 }
 
+.sidebarButton.active svg {
+  fill: var(--light-green); 
+}
+
 .spacedOut{
   justify-content: center;
   gap: 115px;
