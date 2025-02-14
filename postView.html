@@ -6,14 +6,15 @@
 
     <script src="button.js" defer></script>
     <script src="include.js" defer></script>
+    <script src="visibility.js" defer></script>
 </head>
 <body>
     <div id="layout-container"></div>
 
     <div class="mainContent">
-        <div class="post">
+        <div class="post selectedPost">
             <!-- Post Content -->
-            <div class="postContent">
+            <div class="postContent selectedPostContent">
               <!-- Post Header -->
               <div class="postHeader">
                 <!-- Left Side: User Info -->
@@ -92,7 +93,7 @@
   
                   <!-- Comment Box -->
                   <div class="reactionBox">
-                    <button class="actionButton" aria-label="Comment" onclick="toggleVisibility()">
+                    <button class="actionButton" aria-label="Comment" onclick="toggleCommentVisibility()">
                         <svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         viewBox="0 0 16 16" 
@@ -127,13 +128,25 @@
           </div>
         </div>
         <div id="commentBox">
-            <div class="postHeaderLeft commentUser">
+            <div class="postHeaderLeft commentUser yourComment">
                 <img src="pics/pfp.png" class="pfp">
                 <span class="postUsername">u/ishigamiYu</span>
                 <span class="postTime"> 3 hours ago</span>
               </div>
-            <input type="text" id="commentText" placeholder="Write down a comment..." maxlength="1000">
+            <input type="text" class="searchBar commentBar" placeholder="Write down a comment..." maxlength="1000">
         </div>
+        <div id="commentSection">
+          <div class="postHeaderLeft commentUser">
+              <img src="pics/pfp.png" class="pfp">
+              <span class="postUsername">u/ishigamiYu</span>
+              <span class="postTime"> 3 days ago</span>
+          </div>
+          <div class="commentSectionText">
+              <p>
+                  I LOVE THIS SHOW!!!!!!!!!!!!!
+              </p>
+          </div>
+      </div>
         <div id="commentSection">
             <div class="postHeaderLeft commentUser">
                 <img src="pics/pfp.png" class="pfp">
@@ -161,7 +174,7 @@
         <div id="commentSection">
             <div class="postHeaderLeft commentUser">
                 <img src="pics/pfp.png" class="pfp">
-                <span class="postUsername">u/fujiwakaChika</span>
+                <span class="postUsername">u/fujikawaChika</span>
                 <span class="postTime"> 6 days ago</span>
             </div>
             <div class="commentSectionText">

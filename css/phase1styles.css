@@ -75,6 +75,13 @@ body {
   margin-right: 6%;
 }
 
+.commentBar{
+  margin-right: 0%;
+  margin-bottom: 1.5%;
+  padding-left: 1.5%;
+  width: 95%;
+}
+
 .searchIcon {
   position: absolute;
   top: 50%;
@@ -94,7 +101,7 @@ body {
 
 /* Sidebar Buttons */
 .sidebarButton {
-  width: 194px;
+  width: 250px;
   height: 45px;
   display: flex;
   padding: 12px 16px;
@@ -116,6 +123,15 @@ body {
 .sidebarButton.active{
   background-color: var(--cyan-gray);
   color: var(--light-green);
+}
+
+.spacedOut{
+  justify-content: center;
+  gap: 115px;
+}
+
+.dropdownSidebar{
+  display: flex;
 }
 
 .sidebarDividerContainer {
@@ -144,6 +160,9 @@ body {
 }
 
 svg {
+  display: flex;
+  justify-content: center;
+  text-align: center;
   vertical-align: middle;
   width: 24px;
   height: 24px;
@@ -178,10 +197,15 @@ button {
   margin: 16px 0; /* Removes left and right auto margins */
   width: 80%; /* Reduced width */
   box-sizing: border-box;
+  pointer-events: auto;
 }
 
-.postView{
-  width: 90%;
+.selectedPost{
+  border: 0px;
+  border-radius: 0px;
+  margin: 0px;
+  padding-top: 12px;
+  padding-right: 12px;
 }
 
 .postContent {
@@ -189,6 +213,11 @@ button {
   padding: 0 20px;
   width: 100%;
   box-sizing: border-box;
+}
+
+.selectedPostContent
+{
+  padding: 0px;
 }
 
 .postTitle {
@@ -571,7 +600,7 @@ button {
   background-color: var(--main-bg);
   font-size: var(--M);
   font-family: var(--secondary-font);
-  color: var(--grayer);
+  color: var(--white);
   border: none;
   outline: none;
   resize: none;
@@ -581,6 +610,10 @@ button {
   margin-top: 10px;
   margin-left: 15px;
   gap: 5px;
+}
+
+.yourComment{
+  margin-bottom: 20px;
 }
 
 #commentSection{
