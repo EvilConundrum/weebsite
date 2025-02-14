@@ -82,18 +82,20 @@ function toggleSidebarVisibility() {
   });
 }
 
-function toggleDropdownVisibility() {
-  document.querySelectorAll(".dropdown-content-post").forEach((div) => {
+function togglePostDropdownVisibility() {
+  document.querySelectorAll(".dropdown-post-content-post").forEach((div) => {
     if (div.style.display === "none" || div.style.display === "") {
-      div.style.display = "flex"; // Show div
+      div.style.display = "block"; // Show div
     } else {
       div.style.display = "none"; // Hide div
     }
   });
+}
 
-  document.querySelectorAll(".dropdown-line-post").forEach((div) => {
+function toggleCommentDropdownVisibility() {
+  document.querySelectorAll(".dropdown-comment-content-post").forEach((div) => {
     if (div.style.display === "none" || div.style.display === "") {
-      div.style.display = "flex"; // Show div
+      div.style.display = "block"; // Show div
     } else {
       div.style.display = "none"; // Hide div
     }
