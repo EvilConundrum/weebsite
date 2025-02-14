@@ -2,7 +2,7 @@
 
 /* Global Styles */
 body {
-  background: var(--main-bg);
+  background: var(--background-main);
   margin: 0;
   padding: 0;
 }
@@ -11,7 +11,7 @@ body {
 .sidebarContainer {
   display: flex;
   flex-direction: row;
-  background: var(--main-bg);
+  background: var(--background-main);
   min-height: 100vh;
   position: fixed;
 }
@@ -20,7 +20,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 256px;
-  padding: 0px 12px 20px 12px;
+  padding: 0 12px 20px 12px;
   align-items: flex-start;
   flex-shrink: 0;
   position: fixed;
@@ -28,26 +28,26 @@ body {
 }
 
 .title {
-  background: var(--main-bg);
+  background: var(--background-main);
   width: 194px;
   height: 45px;
   margin-top: 1%;
   margin-bottom: 0.01%;
   padding: 12px 20px 8px 20px;
-  color: var(--light-green);
-  font-family: var(--primary-font);
+  color: var(--primary-main);
+  font-family: var(--primary-font), sans-serif;
   font-size: var(--XL);
   font-weight: 400;
   text-align: center;
-  letter-spacing: 4.8px;
+  letter-spacing: 5px;
 }
 
 /* Navbar Styles */
 .navBar {
   display: flex;
-  background: var(--main-bg);
+  background: var(--background-main);
   width: 100%;
-  margin: 0px;
+  margin: 0;
   justify-content: space-between;
   align-items: center;
   position: fixed;
@@ -68,8 +68,8 @@ body {
   height: 35px;
   gap: 12px;
   padding-left: 7.5%;
-  background: var(--cyan-light-gray);
-  font-family: var(--secondary-font);
+  background: var(--background-15);
+  font-family: var(--secondary-font), sans-serif;
   font-size: var(--M);
   color: #FFFFFF;
   margin-right: 6%;
@@ -81,7 +81,7 @@ body {
   left: 1.5%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: var(--white);
+  color: var(--text-main);
 }
 
 .navButtons {
@@ -89,7 +89,7 @@ body {
   align-items: center;
   gap: 35px;
   padding-right: 3%;
-  color: var(--white);
+  color: var(--text-main);
 }
 
 /* Sidebar Buttons */
@@ -99,9 +99,9 @@ body {
   display: flex;
   padding: 12px 16px;
   justify-content: left;
-  background-color: var(--main-bg);
-  color: var(--white);
-  font-family: var(--secondary-font);
+  background-color: var(--background-main);
+  color: var(--text-main);
+  font-family: var(--secondary-font), sans-serif;
   font-size: var(--M);
   outline: none;
   border: none;
@@ -110,12 +110,12 @@ body {
 }
 
 .sidebarButton:hover {
-  background-color: var(--cyan-gray);
+  background-color: var(--background-25);
 }
 
 .sidebarButton.active{
-  background-color: var(--cyan-gray);
-  color: var(--light-green);
+  background-color: var(--background-25);
+  color: var(--primary-main);
 }
 
 .sidebarDividerContainer {
@@ -129,7 +129,7 @@ body {
 .sidebarDivider {
   width: 256px;
   height: 1px;
-  background: var(--gray);
+  background: var(--text-60);
 }
 
 .sidebarText {
@@ -138,7 +138,7 @@ body {
   color: #999;
   justify-content: space-between;
   align-items: center;
-  font-family: "Golos Text";
+  font-family: "Golos Text", sans-serif;
   font-size: var(--S);
   margin-left: 5%;
 }
@@ -147,7 +147,7 @@ svg {
   vertical-align: middle;
   width: 24px;
   height: 24px;
-  fill: var(--white);
+  fill: var(--text-main);
 }
 
 button {
@@ -163,7 +163,7 @@ button {
   top: 100px;
   padding-top: 70px;
   padding-left: 300px;
-  background-color: var(--main-bg);
+  background-color: var(--background-main);
   min-width: 0;
 }
 
@@ -171,8 +171,8 @@ button {
 .post {
   display: flex;
   flex-direction: column;
-  background: var(--main-bg);
-  border: 1px solid var(--post-gray);
+  background: var(--background-main);
+  border: 1px solid var(--background-15);
   border-radius: 8px;
   padding: 12px;
   margin: 16px 0; /* Removes left and right auto margins */
@@ -196,7 +196,7 @@ button {
   font-size: 1.5em;
   font-weight: bolder;
   margin: 0 0 12px 0;
-  font-family: var(--secondary-font);
+  font-family: var(--secondary-font), sans-serif;
 }
 
 .postBody {
@@ -204,7 +204,7 @@ button {
   font-size: 1em;
   line-height: 1.6;
   margin-bottom: 20px;
-  font-family: var(--tertiary-font);
+  font-family: var(--tertiary-font), sans-serif;
   font-weight: lighter;
 }
 
@@ -217,11 +217,11 @@ button {
 .voteCount {
   color: #D7DADC;
   font-size: var(--XS);
-  font-family: var(--secondary-font);
+  font-family: var(--secondary-font), sans-serif;
 }
 
 .separator {
-  color: var(--post-gray);
+  color: var(--background-15);
   margin: 0 8px;
 }
 
@@ -233,7 +233,7 @@ button {
 }
 
 .reactionBox {
-  background-color: var(--reaction-gray);
+  background-color: var(--background-25);
   border-radius: 8px;
   padding: 6px 12px;
   display: flex;
@@ -248,20 +248,20 @@ button {
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  color: var(--white);
+  color: var(--text-main);
 }
 
 .reactionBox .actionButton:hover {
-  background-color: var(--reaction-hover);
+  background-color: var(--background-35);
 }
 
 .reactionBox .actionButton:active {
-  background-color: var(--reaction-active);
+  background-color: var(--background-45);
   transform: scale(0.95);
 }
 
 .reactionBox .actionButton svg {
-  fill: var(--white);
+  fill: var(--text-main);
   width: 20px;
   height: 20px;
 }
@@ -278,7 +278,7 @@ button {
 }
 
 .actionButton svg {
-  fill: var(--reaction-button);
+  fill: var(--text-60);
   width: 24px;
   height: 24px;
 }
@@ -287,8 +287,8 @@ button {
 
 .postUsername {
   margin: 0 5px;
-  font-family: var(--secondary-font);
-  color: var(--reaction-button);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
   font-size: var(--XS);
   font-weight: bold;
 }
@@ -296,7 +296,7 @@ button {
 .postTime {
   font-weight: lighter;
   font-size: var(--XXS);
-  font-family: var(--secondary-font);
+  font-family: var(--secondary-font), sans-serif;
 }
 
 /* Post Header */
@@ -305,7 +305,7 @@ button {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  color: var(--grayer);
+  color: var(--text-60);
 }
 
 .postHeaderLeft {
@@ -328,11 +328,11 @@ button {
 .kebabMenu svg {
   width: 20px;
   height: 20px;
-  fill: var(--lighter-gray);
+  fill: var(--text-80);
 }
 
 .kebabMenu:hover svg {
-  fill: var(--grayer);
+  fill: var(--text-60);
 }
 /* Image Container Styles */
 .imageContainer {
@@ -502,10 +502,10 @@ button {
 /* Link Preview Styles */
 .linkPreview {
   margin-top: 16px;
-  border: 1px solid var(--post-gray);
+  border: 1px solid var(--background-15);
   border-radius: 8px;
   overflow: hidden;
-  background: var(--cyan-light-gray);
+  background: var(--background-15);
 }
 
 .linkPreview a {
@@ -538,40 +538,40 @@ button {
 .linkPreviewTitle {
   margin: 0;
   font-size: var(--M);
-  font-family: var(--secondary-font);
-  color: var(--white);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-main);
 }
 
 .linkPreviewDescription {
   margin: 4px 0;
   font-size: 14px;
-  font-family: var(--tertiary-font);
-  color: var(--lighter-gray);
+  font-family: var(--tertiary-font), sans-serif;
+  color: var(--text-80);
 }
 
 .linkPreviewDomain {
   font-size: var(--XS);
-  font-family: var(--secondary-font);
-  color: var(--grayer);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
 }
 
 #commentBox{
   padding: 10px 10px;
   font-size: var(--M);
-  font-family: var(--secondary-font);
-  color: var(--grayer);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
   clear: both;
-  border: 1px solid var(--post-gray);
+  border: 1px solid var(--background-15);
   border-radius: 8px;
   width: 78.11%;
 }
 
 #commentText{
   padding: 15px 15px;
-  background-color: var(--main-bg);
+  background-color: var(--background-main);
   font-size: var(--M);
-  font-family: var(--secondary-font);
-  color: var(--grayer);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
   border: none;
   outline: none;
   resize: none;
@@ -583,14 +583,14 @@ button {
   gap: 5px;
 }
 
-#commentSection{
+.comment-section{
   padding: 10px;
   margin-top: 10px;
   font-size: var(--M);
-  font-family: var(--secondary-font);
-  color: var(--grayer);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
   clear: both;
-  border: 1px solid var(--post-gray);
+  border: 1px solid var(--background-15);
   border-radius: 8px;
   width: 78.11%;
 }
@@ -598,10 +598,10 @@ button {
 .commentSectionText{
   padding: 5px 5px;
   margin-left: 10px;
-  background-color: var(--main-bg);
+  background-color: var(--background-main);
   font-size: var(--M);
-  font-family: var(--secondary-font);
-  color: var(--grayer);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
   border: none;
   outline: none;
   resize: none;

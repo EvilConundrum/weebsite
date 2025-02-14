@@ -7,32 +7,26 @@
     font-weight: normal;
     font-style: normal;
   }
-  
+
 :root{
-    --light-green: #88CC66;
-    --dark-green: #689750;
-    --light-blue: #57C5DB;
-    --cyan: #57C5DB;
-    --white: #FFFFFF;
-    --light-gray: #CCCCCC;
-    --gray: #999999;
-    --grayer: #818384;
-    --main-bg: #161A1D;
-    --cyan-light-gray: #21262C;
-    --cyan-gray: #29363D;
-    --cyan-black: #33444D;
-    --cyan-blue: #526E7C;
-    --post-gray: #343536;
-    --reaction-gray: #313131;
-    --reaction-hover: #484A4D;
-    --reaction-active: #606468;
-    --lighter-gray: #D7DADC;
-    --carrot: #FF5319;
-    --maroon: #CC3300;
-    --yellow: #CC3300;
-    --dark-yellow: #C2A30A;
-    --lasalle-green: #1DC980;
-    --emerald-green: #138656;
+    --primary-main: hsla(100, 50%, 60%, 1);
+    --primary-70: hsla(100, 31%, 45%, 1);
+    --accent-main: hsla(190, 65%, 60%, 1);
+    --accent-70: hsla(190, 40%, 45%, 1);
+    --text-main: hsla(0, 0%, 100%, 1);
+    --text-80: hsla(0, 0%, 80%, 1);
+    --text-60: hsla(0, 0%, 60%, 1);
+    --background-main: hsla(210, 15%, 10%, 1);
+    --background-15: hsla(210, 15%, 15%, 1);
+    --background-25: hsla(200, 20%, 20%, 1);
+    --background-35: hsla(200, 20%, 25%, 1);
+    --background-45: hsla(200, 20%, 40%, 1);
+    --semantic-red-main: hsla(15, 100%, 55%, 1);
+    --semantic-red-40: hsla(15, 100%, 40%, 1);
+    --semantic-yellow-main: hsla(50, 90%, 55%, 1);
+    --semantic-yellow-40: hsla(50, 90%, 40%, 1);
+    --semantic-green-main: hsla(155, 75%, 45%, 1);
+    --semantic-green-40: hsla(155, 75%, 45%, 1);
 
     --primary-font: "The Last Shuriken", sans-serif;
     --secondary-font: "Golos Text", sans-serif;
