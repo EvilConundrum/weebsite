@@ -1,0 +1,2 @@
+We made use of the "live server" extention of VScode. To run any html file, it must be 
+done through live server for the webpage to properly appear and function.
