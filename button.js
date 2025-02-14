@@ -72,6 +72,15 @@ function toggleCommentVisibility() {
   }
 }
 
+function toggleNotificationVisibility() {
+  let div = document.getElementById("notification-container");
+  if (div.style.display === "none" || div.style.display === "") {
+    div.style.display = "block"; // Show div
+  } else {
+    div.style.display = "none"; // Hide div
+  }
+}
+
 function toggleSidebarVisibility() {
   document.querySelectorAll(".dropdownSidebar").forEach((div) => {
     if (div.style.display === "none" || div.style.display === "") {
