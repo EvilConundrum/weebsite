@@ -643,3 +643,7 @@ button {
   outline: none;
   resize: none;
 }
+
+.disappear{
+  display: none;
+}

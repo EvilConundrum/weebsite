@@ -39,3 +39,31 @@ function toggleSidebarVisibility(){
         }
     });
 }
+
+function toggleLogout() {
+    console.log("Toggling logout");
+    let div = document.getElementById("logoutToggle");
+    let div2 = document.getElementById("loginToggle");
+    if (div.style.display === "none" || div.style.display === "") {
+        div.style.display = "flex"; // Show div
+        div2.style.display = "none"; //Hide div
+
+    } else {
+        div.style.display = "none"; //Hide div
+        div2.style.display = "flex"; //Show div
+
+    }
+}
+
+function toggleLogin() {
+    console.log("Toggling login");
+    let div = document.getElementById("loginToggle");
+    let div2 = document.getElementById("logoutToggle");
+    if (div.style.display === "none" || div.style.display === "") {
+        div.style.display = "flex"; //Show div
+        div2.style.display = "none"; //Hide div
+    } else {
+        div.style.display = "none"; //Show div
+        div2.style.display = "flex"; //Hide div
+    }
+}
