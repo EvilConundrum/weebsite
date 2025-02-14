@@ -1,4 +1,4 @@
-@import url("variables.css");
+@import url('variables.css');
 
 /* Global Styles */
 body {
@@ -71,11 +71,11 @@ body {
   background: var(--background-15);
   font-family: var(--secondary-font), sans-serif;
   font-size: var(--M);
-  color: #ffffff;
+  color: #FFFFFF;
   margin-right: 6%;
 }
 
-.commentBar {
+.commentBar{
   margin-right: 0%;
   margin-bottom: 1.5%;
   padding-left: 1.5%;
@@ -120,7 +120,7 @@ body {
   background-color: var(--background-25);
 }
 
-.sidebarButton.active {
+.sidebarButton.active{
   background-color: var(--background-25);
   color: var(--primary-main);
 }
@@ -129,12 +129,12 @@ body {
   fill: var(--primary-main);
 }
 
-.spacedOut {
+.spacedOut{
   justify-content: center;
   gap: 115px;
 }
 
-.dropdownSidebar {
+.dropdownSidebar{
   display: flex;
 }
 
@@ -204,7 +204,7 @@ button {
   pointer-events: auto;
 }
 
-.selectedPost {
+.selectedPost{
   border: 0;
   border-radius: 0;
   margin: 0;
@@ -219,12 +219,13 @@ button {
   box-sizing: border-box;
 }
 
-.selectedPostContent {
+.selectedPostContent
+{
   padding: 0;
 }
 
 .postTitle {
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: 1.5em;
   font-weight: bolder;
   margin: 0 0 12px 0;
@@ -247,7 +248,7 @@ button {
 }
 
 .voteCount {
-  color: #d7dadc;
+  color: #D7DADC;
   font-size: var(--XS);
   font-family: var(--secondary-font), sans-serif;
 }
@@ -314,6 +315,8 @@ button {
   width: 24px;
   height: 24px;
 }
+
+
 
 .postUsername {
   margin: 0 5px;
@@ -407,11 +410,12 @@ button {
   overflow: hidden;
 }
 
-.rightSide {
+
+.rightSide{ 
   background-position: 90% 50%;
 }
 
-.leftSide {
+.leftSide{ 
   background-position: 1% 20%;
 }
 
@@ -491,7 +495,9 @@ button {
     height: auto;
     width: 100%;
   }
+  
 }
+
 
 /* Add a grey transparent cover to the left and right images */
 .leftSide::before,
@@ -521,9 +527,9 @@ button {
   z-index: 0;
 }
 
-.pfp {
-  height: 25px;
-  width: auto;
+.pfp{
+ height: 25px;
+ width: auto;
 }
 
 /* Link Preview Styles */
@@ -582,7 +588,7 @@ button {
   color: var(--text-60);
 }
 
-#commentBox {
+#commentBox{
   padding: 10px 10px;
   font-size: var(--M);
   font-family: var(--secondary-font), sans-serif;
@@ -593,7 +599,7 @@ button {
   width: 78.11%;
 }
 
-#commentText {
+#commentText{
   padding: 15px 15px;
   background-color: var(--background-main);
   font-size: var(--M);
@@ -604,17 +610,17 @@ button {
   resize: none;
 }
 
-.commentUser {
+.commentUser{
   margin-top: 10px;
   margin-left: 15px;
   gap: 5px;
 }
 
-.yourComment {
+.yourComment{
   margin-bottom: 20px;
 }
 
-.comment-section {
+.comment-section{
   padding: 10px;
   margin-top: 10px;
   font-size: var(--M);
@@ -626,7 +632,7 @@ button {
   width: 78.11%;
 }
 
-.commentSectionText {
+.commentSectionText{
   padding: 5px 5px;
   margin-left: 10px;
   background-color: var(--background-main);
@@ -638,13 +644,6 @@ button {
   resize: none;
 }
 
-.disappear {
+.disappear{
   display: none;
-}
-
-.hiddenButton {
-  background: none;
-  border: none;
-  padding: 0; /* Removes extra spacing */
-  cursor: pointer;
 }
