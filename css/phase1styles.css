@@ -1,4 +1,4 @@
-@import url('variables.css');
+@import url("variables.css");
 
 /* Global Styles */
 body {
@@ -71,11 +71,11 @@ body {
   background: var(--cyan-light-gray);
   font-family: var(--secondary-font);
   font-size: var(--M);
-  color: #FFFFFF;
+  color: #ffffff;
   margin-right: 6%;
 }
 
-.commentBar{
+.commentBar {
   margin-right: 0%;
   margin-bottom: 1.5%;
   padding-left: 1.5%;
@@ -120,21 +120,21 @@ body {
   background-color: var(--cyan-gray);
 }
 
-.sidebarButton.active{
+.sidebarButton.active {
   background-color: var(--cyan-gray);
   color: var(--light-green);
 }
 
 .sidebarButton.active svg {
-  fill: var(--light-green); 
+  fill: var(--light-green);
 }
 
-.spacedOut{
+.spacedOut {
   justify-content: center;
   gap: 115px;
 }
 
-.dropdownSidebar{
+.dropdownSidebar {
   display: flex;
 }
 
@@ -204,7 +204,7 @@ button {
   pointer-events: auto;
 }
 
-.selectedPost{
+.selectedPost {
   border: 0px;
   border-radius: 0px;
   margin: 0px;
@@ -219,13 +219,12 @@ button {
   box-sizing: border-box;
 }
 
-.selectedPostContent
-{
+.selectedPostContent {
   padding: 0px;
 }
 
 .postTitle {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 1.5em;
   font-weight: bolder;
   margin: 0 0 12px 0;
@@ -248,7 +247,7 @@ button {
 }
 
 .voteCount {
-  color: #D7DADC;
+  color: #d7dadc;
   font-size: var(--XS);
   font-family: var(--secondary-font);
 }
@@ -315,8 +314,6 @@ button {
   width: 24px;
   height: 24px;
 }
-
-
 
 .postUsername {
   margin: 0 5px;
@@ -410,12 +407,11 @@ button {
   overflow: hidden;
 }
 
-
-.rightSide{ 
+.rightSide {
   background-position: 90% 50%;
 }
 
-.leftSide{ 
+.leftSide {
   background-position: 1% 20%;
 }
 
@@ -495,9 +491,7 @@ button {
     height: auto;
     width: 100%;
   }
-  
 }
-
 
 /* Add a grey transparent cover to the left and right images */
 .leftSide::before,
@@ -527,9 +521,9 @@ button {
   z-index: 0;
 }
 
-.pfp{
- height: 25px;
- width: auto;
+.pfp {
+  height: 25px;
+  width: auto;
 }
 
 /* Link Preview Styles */
@@ -588,7 +582,7 @@ button {
   color: var(--grayer);
 }
 
-#commentBox{
+#commentBox {
   padding: 10px 10px;
   font-size: var(--M);
   font-family: var(--secondary-font);
@@ -599,7 +593,7 @@ button {
   width: 78.11%;
 }
 
-#commentText{
+#commentText {
   padding: 15px 15px;
   background-color: var(--main-bg);
   font-size: var(--M);
@@ -610,17 +604,17 @@ button {
   resize: none;
 }
 
-.commentUser{
+.commentUser {
   margin-top: 10px;
   margin-left: 15px;
   gap: 5px;
 }
 
-.yourComment{
+.yourComment {
   margin-bottom: 20px;
 }
 
-#commentSection{
+#commentSection {
   padding: 10px;
   margin-top: 10px;
   font-size: var(--M);
@@ -632,7 +626,7 @@ button {
   width: 78.11%;
 }
 
-.commentSectionText{
+.commentSectionText {
   padding: 5px 5px;
   margin-left: 10px;
   background-color: var(--main-bg);
@@ -644,6 +638,13 @@ button {
   resize: none;
 }
 
-.disappear{
+.disappear {
   display: none;
+}
+
+.hiddenButton {
+  background: none;
+  border: none;
+  padding: 0; /* Removes extra spacing */
+  cursor: pointer;
 }
