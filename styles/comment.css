@@ -1,0 +1,56 @@
+#commentBox {
+  display: none;
+  padding: 10px 10px;
+  font-size: var(--M);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
+  clear: both;
+  border: 1px solid var(--background-15);
+  border-radius: 8px;
+  width: 78.11%;
+}
+
+#commentText {
+  padding: 15px 15px;
+  background-color: var(--background-main);
+  font-size: var(--M);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-80);
+  border: none;
+  outline: none;
+  resize: none;
+}
+
+.commentUser {
+  margin-top: 10px;
+  margin-left: 15px;
+  gap: 5px;
+}
+
+.yourComment {
+  margin-bottom: 20px;
+}
+
+.comment-section {
+  padding: 10px;
+  margin-top: 10px;
+  font-size: var(--M);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
+  clear: both;
+  border: 1px solid var(--background-15);
+  border-radius: 8px;
+  width: 78.11%;
+}
+
+.commentSectionText {
+  padding: 5px 5px;
+  margin-left: 10px;
+  background-color: var(--background-main);
+  font-size: var(--M);
+  font-family: var(--secondary-font), sans-serif;
+  color: var(--text-60);
+  border: none;
+  outline: none;
+  resize: none;
+}

@@ -1,6 +1,6 @@
 @import url("variables.css");
 
-#popup-container{
+#popup-container {
   display: flex;
   flex-direction: column;
   margin: 100px auto;
@@ -8,23 +8,24 @@
   height: 500px;
   background-color: var(--background-15);
   border: 1px solid var(--background-25);
+  border-radius: 16px;
 }
 
-#main-content{
+#main-content {
   display: flex;
   flex-direction: column;
   margin: auto;
   gap: 24px;
 }
 
-#profile-pic-submission-container{
+#profile-pic-submission-container {
   display: flex;
   align-items: center;
   margin: 0 24px;
   gap: 24px;
 }
 
-.submission-container{
+.submission-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -32,12 +33,12 @@
   margin: auto;
 }
 
-#current-profile-pic{
+#current-profile-pic {
   width: 100px;
   height: 100px;
 }
 
-#uploading-guidelines{
+#uploading-guidelines {
   color: var(--text-80, #999);
   font-family: var(--tertiary-font, "Hanken Grotesk"), sans-serif;
   font-size: var(--S, 18px);
@@ -45,7 +46,7 @@
   font-weight: 400;
 }
 
-#submit-profile-pic{
+#submit-profile-pic {
   display: flex;
   padding: 8px 12px;
   justify-content: center;
@@ -54,7 +55,7 @@
   border-radius: 12px;
 
   overflow: hidden;
-  color: var(--background-main, #CCC);
+  color: var(--background-main, #ccc);
   text-overflow: ellipsis;
   font-family: var(--secondary-font, "Golos Text"), sans-serif;
   font-size: var(--S, 18px);
@@ -63,7 +64,7 @@
   line-height: normal;
 }
 
-#user-bio-edit-container{
+#user-bio-edit-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -73,7 +74,7 @@
   font-size: var(--M);
 }
 
-#user-bio-edit-container > textarea{
+#user-bio-edit-container > textarea {
   resize: none;
   min-height: 150px;
   border: 1px solid var(--background-25);
@@ -82,7 +83,7 @@
   color: var(--text-main);
 }
 
-#user-bio-edit-container > label{
+#user-bio-edit-container > label {
   color: var(--text-80, #999);
   font-family: var(--tertiary-font, "Hanken Grotesk"), sans-serif;
   font-size: var(--S, 18px);
@@ -91,24 +92,24 @@
   margin-bottom: 12px;
 }
 
-.footer{
+.footer {
   display: flex;
   justify-content: space-between;
   align-self: stretch;
   padding: 0 24px;
 }
 
-.footer > button{
+.footer > button {
   display: flex;
   padding: 12px 16px;
   justify-content: center;
   align-items: center;
   margin: 36px;
   border-radius: 12px;
-  background: var(--primary-main, #8C6);
+  background: var(--primary-main, #8c6);
 
   overflow: hidden;
-  color: var(--background-main, #161A1D);
+  color: var(--background-main, #161a1d);
   text-overflow: ellipsis;
   font-family: var(--secondary-font, "Golos Text"), sans-serif;
   font-size: var(--M, 18px);
@@ -117,6 +118,6 @@
   line-height: normal;
 }
 
-.footer > button:hover{
+.footer > button:hover {
   box-shadow: 0 4px 24px 0 var(--primary-70, #689750);
 }

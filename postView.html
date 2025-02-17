@@ -3,6 +3,9 @@
     <title>Weebsite - The Weeb Forum</title>
     <link rel="stylesheet" href="styles/variables.css">
     <link rel="stylesheet" href="styles/indexstyles.css">
+    <link rel="stylesheet" href="styles/post.css" />
+    <link rel="stylesheet" href="styles/options.css">
+    <link rel="stylesheet" href="styles/comment.css">
 
     <script src="scripts/button.js" defer></script>
     <script src="scripts/include.js" defer></script>
@@ -97,10 +100,9 @@
           <div class="reactionsContainer">
             <!-- Thumbs Up Box -->
             <div class="reactionBox">
-              <button class="actionButton" aria-label="Thumbs Up">
+              <button class="actionButton like-button" aria-label="Thumbs Up">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
-                    fill="#D7DADC"
                     d="M1 21h4V9H1v12z M23 10c0-1.1-0.9-2-2-2h-6.31l0.95-4.57a1.983 1.983 0 0 0-0.44-1.74L14.17 1l-6.58 6.59A2 2 0 0 0 7 9v10a2 2 0 0 0 2 2h9c0.83 0 1.54-0.5 1.84-1.22l3.02-7.05c0.09-0.23 0.14-0.47 0.14-0.73v-2z"
                   />
                 </svg>
@@ -110,10 +112,9 @@
 
             <!-- Thumbs Down Box -->
             <div class="reactionBox">
-              <button class="actionButton" aria-label="Thumbs Down">
+              <button class="actionButton dislike-button" aria-label="Thumbs Down">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
-                    fill="#D7DADC"
                     d="M23 3h-4v12h4V3z M1 14c0 1.1 0.9 2 2 2h6.31l-0.95 4.57a1.983 1.983 0 0 0 0.44 1.74L9.83 23l6.58-6.59c0.36-0.36 0.58-0.86 0.58-1.41V5a2 2 0 0 0-2-2H5c-0.83 0-1.54 0.5-1.84 1.22L0.14 11.27c-0.09 0.23-0.14 0.47-0.14 0.73v2z"
                   />
                 </svg>

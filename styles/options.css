@@ -1,0 +1,56 @@
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-post-content-post {
+  display: none;
+  background: var(--background-25, #29363d);
+  width: 110px;
+  border-radius: 12px;
+  z-index: 1;
+  position: absolute;
+  top: 95%;
+  right: 9.2%;
+}
+
+.dropdown-comment-content-post {
+  display: none;
+  background: var(--background-25, #29363d);
+  width: 110px;
+  border-radius: 12px;
+  z-index: 1;
+  position: absolute;
+  top: 95%;
+  right: 9.2%;
+}
+
+.dropdown-line-post {
+  display: flex;
+  padding: 12px 16px;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+
+  font-family: var(--secondary-font), sans-serif;
+
+  fill: var(--text-main);
+
+  cursor: pointer;
+}
+
+.dropdown-line-post span {
+  overflow: hidden;
+  color: var(--text-60);
+  height: 12px;
+  text-overflow: ellipsis;
+  font-family: var(--secondary-font, "Golos Text"), sans-serif;
+  font-size: var(--XS, 12px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.dropdown-line-post:hover {
+  background-color: var(--background-15);
+  border-radius: 8px;
+}
