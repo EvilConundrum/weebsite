@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{user.username}} - Weebsite</title>
+    <link rel="stylesheet" href="/weebsite/styles/profile.css" />
+    <link rel="stylesheet" href="/weebsite/styles/indexstyles.css" />
+    <link rel="stylesheet" href="/weebsite/styles/variables.css" />
+    <link rel="stylesheet" href="/weebsite/styles/post.css" />
+    <script src="/weebsite/scripts/include.js" defer></script>
+    <script src="/weebsite/scripts/button.js" defer></script>
+  </head>
+  <body>
+    <div id="layout-container"></div>
+
+    <div id="page-content">
+      <div id="main-content">
+        <div id="bio-header">u/{{user.username}}</div>
+        <div id="bio">
+          <img id="bio-image" src="{{user.profileImage}}" alt="Profile Picture" />
+          <div id="bio-content">
+            <p>{{user.bio}}</p>
+            <div class="button-bar">
+              <button
+                id="edit-profile-button"
+                onclick="window.open('edit-profile.html', '_self')"
+              >
+                Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="filter-menu">
+          {{#each filters}}
+            <div class="filter-button"><p>{{this}}</p></div>
+          {{/each}}
+        </div>
+        <div id="filter-results">
+          {{#each posts}}
+            <div class="post">
+              <div class="postContent">
+                <div class="postHeader">
+                  <div class="postHeaderLeft">
+                    <span
+                      class="actionButton"
+                      onclick="window.open('community.html', '_self')"
+                    >
+                      <img
+                        src="{{this.communityImage}}"
+                        class="pfp"
+                        alt=""
+                      />
+                      <span class="postUsername">w/{{this.community}} /</span>
+                    </span>
+                    <span
+                      class="actionButton"
+                      onclick="window.open('profile.html', '_self')"
+                    >
+                      <img src="{{../user.profileImage}}" class="pfp" alt="" />
+                      <span class="postUsername">u/{{../user.username}}</span>
+                    </span>
+                    <span class="postTime">{{this.time}}</span>
+                  </div>
+                </div>
+
+                <h2 class="postTitle" {{#unless this.image}}onclick="window.open('postView.html', '_self')"{{/unless}}>
+                  {{this.title}}
+                </h2>
+
+                <div class="postBody" {{#unless this.image}}onclick="window.open('postView.html', '_self')"{{/unless}}>
+                  {{#if this.image}}
+                    <div class="imageWrapper">
+                      <div class="imageContainer">
+                        <div
+                          class="leftSide"
+                          style="background-image: url('{{this.image}}')"
+                        ></div>
+                        <img
+                          src="{{this.image}}"
+                          alt="Post Image"
+                          class="postImage"
+                        />
+                        <div
+                          class="rightSide"
+                          style="background-image: url('{{this.image}}')"
+                        ></div>
+                      </div>
+                    </div>
+                  {{else}}
+                    <p>{{this.content}}</p>
+                  {{/if}}
+                </div>
+
+                <div class="postActions">
+                  <div class="reactionsContainer">
+                    <div class="reactionBox">
+                      <button class="actionButton like-button" aria-label="Thumbs Up">
+                        <!-- SVG remains same -->
+                      </button>
+                      <span class="voteCount">{{this.upvotes}}</span>
+                    </div>
+
+                    <div class="reactionBox">
+                      <button class="actionButton dislike-button" aria-label="Thumbs Down">
+                        <!-- SVG remains same -->
+                      </button>
+                      <span class="voteCount">{{this.downvotes}}</span>
+                    </div>
+
+                    <div class="reactionBox">
+                      <button class="actionButton" aria-label="Comment">
+                        <!-- SVG remains same -->
+                      </button>
+                    </div>
+
+                    <div class="reactionBox">
+                      <button class="actionButton" aria-label="Share">
+                        <!-- SVG remains same -->
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

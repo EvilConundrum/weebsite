@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/weebsite/styles/variables.css" />
+    <link rel="stylesheet" href="/weebsite/styles/edit-profile.css" />
+  </head>
+  <body>
+    <div id="popup-container">
+      <div id="main-content">
+        <div id="profile-pic-submission-container">
+          <div id="profile-pic-wrapper">
+            <img id="current-profile-pic" src="/weebsite/images/pfp.png" alt="Profile Picture">
+            <div id="account-settings-dropdown">
+              <a href="/weebsite/edit-profile">Edit Profile</a>
+              <a href="/weebsite/change-password">Change Password</a>
+              <a href="/weebsite/privacy-settings">Privacy Settings</a>
+              <a href="/weebsite/logout">Logout</a>
+            </div>
+          </div>
+          <div id="submission-container">
+            <p id="uploading-guidelines">Must be jpg, gif, or png format. No NSFW allowed. No copyrighted images. Maximum of 225 x 350 pixels (resized automatically).</p>
+            <button id="submit-profile-pic">Upload Profile Picture</button>
+          </div>
+        </div>
+        <div id="user-bio-edit-container">
+          <label for="user-bio">Edit your Bio</label>
+          <textarea id="user-bio" placeholder="Enter your bio..."></textarea>
+        </div>
+      </div>
+      <div class="footer">
+        <button id="cancel-changes" onclick="window.location.href='/weebsite/profile'">Cancel</button>
+        <button id="confirm-changes" onclick="window.location.href='/weebsite/profile'">Confirm</button>
+      </div>
+    </div>
+  </body>
+</html>
