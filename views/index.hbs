@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Weebsite - Home</title>
+  <link rel="stylesheet" href="/styles/indexstyles.css">
+</head>
+<body>
+  <div id="layout-container"></div>
+
+  <div class="main-content">
+    {{#if isGuest}}
+      <!-- Guest User Content -->
+      <div class="guest-welcome">
+        <h1>Welcome to Weebsite!</h1>
+        <p>Join the community to share your love for anime and manga.</p>
+        <div class="auth-buttons">
+          <a href="/login" class="login-button">Login</a>
+          <a href="/signup" class="signup-button">Sign Up</a>
+        </div>
+      </div>
+    {{else}}
+      <!-- Authenticated User Content -->
+      <div class="user-welcome">
+        <h1>Welcome back, {{user.username}}!</h1>
+        <p>What would you like to do today?</p>
+        <div class="user-actions">
+          <a href="/share" class="share-button">Create a Post</a>
+          <a href="/profile" class="profile-button">View Profile</a>
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</body>
+</html>
