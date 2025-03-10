@@ -9,10 +9,7 @@ function loadComponent(id, file) {
 }
 
 // Load components after the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", function () {
-  loadComponent("layout-container", "layout.html");
-});
 
-document.addEventListener("DOMContentLoaded", function () {
-  loadComponent("notification-container", "notification-pop-up.html");
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   loadComponent("notification-container", "notification-pop-up.hbs");
+// });

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<head>
+    <title>{{title}} - The Weeb Forum</title>
+    <link rel="stylesheet" href="/weebsite/styles/variables.css">
+    <link rel="stylesheet" href="/weebsite/styles/indexstyles.css">
+    <link rel="stylesheet" href="/weebsite/styles/post.css" />
+    <link rel="stylesheet" href="/weebsite/styles/options.css">
+    <link rel="stylesheet" href="/weebsite/styles/comment.css">
+
+    <script src="/weebsite/scripts/button.js" defer></script>
+    <script src="/weebsite/scripts/include.js" defer></script>
+</head>
+<body>
+    {{> layout}}
+
+  <div class="main-content">
+    <div class="post selectedPost">
+      <div class="postContent selectedPostContent">
+        <div class="postHeader">
+          <div class="postHeaderLeft">
+            <span class="actionButton" onclick="window.open('community.html', '_self')">
+              <img src="{{post.communityImage}}" class="pfp" alt="" />
+              <span class="postUsername">w/{{post.community}} /</span>
+            </span>
+            <span class="actionButton" onclick="window.open('profile.html', '_self')">
+              <img src="{{post.user.profileImage}}" class="pfp" alt="" />
+              <span class="postUsername">u/{{post.user.username}}</span>
+            </span>
+            <span class="postTime">{{post.time}}</span>
+          </div>
+
+          <div class="postHeaderRight" style="flex-direction: column;">
+            {{#if isAuthor}}
+            <div class="dropdown-container">
+              <button class="actionButton kebabMenu" aria-label="More options" onclick="togglePostDropdownVisibility()">
+                <div class="reactionBox" style="margin-bottom: 0;">
+                  <!-- SVG remains same -->
+                </div>
+              </button>
+              <div class="dropdown-post-content-post">
+                <div class="dropdown-line-post">
+                  <!-- Edit SVG -->
+                  <span>Edit</span>
+                </div>
+                <div class="dropdown-line-post">
+                  <!-- Delete SVG -->
+                  <span>Delete</span>
+                </div>
+              </div>
+            </div>
+            {{/if}}
+          </div>
+        </div>
+
+        <h2 class="postTitle">{{post.title}}</h2>
+
+        <div class="postBody">
+          <p>{{post.content}}</p>
+        </div>
+
+        <div class="postActions">
+          <div class="reactionsContainer">
+            <div class="reactionBox">
+              <button class="actionButton like-button" aria-label="Thumbs Up">
+                <!-- Thumbs Up SVG -->
+              </button>
+              <span class="voteCount">{{post.upvotes}}</span>
+            </div>
+
+            <div class="reactionBox">
+              <button class="actionButton dislike-button" aria-label="Thumbs Down">
+                <!-- Thumbs Down SVG -->
+              </button>
+              <span class="voteCount">{{post.downvotes}}</span>
+            </div>
+
+            <div class="reactionBox">
+              <button class="actionButton" aria-label="Comment" onclick="toggleCommentVisibility()">
+                <!-- Comment SVG -->
+              </button>
+            </div>
+
+            <div class="reactionBox">
+              <button class="actionButton" aria-label="Share">
+                <!-- Share SVG -->
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="commentBox">
+      <div class="postHeaderLeft commentUser yourComment">
+        <img src="{{currentUser.profileImage}}" class="pfp" alt=""/>
+        <span class="postUsername">u/{{currentUser.username}}</span>
+        <span class="postTime">Now</span>
+      </div>
+      <input type="text" class="searchBar commentBar" placeholder="Write down a comment..." />
+    </div>
+
+    {{#each comments}}
+    <div class="comment-section">
+      <div class="postHeader">
+        <div class="postHeaderLeft commentUser">
+          <span class="actionButton" onclick="window.open('profile{{this.user.id}}.html', '_self')">
+            <img src="{{this.user.profileImage}}" class="pfp" alt=""/>
+            <span class="postUsername">u/{{this.user.username}}</span>
+          </span>
+          <span class="postTime">{{this.time}}</span>
+        </div>
+        
+        {{#if this.isAuthor}}
+        <div class="postHeaderRight" style="flex-direction: column;">
+          <div class="dropdown-container">
+            <button class="actionButton kebabMenu" aria-label="More options" onclick="toggleCommentDropdownVisibility()">
+              <!-- Kebab SVG -->
+            </button>
+            <div class="dropdown-comment-content-post">
+              <div class="dropdown-line-post">
+                <!-- Edit SVG -->
+                <span>Edit</span>
+              </div>
+              <div class="dropdown-line-post">
+                <!-- Delete SVG -->
+                <span>Delete</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{/if}}
+      </div>
+      <div class="commentSectionText">
+        <p>{{this.text}}</p>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</body>
