@@ -98,3 +98,33 @@
   display: flex;
   align-items: center;
 }
+
+/*From login button*/
+.follow-com-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 9999px;
+  margin-top: 20px;
+  margin-bottom: 50px;
+
+  height: 35px;
+  width: 280px;
+
+  font-weight: bold;
+  font-family: var(--secondary-font), sans-serif;
+  font-size: var(--M);
+  background-color: var(--primary-main);
+
+  color: var(--background-main);
+
+  border: solid 1px var(--primary-main);
+  cursor: pointer;
+}
+
+.follow-com-button:hover {
+  background-color: var(--primary-70);
+  color: var(--background-main);
+  border: solid 1px var(--primary-70);
+}
