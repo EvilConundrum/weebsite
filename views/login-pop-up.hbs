@@ -1,49 +1,124 @@
-<html>
-  <head>
-    <title>Weebsite - The Weeb Forum</title>
-    <link rel="stylesheet" href="styles/pop-up.css" />
-    <link rel="stylesheet" href="styles/login-pop-up.css" />
-    <link rel="stylesheet" href="styles/indexstyles.css" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weebsite - The Weeb Forum</title>
+  <link rel="stylesheet" href="styles/pop-up.css" />
+  <link rel="stylesheet" href="styles/login-pop-up.css" />
+  <link rel="stylesheet" href="styles/indexstyles.css" />
 
-    <script src="scripts/button.js" defer></script>
-    <script src="scripts/include.js" defer></script>
-    <script src="scripts/views.js" defer></script>
-  </head>
-  <body>
-    <div class="popup" id="popup">
-      <div class="overlay"></div>
-      <div class="popup-content">
-        <button class="hiddenButton" onclick="switchPage('')">
-          <svg
-            class="exit-button"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            class="size-6"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </button>
-        <div class="header">Log in to Weebsite</div>
-        <input class="textField" type="text" placeholder="Username" />
-        <input class="textField" type="password" placeholder="Password" />
-        <div class="password"></div>
+  <script src="scripts/button.js" defer></script>
+  <script src="scripts/include.js" defer></script>
+  <script src="scripts/views.js" defer></script>
+</head>
+<body>
+  <!-- Main Login Popup -->
+  <div class="popup" id="popup">
+    <div class="overlay"></div>
+    <div class="popup-content">
+      <!-- Close Button -->
+      <button class="hiddenButton" onclick="switchPage('')">
+        <svg
+          class="exit-button"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="size-6"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+
+      <!-- Login Form -->
+      <div class="header">Log in to Weebsite</div>
+      <form action="/login" method="POST">
+        <!-- Username Input -->
+        <input
+          class="textField"
+          type="text"
+          placeholder="Username"
+          name="username"
+          required
+        />
+
+        <!-- Password Input -->
+        <input
+          class="textField"
+          type="password"
+          placeholder="Password"
+          name="password"
+          required
+        />
+
+        <!-- Remember Me Checkbox -->
         <div class="remember-me">
           <input type="checkbox" id="remember-me" />
-          Remember me
+          <label for="remember-me">Remember me</label>
         </div>
-        <button class="login-button" onclick="switchPage('home')">
-          Log In
-        </button>
-        <div class="create-account">
-          Don't have an account?
-          <a style="color: #8c6" onclick="switchPage('signup')">&nbsp;Sign up</a>
-        </div>
+
+        <!-- Login Button -->
+        <button class="login-button" type="submit">Log In</button>
+      </form>
+
+      <!-- Sign Up Link -->
+      <div class="create-account">
+        Don't have an account?
+        <a style="color: #8c6" onclick="switchPage('signup')">&nbsp;Sign up</a>
       </div>
     </div>
-  </body>
+  </div>
+
+  <!-- Invalid Credentials Popup -->
+  <div class="popup" id="invalidCredentialsPopup" style="display: none;">
+    <div class="overlay"></div>
+    <div class="popup-content">
+      <!-- Close Button -->
+      <button class="hiddenButton" onclick="closeInvalidCredentialsPopup()">
+        <svg
+          class="exit-button"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="size-6"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+
+      <!-- Invalid Credentials Message -->
+      <div class="header">Invalid Credentials</div>
+      <p>Please check your username and password and try again.</p>
+      <button class="login-button" onclick="closeInvalidCredentialsPopup()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    // Function to show the invalid credentials popup
+    function showInvalidCredentialsPopup() {
+      const popup = document.getElementById("invalidCredentialsPopup");
+      popup.style.display = "flex"; // Show the popup
+    }
+
+    // Function to close the invalid credentials popup
+    function closeInvalidCredentialsPopup() {
+      const popup = document.getElementById("invalidCredentialsPopup");
+      popup.style.display = "none"; // Hide the popup
+    }
+
+    // Check if the server sent an invalid credentials flag
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("error")) {
+      showInvalidCredentialsPopup();
+    }
+  </script>
+</body>
 </html>
