@@ -37,6 +37,7 @@ window.onload = function () {
 
   buttons.forEach((btn) => {
     const currentPage = window.location.pathname.split("/").pop();
+    console.log(`Current page: ${currentPage}`);
 
     console.log("Found button with data-page:", btn.dataset.page);
     if (btn.getAttribute("data-page") === currentPage) {
@@ -105,7 +106,7 @@ function toggleNotificationVisibility() {
   if (div.style.display === "none" || div.style.display === "") {
     div.style.display = "block"; // Show div
   } else {
-    div.style.display = "none"; // Hide div
+    div.style.display = "none"; // Hide div okay
   }
 }
 

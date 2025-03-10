@@ -1,22 +1,19 @@
-<!DOCTYPE html>
 <html>
   <head>
     <title>Weebsite - The Weeb Forum</title>
-    <link rel="stylesheet" href="/weebsite/styles/pop-up.css" />
-    <link rel="stylesheet" href="/weebsite/styles/login-pop-up.css" />
-    <link rel="stylesheet" href="/weebsite/styles/indexstyles.css" />
+    <link rel="stylesheet" href="styles/pop-up.css" />
+    <link rel="stylesheet" href="styles/login-pop-up.css" />
+    <link rel="stylesheet" href="styles/indexstyles.css" />
 
-    <script src="/weebsite/scripts/button.js" defer></script>
-    <script src="/weebsite/scripts/include.js" defer></script>
+    <script src="scripts/button.js" defer></script>
+    <script src="scripts/include.js" defer></script>
+    <script src="scripts/views.js" defer></script>"
   </head>
   <body>
     <div class="popup" id="popup">
       <div class="overlay"></div>
       <div class="popup-content">
-        <button
-          class="hiddenButton"
-          onclick="window.open('login.html', '_self')"
-        >
+        <button class="hiddenButton" onclick="switchPage('')">
           <svg
             class="exit-button"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,22 +30,22 @@
         </button>
 
         <div class="header">Sign up</div>
-        <textarea rows="1" placeholder="Username"></textarea>
-        <textarea rows="1" placeholder="Password"></textarea>
-        <textarea rows="1" placeholder="Confirm Password"></textarea>
+        <input class="textField" type="text" placeholder="Username" />
+        <input class="textField" type="password" placeholder="Password" />
+        <input
+          class="textField"
+          type="password"
+          placeholder="Confirm Password"
+        />
         <div class="password"></div>
-        <button
-          class="login-button"
-          onclick="window.open('index.html', '_self')"
-        >
+        <button class="login-button" onclick="switchPage('home')">
           Sign up
         </button>
         <div class="create-account">
           Have an account already?<a
             style="color: #8c6"
-            href="login-pop-up.html"
-            >&nbsp;Log in&nbsp;</a
-          >
+            onclick="switchPage('login')"
+          >&nbsp;Log in&nbsp;</a>
         </div>
       </div>
     </div>
