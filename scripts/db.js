@@ -58,15 +58,18 @@ module.exports = { Post, Comment, User, Community, Notification };
 // Note that this file path probably won't work. Because I'm bad at file paths.
 
 // Sample Data
-
-Post.create({
-  title: "[Interspecies Reviewers] Should I watch Interspecies Reviewers?",
-  content: `My friend kept telling me about this show in school going all like "oh should watch it and then review it so that you get a double review" And it does look interesting, it has an interesting premise, but at the same time I heard that there's a lot of not-so-kid-friendly content within the show (yes you know what I'm talking about). Normally I don't watch a movie or TV show if THAT is front and center, but I have heard some good things about this anime and I'm willing to try it out, but I definitely would be uncomfortable if the only reason to watch it is for those scenes. Should I give it a go? Why do you think so?`,
-  author: "u/ishigamiYu",
-  community: "r/interspeciesReviewers",
-  upvotes: 426960,
-  downvotes: 6960,
-});
+createSampleData();
+async function createSampleData() {
+  const post = await Post.create({
+    title: "[Interspecies Reviewers] Should I watch Interspecies Reviewers?",
+    content: `My friend kept telling me about this show in school going all like "oh should watch it and then review it so that you get a double review" And it does look interesting, it has an interesting premise, but at the same time I heard that there's a lot of not-so-kid-friendly content within the show (yes you know what I'm talking about). Normally I don't watch a movie or TV show if THAT is front and center, but I have heard some good things about this anime and I'm willing to try it out, but I definitely would be uncomfortable if the only reason to watch it is for those scenes. Should I give it a go? Why do you think so?`,
+    author: "u/ishigamiYu",
+    community: "r/interspeciesReviewers",
+    upvotes: 426960,
+    downvotes: 6967,
+    });
+  console.log(post);
+}
 
 Post.create({
   title: "[Interspecies Reviewers] Should I watch Interspecies Reviewers?",

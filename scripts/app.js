@@ -19,9 +19,14 @@ app.engine(
   })
 );
 
-mongoose.connect('mongodb://localhost/weebsiteDB');
+mongoose.connect('mongodb://127.0.0.1:27017/weebsiteDB')
+    .then(() => {
+        console.log('Connected to MongoDB');
+    })
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+    });
 const { User } = require("./db.js");
-
 
 // Middleware
 app.use(
