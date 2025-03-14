@@ -1,8 +1,8 @@
 const express = require("express");
 const path = require("path");
 const hbs = require("express-handlebars");
-const mongoose = require('mongoose');
-const fileUpload = require('express-fileupload');
+const mongoose = require("mongoose");
+const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
@@ -19,14 +19,16 @@ app.engine(
   })
 );
 
-mongoose.connect('mongodb://127.0.0.1:27017/weebsiteDB')
-    .then(() => {
-        console.log('Connected to MongoDB');
-    })
-    .catch(err => {
-        console.error('MongoDB connection error:', err);
-    });
+mongoose
+  .connect("mongodb://127.0.0.1:27017/weebsiteDB")
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
 const { User } = require("./db.js");
+const { createUser } = require("./data.js");
 
 // Middleware
 app.use(
@@ -44,11 +46,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
-    if (req.session.user) {
-        next();
-    } else {
-        res.redirect("/login");
-    }
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
 };
 
 app.use("/styles", express.static(path.join(__dirname, "../styles")));
@@ -63,7 +65,7 @@ app.get("/home", (req, res) => {
   res.render(path.join(__dirname, "../views/index.hbs"));
 });
 
-app.get("/post", (req, res) => {
+app.get("/post/:id", (req, res) => {
   res.render(path.join(__dirname, "../views/postView.hbs"));
 });
 
@@ -85,7 +87,6 @@ app.get("/login", (req, res) => {
   res.render(path.join(__dirname, "../views/login-pop-up.hbs"));
 });
 
-
 // Login route (POST)
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -105,6 +106,15 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/signup", (req, res) => {
+app.get("/signup", async (req, res) => {
   res.render(path.join(__dirname, "../views/signup-pop-up.hbs"));
+});
+
+app.post("/signup", async (req, res) => {
+  const { username, password } = req.body;
+
+  const newUser = await createUser(username, password);
+
+  res.status(201).send(newUser + "has been created!");
+  console.log("User created successfully:", newUser);
 });
