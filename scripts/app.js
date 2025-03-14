@@ -42,6 +42,8 @@ app.use(
   })
 );
 app.use(express.urlencoded({ extended: true }));
+// Add JSON parsing middleware
+app.use(express.json());
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
@@ -110,10 +112,22 @@ app.get("/signup", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
+  const username = req.body.username;
+  const password = req.body.password;
 
-  const newUser = await createUser(username, password);
+  console.log(req.body);
 
-  res.status(201).send(newUser + "has been created!");
-  console.log("User created successfully:", newUser);
+  try {
+    const newUser = await createUser(username, password);
+    console.log("User created successfully:", newUser);
+    
+    // Set session user after successful signup
+    req.session.user = newUser;
+    
+    // Respond with success message
+    res.status(201).send(newUser.username + " has been created!");
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).send("Error creating user: " + error.message);
+  }
 });

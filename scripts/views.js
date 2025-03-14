@@ -35,6 +35,7 @@ async function getPostData() {
     },
     body: JSON.stringify({ title, content, author, community }),
   });
+
   if (response.ok) {
     const result = await response.json();
     console.log("Post created successfully:", result);
@@ -45,9 +46,24 @@ async function getPostData() {
 }
 
 async function getUserData() {
+  // Get form values directly from input elements
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
-
+  const confirmPassword = document.getElementById("confirm-password").value;
+  
+  // Basic validation
+  if (!username || !password) {
+    alert("Username and password are required");
+    return;
+  }
+  
+  if (password !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+  
+  console.log("Submitting user data:", username, password);
+  
   try {
     const response = await fetch("/signup", {
       method: "POST",
@@ -58,13 +74,18 @@ async function getUserData() {
     });
 
     if (response.ok) {
-      const result = await response.json();
+      const result = await response.text();
       console.log("User signed up successfully:", result);
       alert("User signed up successfully!");
+      // Redirect to login page after successful signup
+      switchPage('login');
     } else {
-      console.error("Failed to sign up:", response.statusText);
+      const errorText = await response.text();
+      console.error("Failed to sign up:", response.statusText, errorText);
+      alert("Failed to sign up: " + response.statusText);
     }
   } catch (error) {
     console.error("Error connecting to the server:", error.message);
+    alert("Error connecting to the server: " + error.message);
   }
 }

@@ -28,12 +28,14 @@
         </svg>
       </div>
       <div class="navButtons">
-        <button class="createPost" onclick="window.open('share.html', '_self')">
+        <button class="createPost" onclick="switchPage('create-post')">
           CREATE
         </button>
 
         <button class="hiddenButton" onclick="toggleNotificationVisibility()">
-          <div id="notification-container"></div>
+          <div id="notification-container">
+            {{> notification-pop-up}}
+          </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"

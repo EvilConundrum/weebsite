@@ -1,21 +1,24 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Share - WEEBSITE</title>
-    <link rel="stylesheet" href="/weebsite/styles/variables.css" />
+    <link rel="stylesheet" href="styles/variables.css" />
+    <link rel="stylesheet" href="styles/share.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="/weebsite/styles/share.css" />
+
+    <script src="scripts/views.js" defer></script>
+    <script src="/scripts/data.js" defer></script>
   </head>
   <body>
     <nav>
-      <a href="/weebsite/index.html">
+      <a onclick="switchPage('home')">
         <div class="logo">WEEBSITE</div>
       </a>
+      </button>
     </nav>
     <div class="share-container">
       <!-- Sidebar -->
@@ -24,12 +27,14 @@
         <ul>
           <li>
             <button>
-              <i class="fas fa-info-circle"></i> Sharing Guidelines
+              <i class="fas fa-info-circle"></i>
+              Sharing Guidelines
             </button>
           </li>
           <li>
             <button>
-              <i class="fas fa-star"></i> Support us with a donation
+              <i class="fas fa-star"></i>
+              Support us with a donation
             </button>
           </li>
           <li>
@@ -70,12 +75,17 @@
           required
         />
 
-        <button type="submit" onclick="window.open('index.html', '_self')"><i class="fas fa-share"></i> Share Now</button>
+        <button type="submit" onclick="testPost()"><i
+            class="fas fa-share"
+          ></i>
+          Share Now</button>
       </form>
     </div>
     <footer>
       <p>
-        © 2025 Weebsite. <a href="#">Privacy Policy</a> |
+        © 2025 Weebsite.
+        <a href="#">Privacy Policy</a>
+        |
         <a href="#">Terms of Service</a>
       </p>
     </footer>
