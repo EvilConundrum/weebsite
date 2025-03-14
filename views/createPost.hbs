@@ -12,6 +12,11 @@
 
     <script src="scripts/views.js" defer></script>
     <script src="/scripts/data.js" defer></script>
+<<<<<<< HEAD
+=======
+    <script src="scripts/include.js" defer></script>
+    <script src="/scripts/share.js" defer></script>
+>>>>>>> d8ca2e0c60a86ee84f328566e5718cb68ada4746
   </head>
   <body>
     <nav>
@@ -47,7 +52,7 @@
       </div>
 
       <!-- Share Form -->
-      <form class="share-form">
+           <form class="share-form" id="post-form">
         <div class="share-title">Share Your Content</div>
         <label for="title"><b>Title</b></label>
         <input
@@ -58,13 +63,19 @@
           required
         />
 
-        <label for="description">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          placeholder="Describe your content..."
-          required
-        ></textarea>
+        <div style = "display: flex; flex-direction: row;">
+            <textarea style = "width: 400px; height: 321px; margin-right: 20px;"
+            id="description"
+            name="description"
+            placeholder="Describe your content..."
+            required
+          ></textarea>
+            <div id="drop-area">
+              <label for="image-upload">Upload an Image:</label>
+                <input type="file" id="image-upload" accept="image/*" hidden>
+                <img id="preview" src="#" alt="Image Preview" style="display:none;">
+            </div>
+        </div>
 
         <label for="tags">Communities</label>
         <input
@@ -75,7 +86,11 @@
           required
         />
 
+<<<<<<< HEAD
         <button type="submit" onclick="testPost()"><i
+=======
+        <button type="submit" onclick="getPostData()"><i
+>>>>>>> d8ca2e0c60a86ee84f328566e5718cb68ada4746
             class="fas fa-share"
           ></i>
           Share Now</button>

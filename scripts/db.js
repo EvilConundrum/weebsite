@@ -5,9 +5,9 @@ const postSchema = new Schema({
   content: { type: String },
   author: { type: String, required: true },
   community: { type: String, required: true },
-  upvotes: { type: Number, required: true },
-  downvotes: { type: Number, required: true },
-  images: [{ type: String }],
+  upvotes: { type: Number, default: 0 },
+  downvotes: { type: Number, default: 0 },
+  images: [{ type: String }], // Image file names
 });
 
 const commentSchema = new Schema({

@@ -23,38 +23,58 @@ function switchPage(page, id = null) {
 window.switchPage = switchPage;
 
 async function getPostData() {
-  const title = document.getElementById("title").value;
-  const content = document.getElementById("description").value;
-  const community = document.getElementById("tags").value;
-  const author = "cleevayang";
+  const formData = new FormData();
+  formData.append("title", document.getElementById("title").value);
+  formData.append("description", document.getElementById("description").value);
+  formData.append("tags", document.getElementById("tags").value);
+  formData.append("author", "cleevayang");
 
-  const response = await fetch("/create-post", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ title, content, author, community }),
-  });
+  const image = document.getElementById("image-upload").files[0];
+  if (image) formData.append("image", image);
 
-  if (response.ok) {
-    const result = await response.json();
-    console.log("Post created successfully:", result);
-    alert("Post created successfully!");
-  } else {
-    console.error("Failed to create post:", response.statusText);
+  try {
+    const response = await fetch("/create-post", {
+      method: "POST",
+      body: formData, // No need for `Content-Type`, FormData sets it automatically
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log("Post created successfully:", result);
+      alert("Post created successfully!");
+      switchPage("home");
+    } else {
+      const errorText = await response.text();
+      console.error("Failed to create post:", errorText);
+      alert("Failed to create post: " + errorText);
+    }
+  } catch (error) {
+    console.error("Error connecting to the server:", error.message);
+    res
+      .status(500)
+      .json({ error: "Error connecting to the server: " + error.message });
   }
 }
 
-async function getUserData(event) {
-  console.log(event);
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  const username = formData.get("username");
-  const password = formData.get("password");
-  console.log("!!!");
-  console.log(username + " " + password);
-  const x = JSON.stringify({ username, password });
-  console.log(x);
+async function getUserData() {
+  // Get form values directly from input elements
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirm-password").value;
+
+  // Basic validation
+  if (!username || !password) {
+    alert("Username and password are required");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  console.log("Submitting user data:", username, password);
+
   try {
     const response = await fetch("/signup", {
       method: "POST",
@@ -65,13 +85,18 @@ async function getUserData(event) {
     });
 
     if (response.ok) {
-      const result = await response.json();
+      const result = await response.text();
       console.log("User signed up successfully:", result);
       alert("User signed up successfully!");
+      // Redirect to login page after successful signup
+      switchPage("login");
     } else {
-      console.error("Failed to sign up:", response.statusText);
+      const errorText = await response.text();
+      console.error("Failed to sign up:", response.statusText, errorText);
+      alert("Failed to sign up: " + response.statusText);
     }
   } catch (error) {
     console.error("Error connecting to the server:", error.message);
+    alert("Error connecting to the server: " + error.message);
   }
 }
