@@ -35,6 +35,7 @@ async function getPostData() {
     },
     body: JSON.stringify({ title, content, author, community }),
   });
+
   if (response.ok) {
     const result = await response.json();
     console.log("Post created successfully:", result);
@@ -44,17 +45,23 @@ async function getPostData() {
   }
 }
 
-async function getUserData() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-
+async function getUserData(event) {
+  console.log(event);
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const username = formData.get("username");
+  const password = formData.get("password");
+  console.log("!!!");
+  console.log(username + " " + password);
+  const x = JSON.stringify({ username, password });
+  console.log(x);
   try {
     const response = await fetch("/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: { username: username, password: password },
     });
 
     if (response.ok) {

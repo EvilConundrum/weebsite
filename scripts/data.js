@@ -34,12 +34,21 @@ const createComment = async (author, content, postID) => {
 };
 
 const createUser = async (username, password) => {
-  const newUser = await User.create({
-    username,
-    password,
+  console.log(username + " " + password);
+  const user = new User({
+    username: username,
+    password: password,
   });
 
-  return newUser;
+  //   const newUser = await User.create({
+  //     username: username,
+  //     password: password,
+  //   }).catch((err) => {
+  //     console.log("ERR!!!!");
+  //     console.log(err);
+  //   });
+
+  //   return newUser;
 };
 
 const createCommunity = async (

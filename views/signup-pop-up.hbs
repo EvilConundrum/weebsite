@@ -7,13 +7,13 @@
 
     <script src="scripts/button.js" defer></script>
     <script src="scripts/include.js" defer></script>
-    <script src="scripts/views.js" defer></script>"
+    <script src="scripts/views.js" defer></script>
   </head>
   <body>
     <div class="popup" id="popup">
       <div class="overlay"></div>
       <div class="popup-content">
-        <button class="hiddenButton" onclick="switchPage('')">
+        <button class="hiddenButton" onclick="switchPage('logout')">
           <svg
             class="exit-button"
             xmlns="http://www.w3.org/2000/svg"
@@ -30,15 +30,29 @@
         </button>
 
         <div class="header">Sign up</div>
-        <input class="textField" type="text" placeholder="Username" />
-        <input class="textField" type="password" placeholder="Password" />
-        <input
-          class="textField"
-          type="password"
-          placeholder="Confirm Password"
-        />
+        <form id="signup-form" onsubmit="getUserData(event)">
+          <input
+            class="textField"
+            type="text"
+            placeholder="Username"
+            id="username"
+            name="username"
+          />
+          <input
+            class="textField"
+            type="password"
+            placeholder="Password"
+            id="password"
+            name="password"
+          />
+          <input
+            class="textField"
+            type="password"
+            placeholder="Confirm Password"
+          />
+        </form>
         <div class="password"></div>
-        <button class="login-button" onclick="switchPage('home')">
+        <button class="login-button" type="submit">
           Sign up
         </button>
         <div class="create-account">
