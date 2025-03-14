@@ -71,7 +71,6 @@ body {
   border: var(--primary-main) 1px solid;
   color: var(--primary-main);
   font-family: var(--secondary-font), sans-serif;
-  cursor: pointer;
 }
 
 #create-account {

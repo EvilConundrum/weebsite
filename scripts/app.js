@@ -19,7 +19,8 @@ app.engine(
   })
 );
 
-mongoose.connect("mongodb://127.0.0.1:27017/weebsiteDB")
+mongoose
+  .connect("mongodb://127.0.0.1:27017/weebsiteDB")
   .then(() => {
     console.log("Connected to MongoDB");
   })
