@@ -1,26 +1,26 @@
 // Sample Data and Data Creation Functions
 const { Post, Comment, User, Community, Notification } = require("./db.js");
 
-const createPost = async (title, content, author, community, images = []) => {
-  try {
-    const newPost = new Post({
-      title,
-      content,
-      author,
-      community,
-      upvotes: 0,        // Default values to ensure proper initialization
-      downvotes: 0,
-      images
-    });
+const createPost = async (title, content, author, community) => {
+  const newPost = await Post.create({
+    title,
+    content,
+    author,
+    community,
+  });
 
-    await newPost.save(); // Explicit save for flexibility
-    console.log("Post created successfully:", newPost);
+  return newPost;
+};
 
-    return newPost;
-  } catch (err) {
-    console.error("Error creating post:", err);
-    throw err; // Propagate the error for proper error handling
-  }
+const createPost2 = async (title, content, author, community) => {
+  const newPost = await Post.create({
+    title,
+    content,
+    author,
+    community,
+  });
+
+  return newPost;
 };
 
 const createComment = async (author, content, postID) => {
@@ -99,6 +99,7 @@ const testPost = async (title, content, author, community) => {
 
 module.exports = {
   createPost,
+  createPost2,
   createComment,
   createUser,
   createCommunity,
