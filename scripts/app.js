@@ -29,7 +29,6 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 const { User } = require("./db.js");
-const { createUser, createPost } = require("./data.js");
 
 // Middleware
 app.use(
