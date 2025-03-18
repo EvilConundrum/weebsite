@@ -39,8 +39,13 @@
                 class="actionButton"
                 onclick="window.open('/profile', '_self')"
               >
-                <img src="{{userData.profilePicture}}" class="pfp" alt="" />
-                <span class="postUsername">u/{{userData.username}}</span>
+               {{#if userData}}
+                  <img src="{{userData.profilePicture}}" class="pfp" alt="" />
+                  <span class="postUsername">u/{{userData.username}}</span>
+                {{else}}
+                  <img src="/images/pfp.png" class="pfp" alt="" />
+                  <span class="postUsername">u/ishigamiYu</span>
+                {{/if}}
               </span>
               <span class="postTime"> 2 hours ago</span>
             </div>
@@ -166,8 +171,13 @@
                 class="actionButton"
                 onclick="window.open('/profile', '_self')"
               >
-                <img src="{{userData.profilePicture}}" class="pfp" alt="" />
-                <span class="postUsername">u/{{userData.username}}</span>
+               {{#if userData}}
+                  <img src="{{userData.profilePicture}}" class="pfp" alt="" />
+                  <span class="postUsername">u/{{userData.username}}</span>
+                {{else}}
+                  <img src="/images/pfp.png" class="pfp" alt="" />
+                  <span class="postUsername">u/ishigamiYu</span>
+                {{/if}}
               </span>
               <span class="postTime"> 1 hour ago</span>
             </div>
@@ -283,8 +293,13 @@
                 class="actionButton"
                 onclick="window.open('/profile', '_self')"
               >
-                <img src="{{userData.profilePicture}}" class="pfp" alt="" />
-                <span class="postUsername">u/{{userData.username}}</span>
+               {{#if userData}}
+                  <img src="{{userData.profilePicture}}" class="pfp" alt="" />
+                  <span class="postUsername">u/{{userData.username}}</span>
+                {{else}}
+                  <img src="/images/pfp.png" class="pfp" alt="" />
+                  <span class="postUsername">u/ishigamiYu</span>
+                {{/if}}
               </span>
               <span class="postTime"> 3 hours ago</span>
             </div>
