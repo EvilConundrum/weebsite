@@ -23,25 +23,35 @@ function switchPage(page, id = null) {
 window.switchPage = switchPage;
 
 async function getPostData() {
-  const title = document.getElementById("title").value;
-  const content = document.getElementById("description").value;
-  const community = document.getElementById("tags").value;
-  const author = "cleevayang";
 
-  const response = await fetch("/create-post", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ title, content, author, community }),
-  });
+  const formData = new FormData();
+  formData.append("title", document.getElementById("title").value);
+  formData.append("description", document.getElementById("description").value);
+  formData.append("tags", document.getElementById("tags").value);
+  formData.append("author", "cleevayang");
 
-  if (response.ok) {
-    const result = await response.json();
-    console.log("Post created successfully:", result);
-    alert("Post created successfully!");
-  } else {
-    console.error("Failed to create post:", response.statusText);
+  const image = document.getElementById("image-upload").files[0];
+  if (image) formData.append("image", image);
+
+  try {
+    const response = await fetch("/create-post", {
+      method: "POST",
+      body: formData, // No need for `Content-Type`, FormData sets it automatically
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log("Post created successfully:", result);
+      alert("Post created successfully!");
+      switchPage('home');
+    } else {
+      const errorText = await response.text();
+      console.error("Failed to create post:", errorText);
+      alert("Failed to create post: " + errorText);
+    }
+  } catch (error) {
+    console.error("Error connecting to the server:", error.message);
+    res.status(500).json({ error: "Error connecting to the server: " + error.message });
   }
 }
 

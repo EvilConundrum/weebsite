@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const multer = require("multer");
 
 const app = express();
 
@@ -28,7 +29,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 const { User } = require("./db.js");
-const { createUser } = require("./data.js");
+const { createUser, createPost } = require("./data.js");
 
 // Middleware
 app.use(
@@ -54,7 +55,6 @@ const isAuthenticated = (req, res, next) => {
     res.redirect("/login");
   }
 };
-
 app.use("/styles", express.static(path.join(__dirname, "../styles")));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
@@ -130,5 +130,22 @@ app.post("/signup", async (req, res) => {
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).send("Error creating user: " + error.message);
+  }
+});
+
+const upload = multer({ dest: 'uploads/' }); // Temporary storage for uploaded files
+
+app.post('/create-post', upload.single('image'), async (req, res) => {
+  const { title, description, tags, author } = req.body;
+  const image = req.file;
+
+  const images = image ? [image.filename] : [];
+
+  try {
+      await createPost(title, description, tags, author, images);
+      res.status(201).json({ message: 'Post created successfully!' });  // Send success response
+  } catch (error) {
+      console.error('Error creating post:', error);
+      res.status(500).json({ error: 'Failed to create post' });
   }
 });
