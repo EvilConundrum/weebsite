@@ -1,8 +1,8 @@
 <html lang="">
   <head>
-    <title>Weebsite - The Weeb Forum</title>
+    <title>Weebsite - The Weeb Forum </title>
     <link rel="stylesheet" href="styles/variables.css" />
-    <link rel="stylesheet" href="styles/indexstyles.css" />
+    <link rel="stylesheet" href="/styles/indexstyles.css" />
     <link rel="stylesheet" href="styles/layout.css" />
 
     <script src="scripts/include.js" defer></script>
@@ -51,9 +51,9 @@
         </button>
         <button
           class="hiddenButton"
-          onclick="window.open('profile.html', '_self')"
+          onclick="window.open('/profile', '_self')"
         >
-          <img src="images/pfp.png" class="pfp" alt="" />
+         <img id="layoutpfp" src="{{userData.profilePicture}}" alt="Profile Picture">
         </button>
       </div>
     </div>
