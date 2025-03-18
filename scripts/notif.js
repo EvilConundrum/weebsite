@@ -27,7 +27,6 @@ async function loadNotification() {
       `;
       notifContainer.appendChild(notifElement);
     });
-
   } catch (error) {
     console.error("Error loading notifications:", error);
   }

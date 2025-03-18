@@ -158,7 +158,6 @@ app.post("/api/notifications", async (req, res) => {
 
   try {
     const notification = await createNotification(userID, content, type);
-    console.log("hello");
     res.status(201).json({ message: "Notification created successfully!", notification });
   } catch (error) {
     console.error("Error creating notification:", error);
