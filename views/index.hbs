@@ -204,7 +204,7 @@
             <div class="reactionsContainer">
               <!-- Thumbs Up Box -->
               <div class="reactionBox like-button">
-                <button class="actionButton" aria-label="Thumbs Up">
+                <button class="actionButton upvote-btn" aria-label="Thumbs Up" data-id="{{_id}}">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       d="M1 21h4V9H1v12z M23 10c0-1.1-0.9-2-2-2h-6.31l0.95-4.57a1.983 1.983 0 0 0-0.44-1.74L14.17 1l-6.58 6.59A2 2 0 0 0 7 9v10a2 2 0 0 0 2 2h9c0.83 0 1.54-0.5 1.84-1.22l3.02-7.05c0.09-0.23 0.14-0.47 0.14-0.73v-2z"
@@ -217,8 +217,9 @@
               <!-- Thumbs Down Box -->
               <div class="reactionBox">
                 <button
-                  class="actionButton dislike-button"
+                  class="actionButton dislike-button downvote-btn"
                   aria-label="Thumbs Down"
+                  data-id="{{_id}}"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
@@ -621,6 +622,9 @@
         <!-- End of Post Content -->
       </div>
       <!-- End of Fifth Post -->
+      {{#each posts}}
+        {{> posts}}
+      {{/each}}
     </div>
     <!-- End of Main Content Area -->
   </body>

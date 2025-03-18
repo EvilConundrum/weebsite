@@ -8,9 +8,9 @@ const createPost = async (title, content, author, community, images = []) => {
       content,
       author,
       community,
-      upvotes: 0,        // Default values to ensure proper initialization
+      upvotes: 0, // Default values to ensure proper initialization
       downvotes: 0,
-      images
+      images,
     });
 
     await newPost.save(); // Explicit save for flexibility
@@ -35,28 +35,12 @@ const createComment = async (author, content, postID) => {
 
 const createUser = async (username, password) => {
   console.log(username + " " + password);
-<<<<<<< HEAD
-  const user = new User({
-    username: username,
-    password: password,
-  });
-
-  //   const newUser = await User.create({
-  //     username: username,
-  //     password: password,
-  //   }).catch((err) => {
-  //     console.log("ERR!!!!");
-  //     console.log(err);
-  //   });
-
-  //   return newUser;
-=======
   try {
     const user = new User({
       username: username,
       password: password,
     });
-    
+
     // Save the user to the database
     await user.save();
     console.log("User saved successfully:", user);
@@ -65,7 +49,6 @@ const createUser = async (username, password) => {
     console.error("Error creating user:", err);
     throw err;
   }
->>>>>>> d8ca2e0c60a86ee84f328566e5718cb68ada4746
 };
 
 const createCommunity = async (
