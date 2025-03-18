@@ -8,9 +8,9 @@ const createPost = async (title, content, author, community, images = []) => {
       content,
       author,
       community,
-      upvotes: 0, // Default values to ensure proper initialization
+      upvotes: 0,        // Default values to ensure proper initialization
       downvotes: 0,
-      images,
+      images
     });
 
     await newPost.save(); // Explicit save for flexibility
@@ -40,7 +40,7 @@ const createUser = async (username, password) => {
       username: username,
       password: password,
     });
-
+    
     // Save the user to the database
     await user.save();
     console.log("User saved successfully:", user);
