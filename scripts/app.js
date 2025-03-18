@@ -28,6 +28,7 @@ mongoose
   .catch((err) => {
     console.error("MongoDB connection error:", err);
   });
+
 const { User, Post } = require("./db.js");
 const { createUser, createPost } = require("./data.js");
 
