@@ -36,6 +36,31 @@ async function loadNotification() {
 // Auto-load notifications when the popup appears
 window.addEventListener("load", loadNotification);
 
+async function sendNotification(userID, content, type, button) {
+  try {
+    const response = await fetch("/api/notifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userID, content, type }),
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to create ${type} notification:`, response.statusText);
+    } else {
+      console.log(`${type} notification created successfully!`);
+      await loadNotification();
+
+      // Mark the post as liked/disliked to prevent future POST requests
+      button.setAttribute("data-liked", "true");
+    }
+  } catch (error) {
+    console.error(`Error creating ${type} notification:`, error);
+  }
+}
+
+// Auto-load notifications when the popup appears
+window.addEventListener("load", loadNotification);
+
 document.addEventListener("DOMContentLoaded", () => {
   const likeButtons = document.querySelectorAll(".like-button");
   const dislikeButtons = document.querySelectorAll(".dislike-button");
@@ -43,71 +68,23 @@ document.addEventListener("DOMContentLoaded", () => {
   likeButtons.forEach(button => {
     if (!button.hasEventListener) {
       button.addEventListener("click", async () => {
-        const isLiked = button.getAttribute("data-liked") === "true"; // Check like state
-        if (isLiked) return; // 🚫 Prevent sending duplicate 'Like' notifications
+        const isLiked = button.getAttribute("data-liked") === "true";
+        if (isLiked) return; // 🚫 Prevent duplicate likes
 
-        const userID = 69;
-        const content = "Your post has been liked!";
-        const type = "Like";
-
-        try {
-          const response = await fetch("/api/notifications", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userID, content, type }),
-          });
-
-          if (!response.ok) {
-            console.error("Failed to create notification:", response.statusText);
-          } else {
-            console.log("Notification created successfully!");
-            await loadNotification();
-
-            // Mark the post as liked to prevent future POST requests
-            button.setAttribute("data-liked", "true");
-          }
-        } catch (error) {
-          console.error("Error creating notification:", error);
-        }
+        await sendNotification(69, "Your post has been liked!", "Like", button);
       });
 
       button.hasEventListener = true;
     }
   });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const dislikeButtons = document.querySelectorAll(".dislike-button");
 
   dislikeButtons.forEach(button => {
     if (!button.hasEventListener) {
       button.addEventListener("click", async () => {
-        const isDisliked = button.getAttribute("data-liked") === "true"; // Check like state
-        if (isDisliked) return; // 🚫 Prevent sending duplicate 'Like' notifications
+        const isDisliked = button.getAttribute("data-liked") === "true";
+        if (isDisliked) return; // 🚫 Prevent duplicate dislikes
 
-        const userID = 69;
-        const content = "Your post has been disliked!";
-        const type = "Dislike";
-
-        try {
-          const response = await fetch("/api/notifications", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userID, content, type }),
-          });
-
-          if (!response.ok) {
-            console.error("Failed to create notification:", response.statusText);
-          } else {
-            console.log("Notification created successfully!");
-            await loadNotification();
-
-            // Mark the post as liked to prevent future POST requests
-            button.setAttribute("data-liked", "true");
-          }
-        } catch (error) {
-          console.error("Error creating notification:", error);
-        }
+        await sendNotification(69, "Your post has been disliked!", "Dislike", button);
       });
 
       button.hasEventListener = true;
