@@ -13,6 +13,33 @@ body {
   left: 68%;
 }
 
+.notification-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  background: var(--background-main);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 0 2px 2px 5px var(--text-main);
+}
+
+
+.popup-content header{
+  display: flex;
+  align-items: absolute;
+
+  height: 15px;
+  width: 325px;
+  margin-bottom: 10px;
+
+  font-family: var(--secondary-font), sans-serif;
+  font-size: var(--XL);
+  font-weight: bold;
+  color: var(--primary-main);
+}
+
 .popup .notification-line {
   display: flex;
 
@@ -45,17 +72,17 @@ body {
   color: var(--primary-main);
 }
 
-.popup #message {
+.popup #topic {
   display: flex;
   justify-content: center;
 
   position: absolute;
   left: 40%;
-  height: 35px;
+  height: 19px;
   width: 50%;
 
   overflow: hidden;
   font-family: var(--secondary-font), sans-serif;
-  font-size: var(--S);
+  font-size: var(--M);
   color: var(--text-80);
 }

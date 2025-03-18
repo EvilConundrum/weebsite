@@ -1,0 +1,108 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Share - WEEBSITE</title>
+    <link rel="stylesheet" href="styles/variables.css" />
+    <link rel="stylesheet" href="styles/share.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <script src="scripts/views.js" defer></script>
+    <script src="/scripts/data.js" defer></script>
+<<<<<<< HEAD
+=======
+    <script src="scripts/include.js" defer></script>
+    <script src="/scripts/share.js" defer></script>
+>>>>>>> d8ca2e0c60a86ee84f328566e5718cb68ada4746
+  </head>
+  <body>
+    <nav>
+      <a onclick="switchPage('home')">
+        <div class="logo">WEEBSITE</div>
+      </a>
+      </button>
+    </nav>
+    <div class="share-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h3>Quick Links</h3>
+        <ul>
+          <li>
+            <button>
+              <i class="fas fa-info-circle"></i>
+              Sharing Guidelines
+            </button>
+          </li>
+          <li>
+            <button>
+              <i class="fas fa-star"></i>
+              Support us with a donation
+            </button>
+          </li>
+          <li>
+            <button><i class="fas fa-question-circle"></i> FAQs</button>
+          </li>
+          <li>
+            <button><i class="fas fa-cog"></i> Settings</button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Share Form -->
+           <form class="share-form" id="post-form">
+        <div class="share-title">Share Your Content</div>
+        <label for="title"><b>Title</b></label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="Enter a title for your post..."
+          required
+        />
+
+        <div style = "display: flex; flex-direction: row;">
+            <textarea style = "width: 400px; height: 321px; margin-right: 20px;"
+            id="description"
+            name="description"
+            placeholder="Describe your content..."
+            required
+          ></textarea>
+            <div id="drop-area">
+              <label for="image-upload">Upload an Image:</label>
+                <input type="file" id="image-upload" accept="image/*" hidden>
+                <img id="preview" src="#" alt="Image Preview" style="display:none;">
+            </div>
+        </div>
+
+        <label for="tags">Communities</label>
+        <input
+          type="text"
+          id="tags"
+          name="tags"
+          placeholder="Add communities (e.g., Naruto, One Piece, Bleach)..."
+          required
+        />
+
+<<<<<<< HEAD
+        <button type="submit" onclick="testPost()"><i
+=======
+        <button type="submit" onclick="getPostData()"><i
+>>>>>>> d8ca2e0c60a86ee84f328566e5718cb68ada4746
+            class="fas fa-share"
+          ></i>
+          Share Now</button>
+      </form>
+    </div>
+    <footer>
+      <p>
+        © 2025 Weebsite.
+        <a href="#">Privacy Policy</a>
+        |
+        <a href="#">Terms of Service</a>
+      </p>
+    </footer>
+  </body>
+</html>

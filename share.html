@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Share - WEEBSITE</title>
     <link rel="stylesheet" href="styles/variables.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <link rel="stylesheet" href="styles/share.css" />
+    
   </head>
   <body>
     <nav>
@@ -53,13 +51,19 @@
           required
         />
 
-        <label for="description">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          placeholder="Describe your content..."
-          required
-        ></textarea>
+        <div style = "display: flex; flex-direction: row;">
+            <textarea style = "width: 400px; margin-right: 20px;"
+            id="description"
+            name="description"
+            placeholder="Describe your content..."
+            required
+          ></textarea>
+            <div id="drop-area">
+              <label for="image-upload">Upload an Image:</label>
+                <input type="file" id="image-upload" accept="image/*" hidden>
+                <img id="preview" src="#" alt="Image Preview" style="display:none;">
+            </div>
+        </div>
 
         <label for="tags">Communities</label>
         <input
@@ -73,11 +77,6 @@
         <button type="submit" onclick="window.open('index.html', '_self')"><i class="fas fa-share"></i> Share Now</button>
       </form>
     </div>
-    <footer>
-      <p>
-        © 2025 Weebsite. <a href="#">Privacy Policy</a> |
-        <a href="#">Terms of Service</a>
-      </p>
-    </footer>
+    <script src="scripts/share.js"></script> 
   </body>
 </html>
