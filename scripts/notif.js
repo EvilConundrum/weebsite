@@ -22,7 +22,7 @@ async function loadNotification() {
       const notifElement = document.createElement("div");
       notifElement.classList.add("notification-line");
       notifElement.innerHTML = `
-        <div id="subject">${notif.type} |</div>
+        <div id="subject">${notif.type}</div>
         <div id="topic">${notif.content}</div>
       `;
       notifContainer.appendChild(notifElement);
@@ -38,6 +38,7 @@ window.addEventListener("load", loadNotification);
 
 document.addEventListener("DOMContentLoaded", () => {
   const likeButtons = document.querySelectorAll(".like-button");
+  const dislikeButtons = document.querySelectorAll(".dislike-button");
 
   likeButtons.forEach(button => {
     if (!button.hasEventListener) {
@@ -48,6 +49,45 @@ document.addEventListener("DOMContentLoaded", () => {
         const userID = 69;
         const content = "Your post has been liked!";
         const type = "Like";
+
+        try {
+          const response = await fetch("/api/notifications", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userID, content, type }),
+          });
+
+          if (!response.ok) {
+            console.error("Failed to create notification:", response.statusText);
+          } else {
+            console.log("Notification created successfully!");
+            await loadNotification();
+
+            // Mark the post as liked to prevent future POST requests
+            button.setAttribute("data-liked", "true");
+          }
+        } catch (error) {
+          console.error("Error creating notification:", error);
+        }
+      });
+
+      button.hasEventListener = true;
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const dislikeButtons = document.querySelectorAll(".dislike-button");
+
+  dislikeButtons.forEach(button => {
+    if (!button.hasEventListener) {
+      button.addEventListener("click", async () => {
+        const isDisliked = button.getAttribute("data-liked") === "true"; // Check like state
+        if (isDisliked) return; // 🚫 Prevent sending duplicate 'Like' notifications
+
+        const userID = 69;
+        const content = "Your post has been disliked!";
+        const type = "Dislike";
 
         try {
           const response = await fetch("/api/notifications", {
