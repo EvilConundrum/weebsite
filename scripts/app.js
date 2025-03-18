@@ -148,8 +148,10 @@ app.get("/create-post", (req, res) => {
 
 // TODO: Add post for creating posts
 
-app.get("/", (req, res) => {
-  res.render(path.join(__dirname, "../views/logout.hbs"));
+app.get('/', (req, res) => {
+  res.render('index', {
+    userData: req.session.user || null // Pass null if no user is logged in
+  });
 });
 
 app.get("/login", (req, res) => {
@@ -253,3 +255,13 @@ app.post('/update-profile',
     }
   }
 );
+
+app.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.status(500).send('Logout error');
+    }
+    res.redirect('/'); // Redirect to root after logout
+  });
+});
