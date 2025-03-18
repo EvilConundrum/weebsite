@@ -14,7 +14,7 @@ async function loadNotification() {
     `;
 
     if (notifications.length === 0) {
-      notifContainer.innerHTML += "<p>No notifications found.</p>";
+      notifContainer.innerHTML += '<div class="header" style="font-size: var(--S);padding-top: 10px;margin: 0;">You are caught up 😊</div>';
       return;
     }
 
