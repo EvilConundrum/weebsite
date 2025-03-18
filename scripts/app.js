@@ -28,8 +28,8 @@ mongoose
   .catch((err) => {
     console.error("MongoDB connection error:", err);
   });
-const { User } = require("./db.js");
-const { createUser, createPost } = require("./data.js");
+const { User, Notification } = require("./db.js");
+const { createUser, createPost, createNotification } = require("./data.js");
 
 // Middleware
 app.use(
@@ -79,8 +79,6 @@ app.get("/create-post", (req, res) => {
   res.render(path.join(__dirname, "../views/createPost.hbs"));
 });
 
-// TODO: Add post for creating posts
-
 app.get("/", (req, res) => {
   res.render(path.join(__dirname, "../views/logout.hbs"));
 });
@@ -121,10 +119,10 @@ app.post("/signup", async (req, res) => {
   try {
     const newUser = await createUser(username, password);
     console.log("User created successfully:", newUser);
-    
+
     // Set session user after successful signup
     req.session.user = newUser;
-    
+
     // Respond with success message
     res.status(201).send(newUser.username + " has been created!");
   } catch (error) {
@@ -133,19 +131,47 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-const upload = multer({ dest: 'uploads/' }); // Temporary storage for uploaded files
+const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
-app.post('/create-post', upload.single('image'), async (req, res) => {
+app.post("/create-post", upload.single("image"), async (req, res) => {
   const { title, description, tags, author } = req.body;
   const image = req.file;
 
   const images = image ? [image.filename] : [];
 
   try {
-      await createPost(title, description, tags, author, images);
-      res.status(201).json({ message: 'Post created successfully!' });  // Send success response
+    await createPost(title, description, tags, author, images);
+    res.status(201).json({ message: "Post created successfully!" }); // Send success response
   } catch (error) {
-      console.error('Error creating post:', error);
-      res.status(500).json({ error: 'Failed to create post' });
+    console.error("Error creating post:", error);
+    res.status(500).json({ error: "Failed to create post" });
+  }
+});
+
+app.post("/api/notifications", async (req, res) => {
+  const { userID, content, type } = req.body;
+
+  // Validate data
+  if (!userID || !content || !type) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  try {
+    const notification = await createNotification(userID, content, type);
+    console.log("hello");
+    res.status(201).json({ message: "Notification created successfully!", notification });
+  } catch (error) {
+    console.error("Error creating notification:", error);
+    res.status(500).json({ error: "Failed to create notification." });
+  }
+});
+
+app.get("/api/notifications", async (req, res) => {
+  try {
+    const notifications = await Notification.find();
+    res.json(notifications);
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "Failed to load notifications." });
   }
 });
