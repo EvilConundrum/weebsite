@@ -74,14 +74,21 @@ const createCommunity = async (
 };
 
 const createNotification = async (userID, content, type, read) => {
-  const newNotification = await Notification.create({
-    userID,
-    content,
-    type,
-    read,
-  });
+  try {
+    const newNotification = new Notification({
+      userID,
+      content,
+      type,
+      read: false, // should default be unread?
+    });
 
-  return newNotification;
+    await newNotification.save();
+    console.log(`Notification  for user ${userID} created successfully:`, newNotification);
+    return newNotification;
+  } catch (error) {
+    console.log(`Error creating notification  for user ${userID}:`, newNotification);
+    throw error;
+  }
 };
 
 // THIS IS ONLY HERE BECAUSE WE DONT HAVE THE GODDAMN FILE UPLOAD

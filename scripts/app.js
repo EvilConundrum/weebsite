@@ -29,8 +29,8 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-const { User, Post } = require("./db.js");
-const { createUser, createPost } = require("./data.js");
+const { User, Post, Notification } = require("./db.js");
+const { createUser, createPost, createNotification } = require("./data.js");
 
 // Middleware
 app.use(
@@ -89,6 +89,7 @@ app.get("/create-post", (req, res) => {
   res.render(path.join(__dirname, "../views/createPost.hbs"));
 });
 
+
 app.post("/create-post", upload.array("images", 5), async (req, res) => {
   console.log("Received request body:", req.body); // Debugging
   console.log("Received file:", req.files); // Debugging
@@ -103,8 +104,6 @@ app.post("/create-post", upload.array("images", 5), async (req, res) => {
   });
   console.log("Post saved successfully:", newPost);
 });
-
-// TODO: Add post for creating posts
 
 app.get("/", (req, res) => {
   res.render(path.join(__dirname, "../views/logout.hbs"));
@@ -158,7 +157,49 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.put("/upvote/:id", async (req, res) => {
+const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
+
+app.post("/create-post", upload.single("image"), async (req, res) => {
+  const { title, description, tags, author } = req.body;
+  const image = req.file;
+
+  try {
+    await createPost(title, description, tags, author, images);
+    res.status(201).json({ message: "Post created successfully!" }); // Send success response
+  } catch (error) {
+    console.error("Error creating post:", error);
+    res.status(500).json({ error: "Failed to create post" });
+  }
+});
+
+app.post("/api/notifications", async (req, res) => {
+  const { userID, content, type } = req.body;
+
+  // Validate data
+  if (!userID || !content || !type) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  try {
+    const notification = await createNotification(userID, content, type);
+    console.log("hello");
+    res.status(201).json({ message: "Notification created successfully!", notification });
+  } catch (error) {
+    console.error("Error creating notification:", error);
+    res.status(500).json({ error: "Failed to create notification." });
+  }
+});
+
+app.get("/api/notifications", async (req, res) => {
+  try {
+    const notifications = await Notification.find();
+    res.json(notifications);
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "Failed to load notifications." });
+  }});
+
+  app.put("/upvote/:id", async (req, res) => {
   const { action, oppaction } = req.body;
   console.log("Action:", action);
   console.log("Opp Action:", oppaction);
