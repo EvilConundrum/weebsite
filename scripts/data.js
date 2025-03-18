@@ -37,6 +37,7 @@ const createUser = async (username, password) => {
   console.log(username + " " + password);
   try {
     const user = new User({
+      profilePicture: "/images/profile-pictures/deafult.gif",
       username: username,
       password: password,
     });
