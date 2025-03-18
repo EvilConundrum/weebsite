@@ -47,6 +47,7 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 // Add JSON parsing middleware
 app.use(express.json());
+const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
