@@ -87,7 +87,6 @@ async function editComment(commentId) {
     console.error(`Edit field not found for comment ${commentId}`);
     return;
   }
-  editField.value = displayComment.textContent.trim();
 
   const updatedContent = editField.value.trim();
 
