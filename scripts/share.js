@@ -5,11 +5,6 @@ const imageInput = document.getElementById("image-upload");
 const preview = document.getElementById("preview");
 const label = dropArea.querySelector("p"); // Target the label text
 
-document.getElementById("post-form").addEventListener("submit", async (e) => {
-  e.preventDefault(); // Prevents page reload on form submission
-  getPostData();
-});
-
 dropArea.addEventListener("click", () => imageInput.click());
 
 imageInput.addEventListener("change", handleFile);
