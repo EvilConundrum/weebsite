@@ -32,7 +32,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-const { User, Post, Notification, Comment } = require("./db.js");
+const { User, Post, Notification, Comment, Community } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
 
 // Middleware
