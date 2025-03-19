@@ -3,16 +3,19 @@
     <title>Weebsite - The Weeb Forum</title>
     <link rel="stylesheet" href="/styles/variables.css">
     <link rel="stylesheet" href="/styles/indexstyles.css">
-    <link rel="stylesheet" href="/styles/post.css" />
+    <link rel="stylesheet" href="/styles/post.css">
     <link rel="stylesheet" href="/styles/options.css">
     <link rel="stylesheet" href="/styles/comment.css">
+    <link rel="stylesheet" href="/styles/layout.css" />
 
     <script src="/scripts/button.js" defer></script>
     <script src="/scripts/include.js" defer></script>
     <script src="/scripts/views.js" defer></script>
+    <script src="/scripts/share.js" defer></script>
 </head>
 <body>
     {{> layout}}
+    <!--the layout show load here (sidebar and navbar)-->
 
   <div class="main-content">
     <div class="post selectedPost">
@@ -27,13 +30,13 @@
                 onclick="window.open('community.html', '_self')"
               >
                 <img src="images/interspeciesReviewers.png" class="pfp" alt="" />
-                <span class="postUsername">{{community}} /</span>
+                <span class="postUsername">{{post.community}} /</span>
               </span>
             <span
                 class="actionButton"
                 onclick="window.open('profile.html', '_self')">
                 <img src="images/pfp.png" class="pfp" alt="" />
-                <span class="postUsername"{{author}}></span>
+                <span class="postUsername">{{post.author}}</span>
               </span>
             <span class="postTime"> 2 hours ago</span>
           </div>
@@ -57,14 +60,14 @@
               </button>
               <!-- DROPDOWN -->
               <div class="dropdown-post-content-post">
-                <div class="dropdown-line-post">
+                <div class="dropdown-line-post" onclick="editPost('{{post._id}}')">
                   <svg class="dropdown-edit" width="20" height="19" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                     <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
                     <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
                   </svg>
                   <span>Edit</span>
                 </div>
-                <div class="dropdown-line-post">
+                <div class="dropdown-line-post" onclick="deletePost('{{post._id}}')">
                   <svg width="20" height="19" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
                     <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
                   </svg>
@@ -74,44 +77,54 @@
               <!-- END OF DROPDOWN -->
             </div>
           </div>
+        </div>
 
         <!-- Post Title -->
         <h2 class="postTitle">
-          {{title}}
+          {{post.title}}
         </h2>
 
         <!-- Post Body -->
         <div class="postBody">
-          <p>
-            {{content}}
-          </p>
-        </div>
+  <p class="hideBody">
+    {{post.content}}
+  </p>
+  <div class="hiddenEdit">
+    <textarea
+      class="innerContent editContent"
+      maxlength="1000"
+      rows="7"
+      oninput="autoExpand(this)"
+    ></textarea>
+    <button class="comment-reply" onclick="confirmEditPost('{{post._id}}')">Edit</button>
+  </div>
+</div>
 
         <!-- Post Actions -->
         <div class="postActions">
           <div class="reactionsContainer">
             <!-- Thumbs Up Box -->
             <div class="reactionBox">
-              <button class="actionButton like-button" aria-label="Thumbs Up">
+              <button class="actionButton like-button" aria-label="Thumbs Up" onclick="upvotePost('{{_id}}')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M1 21h4V9H1v12z M23 10c0-1.1-0.9-2-2-2h-6.31l0.95-4.57a1.983 1.983 0 0 0-0.44-1.74L14.17 1l-6.58 6.59A2 2 0 0 0 7 9v10a2 2 0 0 0 2 2h9c0.83 0 1.54-0.5 1.84-1.22l3.02-7.05c0.09-0.23 0.14-0.47 0.14-0.73v-2z"
                   />
                 </svg>
               </button>
-              <span class="voteCount">{{upvotes}}</span>
+              <span class="voteCount" id="upvotes-{{_id}}">{{post.upvotes}}</span>
             </div>
 
             <!-- Thumbs Down Box -->
             <div class="reactionBox">
-              <button class="actionButton dislike-button" aria-label="Thumbs Down">
+              <button class="actionButton dislike-button" aria-label="Thumbs Down" onclick="downvotePost('{{_id}}')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M23 3h-4v12h4V3z M1 14c0 1.1 0.9 2 2 2h6.31l-0.95 4.57a1.983 1.983 0 0 0 0.44 1.74L9.83 23l6.58-6.59c0.36-0.36 0.58-0.86 0.58-1.41V5a2 2 0 0 0-2-2H5c-0.83 0-1.54 0.5-1.84 1.22L0.14 11.27c-0.09 0.23-0.14 0.47-0.14 0.73v2z"
                   />
                 </svg>
               </button>
-              <span class="voteCount">{{downvotes}}</span>
+              <span class="voteCount" id="downvotes-{{_id}}">{{post.downvotes}}</span>
             </div>
 
             <!-- Comment Box -->
@@ -152,7 +165,6 @@
               </button>
             </div>
           </div>
-        </div>
         <!-- End of Post Content -->
       </div>
     </div>
@@ -162,13 +174,20 @@
         <span class="postUsername">u/ishigamiYu</span>
         <span class="postTime"> 3 hours ago</span>
       </div>
-      <input
+      <div class="usersComment">
+        <input
         type="text"
         class="searchBar commentBar"
         placeholder="Write down a comment..."
         maxlength="1000"
-      />
+        />
+        <button class="comment-reply" onclick="getComment('{{post._id}}')">Reply</button>
+      </div>
     </div>
+    {{#each comments}}
+      {{> comments}}
+    {{/each}}
+
     <div class="comment-section">
       <div class="postHeader">
         <div class="postHeaderLeft commentUser">
@@ -214,6 +233,7 @@
           </div>
         </div>
       </div>
+      {{!-- OLD SAMPLE DATA --}}
       <div class="commentSectionText">
         <p>I'VE WATCHED THESE SHOWS BEFORE!!!!!!!!!!</p>
       </div>
@@ -231,7 +251,8 @@
         <p>what is this show...</p>
       </div>
     </div>
-    <div class="comment-section">
+    <div class="comment-container">
+     <div class="comment-section">
       <div class="postHeaderLeft commentUser">
         <span class="actionButton" onclick="window.open('profile3.html', '_self')">
           <img src="images/kaguya.png" class="pfp"  alt=""/>
@@ -243,8 +264,8 @@
       <div class="commentSectionText">
         <p>not my type</p>
       </div>
-    </div>
-    <div class="comment-section">
+     </div>
+     <div class="comment-section">
       <div class="postHeaderLeft commentUser">
         <span class="actionButton" onclick="window.open('profile4.html', '_self')">
           <img src="images/chika.png" class="pfp"  alt=""/>
@@ -255,8 +276,8 @@
       <div class="commentSectionText">
         <p>I bet you're into that u/ishigamiYu :hehe:</p>
       </div>
-    </div>
-    <div class="comment-section">
+     </div>
+     <div class="comment-section">
       <div class="postHeaderLeft commentUser">
         <span class="actionButton" onclick="window.open('profile5.html', '_self')"><img src="images/iino.png" class="pfp"  alt=""/> <span class="postUsername">u/mikoIino</span></span>
         <span class="postTime"> 30 minutes ago</span>
@@ -264,8 +285,8 @@
       <div class="commentSectionText">
         <p>what is this?!</p>
       </div>
-    </div>
-    <div class="comment-section">
+     </div>
+     <div class="comment-section">
       <div class="postHeaderLeft commentUser">
         <span class="actionButton" onclick="window.open('profile6.html', '_self')">
           <img src="images/pikachu.png" class="pfp"  alt=""/>
@@ -277,6 +298,7 @@
       <div class="commentSectionText">
         <p>pukka pukka pukka</p>
       </div>
+    </div>
     </div>
   </div>
 </body>

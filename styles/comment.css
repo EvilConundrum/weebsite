@@ -54,3 +54,28 @@
   outline: none;
   resize: none;
 }
+
+.dropdown-line-post button {
+  overflow: hidden;
+  color: var(--text-60);
+  height: 12px;
+  text-overflow: ellipsis;
+  font-family: var(--secondary-font, "Golos Text"), sans-serif;
+  font-size: var(--XS, 12px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.hiddenComment {
+  display: none;
+}
+
+.usersComment {
+  display: flex;
+  gap: 15px;
+}
+
+.userComment {
+  gap: 15px;
+}

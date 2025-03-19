@@ -130,14 +130,41 @@ function togglePostDropdownVisibility() {
   });
 }
 
-function toggleCommentDropdownVisibility() {
-  document.querySelectorAll(".dropdown-comment-content-post").forEach((div) => {
-    if (div.style.display === "none" || div.style.display === "") {
-      div.style.display = "block"; // Show div
-    } else {
-      div.style.display = "none"; // Hide div
-    }
-  });
+function toggleCommentDropdownVisibility(commentId) {
+  const dropdown = document.getElementById(`dropdown-${commentId}`);
+  const isDisplayed = window.getComputedStyle(dropdown).display !== "none";
+
+  if (isDisplayed) {
+    dropdown.style.display = "none";
+  } else {
+    dropdown.style.display = "block";
+  }
+}
+
+function toggleEditComment(commentId) {
+  const editComment = document.getElementById(`editComment-${commentId}`);
+  const dropdown = document.getElementById(`dropdown-${commentId}`);
+  const displayComment = document.getElementById(
+    `commentSectionText-${commentId}`
+  );
+  const editField = document.querySelector(`input.commentBar`);
+  const textValue = displayComment.textContent.trim();
+
+  const isDisplayed =
+    window.getComputedStyle(displayComment).display !== "none";
+
+  if (isDisplayed) {
+    displayComment.style.display = "none";
+    editComment.style.display = "flex";
+    editField.value = textValue;
+  } else {
+    displayComment.style.display = "flex";
+    editComment.style.display = "none";
+  }
+
+  if (dropdown && dropdown.style.display !== "none") {
+    dropdown.style.display = "none";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
