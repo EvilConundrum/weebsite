@@ -29,6 +29,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
+
 const { User, Post, Notification } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
 
@@ -77,8 +78,12 @@ app.get("/home", async (req, res) => {
 });
 
 app.get("/post/:id", async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  res.render(path.join(__dirname, "../views/postView.hbs"), { post });
+  const { id } = req.params;
+  const post = await Post.findById(id).lean();
+  const comments = await Comment.find({ postId: id }).lean();
+  console.log("Posts:", post);
+  console.log("Comments:", comments);
+  res.render(path.join(__dirname, "../views/postView.hbs"), { post, comments });
 });
 
 app.get("/profile/:id", (req, res) => {
@@ -259,6 +264,97 @@ app.put("/downvote/:id", async (req, res) => {
   }
 
   res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
+});
+
+const uploader = multer();
+
+app.post("/create-comment", upload.none(), async (req, res) => {
+  const { author, content, postId } = req.body;
+
+  // if (!author) {
+  //   return res.status(400).json({ error: "Missing author fields" });
+  // }
+  // if (!content) {
+  //   return res.status(400).json({ error: "Missing content fields" });
+  // }
+  // if (!postId) {
+  //   return res.status(400).json({ error: "Missing post id fields" });
+  // }
+
+  // console.log("Author: ", author);
+  // console.log("Content: ", content);
+  // console.log("Post ID: ", postId);
+  const newComment = await Comment.create({
+    author,
+    content,
+    postId,
+  });
+});
+
+app.put("/edit-comment", upload.none(), async (req, res) => {
+  const { content, id } = req.body;
+
+  if (!id || !content || content === "") {
+    return res
+      .status(400)
+      .json({ error: "Content is required and cannot be empty." });
+  }
+
+  console.log(content);
+  console.log(id);
+
+  const editComment = await Comment.findByIdAndUpdate(
+    id,
+    { content },
+    { new: true }
+  );
+
+  res.json({ success: true, content });
+});
+
+app.delete("/delete-comment/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const deletedComment = await Comment.findByIdAndDelete(id);
+
+  if (!deletedComment) {
+    return res.status(404).json({ error: "Comment not found." });
+  }
+
+  res.json({ success: true, message: "Comment deleted successfully." });
+});
+
+app.put("/edit-post", upload.none(), async (req, res) => {
+  const { content, id } = req.body;
+
+  if (!id || !content || content === "") {
+    return res
+      .status(400)
+      .json({ error: "Content is required and cannot be empty." });
+  }
+
+  console.log(content);
+  console.log(id);
+
+  const editComment = await Post.findByIdAndUpdate(
+    id,
+    { content },
+    { new: true }
+  );
+
+  res.json({ success: true, content });
+});
+
+app.delete("/delete-post/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const deletedPost = await Post.findByIdAndDelete(id);
+
+  if (!deletedPost) {
+    return res.status(404).json({ error: "Post not found." });
+  }
+
+  res.json({ success: true, message: "Post deleted successfully." });
 });
 
 // app.post("/create-post", upload.single("image"), async (req, res) => {

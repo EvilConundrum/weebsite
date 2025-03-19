@@ -13,6 +13,8 @@ function viewPost(id) {
 function switchPage(page, id = null) {
   console.log(`Switching page to ${page}`);
 
+  window.history.replaceState(null, "", window.location.origin);
+
   if (id) {
     window.location.href = `/${page}/${id}`;
   } else {
@@ -40,10 +42,6 @@ async function getPostData() {
       method: "POST",
       body: formData, // No need for `Content-Type`, FormData sets it automatically
     });
-    console.log("📌 FormData contents:");
-    for (let pair of formData.entries()) {
-      console.log(pair[0], ":", pair[1]);
-    }
 
     if (response.ok) {
       const result = await response.json();
