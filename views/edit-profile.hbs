@@ -1,37 +1,93 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Edit Profile</title>
-    <link rel="stylesheet" href="/weebsite/styles/variables.css" />
-    <link rel="stylesheet" href="/weebsite/styles/edit-profile.css" />
+    <title>{{#if userData.username}}Edit Profile - {{userData.username}}{{else}}Weebsite - The Weeb Forum{{/if}}</title>
+    <link rel="stylesheet" href="/styles/edit-profile.css" />
+    <link rel="stylesheet" href="/styles/indexstyles.css" />
+    <script src="/scripts/button.js" defer></script>
+    <script src="/scripts/include.js" defer></script>
   </head>
   <body>
     <div id="popup-container">
-      <div id="main-content">
-        <div id="profile-pic-submission-container">
-          <div id="profile-pic-wrapper">
-            <img id="current-profile-pic" src="/weebsite/images/pfp.png" alt="Profile Picture">
-            <div id="account-settings-dropdown">
-              <a href="/weebsite/edit-profile">Edit Profile</a>
-              <a href="/weebsite/change-password">Change Password</a>
-              <a href="/weebsite/privacy-settings">Privacy Settings</a>
-              <a href="/weebsite/logout">Logout</a>
-            </div>
-          </div>
-          <div id="submission-container">
-            <p id="uploading-guidelines">Must be jpg, gif, or png format. No NSFW allowed. No copyrighted images. Maximum of 225 x 350 pixels (resized automatically).</p>
-            <button id="submit-profile-pic">Upload Profile Picture</button>
-          </div>
-        </div>
-        <div id="user-bio-edit-container">
-          <label for="user-bio">Edit your Bio</label>
-          <textarea id="user-bio" placeholder="Enter your bio..."></textarea>
-        </div>
-      </div>
-      <div class="footer">
-        <button id="cancel-changes" onclick="window.location.href='/weebsite/profile'">Cancel</button>
-        <button id="confirm-changes" onclick="window.location.href='/weebsite/profile'">Confirm</button>
+     <form id="profile-form" action="/update-profile" method="POST" enctype="multipart/form-data">
+  <div id="main-content">
+    <div id="profile-pic-submission-container">
+      <img id="current-profile-pic" src="{{userData.profilePicture}}" alt="Profile Picture">
+      <div id="submission-container">
+        <p id="uploading-guidelines">
+          Must be jpg, gif or png format. No NSFW allowed. No copyrighted images. 
+          Maximum of 225 x 350 pixels (resized automatically).
+        </p>
+        <input 
+          type="file" 
+          id="profile-picture-input" 
+          name="profilePicture" 
+          accept="image/*"
+          style="display: none;"
+        />
+        <button 
+          type="button"
+          id="submit-profile-pic"
+          onclick="document.getElementById('profile-picture-input').click()"
+        >
+          {{#if userData.profilePicture}}Change{{else}}Upload{{/if}} Profile Picture
+        </button>
+        <div id="upload-status"></div>
       </div>
     </div>
+    <div id="user-bio-edit-container">
+      <label for="user-bio">Edit your Bio</label>
+      <textarea 
+        id="user-bio" 
+        name="bio"
+        placeholder="Enter your bio..."
+      >{{userData.bio}}</textarea>
+    </div>
+  </div>
+  <div class="footer">
+    <button 
+      type="button"
+      id="cancel-changes" 
+      onclick="window.location.href='/profile'"
+    >
+      Cancel
+    </button>
+    <button 
+      type="submit"
+      id="confirm-changes"
+    >
+      Confirm
+    </button>
+  </div>
+</form>
+    </div>
+
+    <script>
+      document.getElementById('profile-picture-input').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('current-profile-pic').src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      function validateForm() {
+        const fileInput = document.getElementById('profile-picture-input');
+        const bioInput = document.getElementById('user-bio');
+        const bio = bioInput.value.trim();
+        const originalBio = bioInput.defaultValue.trim();
+
+        const isBioChanged = bio !== originalBio;
+
+        if (!fileInput.files[0] && !isBioChanged) {
+          alert('Please make at least one change before submitting');
+          return false;
+        }
+        return true;
+      }
+    </script>
   </body>
 </html>

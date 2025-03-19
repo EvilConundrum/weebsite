@@ -6,6 +6,7 @@ const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const multer = require("multer");
+const fs = require('fs');
 
 const app = express();
 
@@ -19,6 +20,9 @@ app.engine(
     partialsDir: path.join(__dirname, "../views/partials"),
   })
 );
+
+app.use(express.static("weebsite")); 
+
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/weebsiteDB")
@@ -49,6 +53,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
+app.use("/images/profile-pictures", express.static(
+  path.join(__dirname, "../weebsite/images/profile-pictures")
+));
+
+const profileStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../weebsite/images/profile-pictures')); // Updated path
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Unique filename
+  }
+});
+
+const profileUpload = multer({ 
+  storage: profileStorage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
+
+
+
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
   if (req.session.user) {
@@ -63,6 +87,35 @@ app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 
 app.listen(9000, "localhost", () => {
   console.log("Server is listening on port 9000");
+});
+
+app.engine("hbs", hbs.engine({
+  extname: "hbs",
+  defaultLayout: false,
+  partialsDir: path.join(__dirname, "../views/partials"),
+  helpers: {
+    timestamp: () => Date.now() // Cache busting
+  }
+}));
+
+app.get("/home", isAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    res.render("index", {
+      userData: {
+        profilePicture: user.profilePicture,
+        username: user.username
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
+});
+
+
+app.get("/post/:id", (req, res) => {
+  res.render(path.join(__dirname, "../views/postView.hbs"));
 });
 
 app.get("/home", async (req, res) => {
@@ -85,8 +138,30 @@ app.get("/post/:id", async (req, res) => {
   res.render(path.join(__dirname, "../views/postView.hbs"), { post, comments });
 });
 
-app.get("/profile/:id", (req, res) => {
-  res.render(path.join(__dirname, "../views/profile.hbs"));
+app.get("/profile", isAuthenticated, async (req, res) => {
+  try {
+    const userData = await User.findById(req.session.user._id)
+      .populate('posts')
+      .populate('comments')
+      .lean();
+
+    res.render('profile', { 
+      userData: {
+        ...userData,
+        username: userData.username,
+        profilePicture: userData.profilePicture,
+        bio: userData.bio
+      }
+    });
+  } catch (error) {
+    console.error('Profile load error:', error);
+    res.status(500).send('Error loading profile');
+  }
+});
+
+app.get("/edit-profile", isAuthenticated, (req, res) => {
+  const userData = req.session.user;
+  res.render('edit-profile', { userData });
 });
 
 app.get("/create-post", (req, res) => {
@@ -108,8 +183,10 @@ app.post("/create-post", upload.array("images", 5), async (req, res) => {
   console.log("Post saved successfully:", newPost);
 });
 
-app.get("/", (req, res) => {
-  res.render(path.join(__dirname, "../views/logout.hbs"));
+app.get('/', (req, res) => {
+  res.render('index', {
+    userData: req.session.user || null // Pass null if no user is logged in
+  });
 });
 
 app.get("/login", (req, res) => {
@@ -288,27 +365,72 @@ app.post("/create-comment", upload.none(), async (req, res) => {
   });
 });
 
-app.put("/edit-comment", upload.none(), async (req, res) => {
-  const { content, id } = req.body;
+// Profile update route
+app.post('/update-profile', 
+  isAuthenticated,
+  profileUpload.single('profilePicture'), // Use profile-specific upload config
+  async (req, res) => {
+    try {
+      const updateData = {
+        bio: req.body.bio
+      };
 
-  if (!id || !content || content === "") {
-    return res
-      .status(400)
-      .json({ error: "Content is required and cannot be empty." });
+      // Handle profile picture update
+      if (req.file) {
+        updateData.profilePicture = `/images/profile-pictures/${req.file.filename}`;
+      }
+
+      // Update user document
+      const updatedUser = await User.findByIdAndUpdate(
+        req.session.user._id,
+        { $set: updateData },
+        { new: true }
+      );
+
+      // Update session data
+      req.session.user = updatedUser;
+      
+      res.redirect('/profile');
+    } catch (error) {
+      console.error('Profile update error:', error);
+      res.status(500).send('Error updating profile');
+    }
   }
+);
 
-  console.log(content);
-  console.log(id);
-
-  const editComment = await Comment.findByIdAndUpdate(
-    id,
-    { content },
-    { new: true }
-  );
-
-  res.json({ success: true, content });
+app.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.status(500).send('Logout error');
+    }
+    res.redirect('/'); // Redirect to root after logout
+  });
 });
 
+
+ app.put("/edit-comment", upload.none(), async (req, res) => {
+ const { content, id } = req.body;
+
+ if (!id || !content || content === "") {
+   return res
+     .status(400)
+     .json({ error: "Content is required and cannot be empty." });
+ }
+
+ console.log(content);
+ console.log(id);
+
+ const editComment = await Comment.findByIdAndUpdate(
+   id,
+   { content },
+   { new: true }
+ );
+
+ res.json({ success: true, content });
+});
+
+  
 app.delete("/delete-comment/:id", async (req, res) => {
   const { id } = req.params;
 
