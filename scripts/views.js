@@ -25,16 +25,14 @@ function switchPage(page, id = null) {
 window.switchPage = switchPage;
 
 async function getPostData() {
+
   const formData = new FormData();
   formData.append("title", document.getElementById("title").value);
-  formData.append("content", document.getElementById("description").value);
+  formData.append("description", document.getElementById("description").value);
+  formData.append("tags", document.getElementById("tags").value);
   formData.append("author", "cleevayang");
-  formData.append("community", document.getElementById("tags").value);
-  const image = document.getElementById("image-upload").files[0];
-  if (image) {
-    formData.append("images", image);
-  }
 
+  const image = document.getElementById("image-upload").files[0];
   if (image) formData.append("image", image);
 
   try {
@@ -45,9 +43,9 @@ async function getPostData() {
 
     if (response.ok) {
       const result = await response.json();
-      // console.log("Post created successfully:", result);
+      console.log("Post created successfully:", result);
       alert("Post created successfully!");
-      switchPage("home");
+      switchPage('home');
     } else {
       const errorText = await response.text();
       console.error("Failed to create post:", errorText);
@@ -55,6 +53,7 @@ async function getPostData() {
     }
   } catch (error) {
     console.error("Error connecting to the server:", error.message);
+    res.status(500).json({ error: "Error connecting to the server: " + error.message });
   }
 }
 
@@ -63,20 +62,20 @@ async function getUserData() {
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirm-password").value;
-
+  
   // Basic validation
   if (!username || !password) {
     alert("Username and password are required");
     return;
   }
-
+  
   if (password !== confirmPassword) {
     alert("Passwords do not match");
     return;
   }
-
+  
   console.log("Submitting user data:", username, password);
-
+  
   try {
     const response = await fetch("/signup", {
       method: "POST",
@@ -91,7 +90,7 @@ async function getUserData() {
       console.log("User signed up successfully:", result);
       alert("User signed up successfully!");
       // Redirect to login page after successful signup
-      switchPage("login");
+      switchPage('login');
     } else {
       const errorText = await response.text();
       console.error("Failed to sign up:", response.statusText, errorText);
@@ -101,7 +100,6 @@ async function getUserData() {
     console.error("Error connecting to the server:", error.message);
     alert("Error connecting to the server: " + error.message);
   }
-}
 
 async function upvotePost(postId) {
   const button = document.getElementById(`upvotes-${postId}`);

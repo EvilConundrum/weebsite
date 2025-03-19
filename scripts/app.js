@@ -51,7 +51,6 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 // Add JSON parsing middleware
 app.use(express.json());
-const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
 app.use("/images/profile-pictures", express.static(
   path.join(__dirname, "../weebsite/images/profile-pictures")
@@ -96,7 +95,7 @@ app.engine("hbs", hbs.engine({
   helpers: {
     timestamp: () => Date.now() // Cache busting
   }
-}));
+}));  
 
 app.get("/home", isAuthenticated, async (req, res) => {
   try {
@@ -241,6 +240,8 @@ app.post("/create-post", upload.single("image"), async (req, res) => {
   const { title, description, tags, author } = req.body;
   const image = req.file;
 
+  const images = image ? [image.filename] : [];
+
   try {
     await createPost(title, description, tags, author, images);
     res.status(201).json({ message: "Post created successfully!" }); // Send success response
@@ -260,10 +261,9 @@ app.post("/api/notifications", async (req, res) => {
 
   try {
     const notification = await createNotification(userID, content, type);
-    console.log("hello");
-    res
-      .status(201)
-      .json({ message: "Notification created successfully!", notification });
+
+    res.status(201).json({ message: "Notification created successfully!", notification });
+    
   } catch (error) {
     console.error("Error creating notification:", error);
     res.status(500).json({ error: "Failed to create notification." });
