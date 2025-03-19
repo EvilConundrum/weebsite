@@ -83,8 +83,9 @@ app.use("/styles", express.static(path.join(__dirname, "../styles")));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 
-app.listen(9000, "localhost", () => {
-  console.log("Server is listening on port 9000");
+const PORT = process.env.PORT || 9000;
+app.listen(PORT, "localhost", () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
 
 app.engine(
@@ -115,17 +116,6 @@ app.get("/home", isAuthenticated, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-
-// app.get("/home", async (req, res) => {
-//   try {
-//     const posts = await Post.find().lean();
-//     console.log("Posts fetched successfully:", posts);
-//     res.render(path.join(__dirname, "../views/index.hbs"), { posts });
-//   } catch (error) {
-//     console.error("Error fetching posts:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;

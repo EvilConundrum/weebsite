@@ -10,18 +10,22 @@ function viewPost(id) {
   window.location.href = `/post/${id}`;
 }
 
+
 function switchPage(page, id = null) {
   console.log(`Switching page to ${page}`);
 
-  // Ensure the URL starts from the root
-  const basePath = window.location.origin;
+  // Ensure absolute path by including the leading '/'
+  const newPath = id ? `/${page}/${id}` : `/${page}`;
 
-  if (id) {
-    window.location.href = `${basePath}/${page}/${id}`;
-  } else {
-    window.location.href = `${basePath}/${page}`;
-  }
+  // Replace the full URL with absolute path
+  window.history.replaceState(null, "", newPath);
+  window.location.href = newPath;
 }
+
+function goHome(){
+  window.location.href = "/home"
+}
+
 
 window.switchPage = switchPage;
 
