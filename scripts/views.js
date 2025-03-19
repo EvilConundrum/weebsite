@@ -83,7 +83,7 @@ async function getUserData() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: { username: username, password: password },
+      body: JSON.stringify({ username: username, password: password }),
     });
 
     if (response.ok) {
@@ -101,6 +101,7 @@ async function getUserData() {
     console.error("Error connecting to the server:", error.message);
     alert("Error connecting to the server: " + error.message);
   }
+}
 
 async function upvotePost(postId) {
   const button = document.getElementById(`upvotes-${postId}`);
@@ -168,8 +169,3 @@ async function downvotePost(postId) {
   }
 }
 
-function switchPage(path) {
-  window.location.href = `/${path}`;
-}
-
-}
