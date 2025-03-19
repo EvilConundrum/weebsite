@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="styles/variables.css" />
     <link rel="stylesheet" href="styles/indexstyles.css" />
     <link rel="stylesheet" href="styles/post.css" />
+    <link rel="stylesheet" href="styles/layout.css" />
 
     <script src="scripts/include.js" defer></script>
     <script src="scripts/button.js" defer></script>
@@ -11,7 +12,7 @@
     <script src="scripts/notif.js" defer></script>
   </head>
   <body>
-    {{> layout}}
+   {{> layout userData=userData}}
     <!--the layout show load here (sidebar and navbar)-->
 
     <!-- Main content area -->
@@ -38,10 +39,15 @@
               </span>
               <span
                 class="actionButton"
-                onclick="window.open('profile.html', '_self')"
+                onclick="window.open('/profile', '_self')"
               >
-                <img src="images/pfp.png" class="pfp" alt="" />
-                <span class="postUsername">u/ishigamiYu</span>
+               {{#if userData}}
+                  <img src="{{userData.profilePicture}}" class="pfp" alt="" />
+                  <span class="postUsername">u/{{userData.username}}</span>
+                {{else}}
+                  <img src="/images/pfp.png" class="pfp" alt="" />
+                  <span class="postUsername">u/ishigamiYu</span>
+                {{/if}}
               </span>
               <span class="postTime"> 2 hours ago</span>
             </div>
@@ -165,10 +171,15 @@
               </span>
               <span
                 class="actionButton"
-                onclick="window.open('profile.html', '_self')"
+                onclick="window.open('/profile', '_self')"
               >
-                <img src="images/pfp.png" class="pfp" alt="" />
-                <span class="postUsername">u/ishigamiYu</span>
+               {{#if userData}}
+                  <img src="{{userData.profilePicture}}" class="pfp" alt="" />
+                  <span class="postUsername">u/{{userData.username}}</span>
+                {{else}}
+                  <img src="/images/pfp.png" class="pfp" alt="" />
+                  <span class="postUsername">u/ishigamiYu</span>
+                {{/if}}
               </span>
               <span class="postTime"> 1 hour ago</span>
             </div>
@@ -282,10 +293,15 @@
               <span class="postUsername">w/attackOnTitan /</span>
               <span
                 class="actionButton"
-                onclick="window.open('profile.html', '_self')"
+                onclick="window.open('/profile', '_self')"
               >
-                <img src="images/pfp.png" class="pfp" alt="" />
-                <span class="postUsername">u/ishigamiYu</span>
+               {{#if userData}}
+                  <img src="{{userData.profilePicture}}" class="pfp" alt="" />
+                  <span class="postUsername">u/{{userData.username}}</span>
+                {{else}}
+                  <img src="/images/pfp.png" class="pfp" alt="" />
+                  <span class="postUsername">u/ishigamiYu</span>
+                {{/if}}
               </span>
               <span class="postTime"> 3 hours ago</span>
             </div>

@@ -13,6 +13,8 @@ function viewPost(id) {
 function switchPage(page, id = null) {
   console.log(`Switching page to ${page}`);
 
+  window.history.replaceState(null, "", window.location.origin);
+
   if (id) {
     window.location.href = `/${page}/${id}`;
   } else {
@@ -80,7 +82,7 @@ async function getUserData() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username: username, password: password }),
     });
 
     if (response.ok) {
@@ -97,5 +99,70 @@ async function getUserData() {
   } catch (error) {
     console.error("Error connecting to the server:", error.message);
     alert("Error connecting to the server: " + error.message);
+  }
+
+async function upvotePost(postId) {
+  const button = document.getElementById(`upvotes-${postId}`);
+  const oppBtn = document.getElementById(`downvotes-${postId}`);
+  const isActive = button.classList.contains("active");
+  const isOppActive = oppBtn.classList.contains("active");
+
+  const body = {};
+
+  if (!isActive) {
+    body.action = "add";
+    if (isOppActive) {
+      body.oppaction = "remove";
+    }
+  } else {
+    body.action = "remove";
+  }
+
+  const res = await fetch(`/upvote/${postId}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    button.textContent = data.upvotes;
+    oppBtn.textContent = data.downvotes;
+
+    button.classList.toggle("active");
+    oppBtn.classList.remove("active");
+  }
+}
+
+async function downvotePost(postId) {
+  const button = document.getElementById(`downvotes-${postId}`);
+  const oppBtn = document.getElementById(`upvotes-${postId}`);
+  const isActive = button.classList.contains("active");
+  const isOppActive = oppBtn.classList.contains("active");
+
+  const body = {};
+
+  if (!isActive) {
+    body.action = "add";
+    if (isOppActive) {
+      body.oppaction = "remove";
+    }
+  } else {
+    body.action = "remove";
+  }
+
+  const res = await fetch(`/downvote/${postId}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    button.textContent = data.downvotes;
+    oppBtn.textContent = data.upvotes;
+
+    button.classList.toggle("active");
+    oppBtn.classList.remove("active");
   }
 }

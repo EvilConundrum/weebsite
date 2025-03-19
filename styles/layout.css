@@ -72,7 +72,7 @@
   margin-right: 0;
   margin-bottom: 1.5%;
   padding-left: 1.5%;
-  width: 95%;
+  width: 80%;
 }
 
 .searchIcon {
@@ -190,4 +190,10 @@ svg {
 
 .createPost:hover {
   box-shadow: 0 4px 16px 0 var(--primary-70);
+}
+
+#layoutpfp{
+  height: 25px;
+  width: auto;
+  border-radius: 9999px;
 }

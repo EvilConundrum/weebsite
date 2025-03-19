@@ -13,7 +13,7 @@ const postSchema = new Schema({
 const commentSchema = new Schema({
   author: { type: String, required: true },
   content: { type: String, required: true },
-  postID: { type: Schema.Types.ObjectId, ref: "Post", required: true },
+  postId: { type: Schema.Types.ObjectId, ref: "Post", required: true },
 });
 
 const userSchema = new Schema({
