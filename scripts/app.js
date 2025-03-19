@@ -6,7 +6,7 @@ const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const multer = require("multer");
-const fs = require('fs');
+const fs = require("fs");
 
 const app = express();
 
@@ -21,8 +21,7 @@ app.engine(
   })
 );
 
-app.use(express.static("weebsite")); 
-
+app.use(express.static("weebsite"));
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/weebsiteDB")
@@ -53,25 +52,24 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
-app.use("/images/profile-pictures", express.static(
-  path.join(__dirname, "../weebsite/images/profile-pictures")
-));
+app.use(
+  "/images/profile-pictures",
+  express.static(path.join(__dirname, "../weebsite/images/profile-pictures"))
+);
 
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../weebsite/images/profile-pictures')); // Updated path
+    cb(null, path.join(__dirname, "../weebsite/images/profile-pictures")); // Updated path
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); // Unique filename
-  }
+    cb(null, Date.now() + "-" + file.originalname); // Unique filename
+  },
 });
 
-const profileUpload = multer({ 
+const profileUpload = multer({
   storage: profileStorage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
 });
-
-
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
@@ -89,23 +87,28 @@ app.listen(9000, "localhost", () => {
   console.log("Server is listening on port 9000");
 });
 
-app.engine("hbs", hbs.engine({
-  extname: "hbs",
-  defaultLayout: false,
-  partialsDir: path.join(__dirname, "../views/partials"),
-  helpers: {
-    timestamp: () => Date.now() // Cache busting
-  }
-}));
+app.engine(
+  "hbs",
+  hbs.engine({
+    extname: "hbs",
+    defaultLayout: false,
+    partialsDir: path.join(__dirname, "../views/partials"),
+    helpers: {
+      timestamp: () => Date.now(), // Cache busting
+    },
+  })
+);
 
 app.get("/home", isAuthenticated, async (req, res) => {
   try {
     const user = await User.findById(req.session.user._id);
+    const posts = await Post.find().lean();
     res.render("index", {
       userData: {
         profilePicture: user.profilePicture,
-        username: user.username
-      }
+        username: user.username,
+      },
+      posts,
     });
   } catch (error) {
     console.error(error);
@@ -113,21 +116,16 @@ app.get("/home", isAuthenticated, async (req, res) => {
   }
 });
 
-
-app.get("/post/:id", (req, res) => {
-  res.render(path.join(__dirname, "../views/postView.hbs"));
-});
-
-app.get("/home", async (req, res) => {
-  try {
-    const posts = await Post.find().lean();
-    // console.log("Posts fetched successfully:", posts);
-    res.render(path.join(__dirname, "../views/index.hbs"), { posts });
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+// app.get("/home", async (req, res) => {
+//   try {
+//     const posts = await Post.find().lean();
+//     console.log("Posts fetched successfully:", posts);
+//     res.render(path.join(__dirname, "../views/index.hbs"), { posts });
+//   } catch (error) {
+//     console.error("Error fetching posts:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;
@@ -138,30 +136,30 @@ app.get("/post/:id", async (req, res) => {
   res.render(path.join(__dirname, "../views/postView.hbs"), { post, comments });
 });
 
-app.get("/profile", isAuthenticated, async (req, res) => {
+app.get("/profile/", isAuthenticated, async (req, res) => {
   try {
     const userData = await User.findById(req.session.user._id)
-      .populate('posts')
-      .populate('comments')
+      .populate("posts")
+      .populate("comments")
       .lean();
 
-    res.render('profile', { 
+    res.render("profile", {
       userData: {
         ...userData,
         username: userData.username,
         profilePicture: userData.profilePicture,
-        bio: userData.bio
-      }
+        bio: userData.bio,
+      },
     });
   } catch (error) {
-    console.error('Profile load error:', error);
-    res.status(500).send('Error loading profile');
+    console.error("Profile load error:", error);
+    res.status(500).send("Error loading profile");
   }
 });
 
 app.get("/edit-profile", isAuthenticated, (req, res) => {
   const userData = req.session.user;
-  res.render('edit-profile', { userData });
+  res.render("edit-profile", { userData });
 });
 
 app.get("/create-post", (req, res) => {
@@ -183,9 +181,9 @@ app.post("/create-post", upload.array("images", 5), async (req, res) => {
   console.log("Post saved successfully:", newPost);
 });
 
-app.get('/', (req, res) => {
-  res.render('index', {
-    userData: req.session.user || null // Pass null if no user is logged in
+app.get("/", (req, res) => {
+  res.render("index", {
+    userData: req.session.user || null, // Pass null if no user is logged in
   });
 });
 
@@ -366,13 +364,14 @@ app.post("/create-comment", upload.none(), async (req, res) => {
 });
 
 // Profile update route
-app.post('/update-profile', 
+app.post(
+  "/update-profile",
   isAuthenticated,
-  profileUpload.single('profilePicture'), // Use profile-specific upload config
+  profileUpload.single("profilePicture"), // Use profile-specific upload config
   async (req, res) => {
     try {
       const updateData = {
-        bio: req.body.bio
+        bio: req.body.bio,
       };
 
       // Handle profile picture update
@@ -389,48 +388,46 @@ app.post('/update-profile',
 
       // Update session data
       req.session.user = updatedUser;
-      
-      res.redirect('/profile');
+
+      res.redirect("/profile");
     } catch (error) {
-      console.error('Profile update error:', error);
-      res.status(500).send('Error updating profile');
+      console.error("Profile update error:", error);
+      res.status(500).send("Error updating profile");
     }
   }
 );
 
-app.post('/logout', (req, res) => {
-  req.session.destroy(err => {
+app.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
     if (err) {
-      console.error('Error destroying session:', err);
-      return res.status(500).send('Logout error');
+      console.error("Error destroying session:", err);
+      return res.status(500).send("Logout error");
     }
-    res.redirect('/'); // Redirect to root after logout
+    res.redirect("/"); // Redirect to root after logout
   });
 });
 
+app.put("/edit-comment", upload.none(), async (req, res) => {
+  const { content, id } = req.body;
 
- app.put("/edit-comment", upload.none(), async (req, res) => {
- const { content, id } = req.body;
+  if (!id || !content || content === "") {
+    return res
+      .status(400)
+      .json({ error: "Content is required and cannot be empty." });
+  }
 
- if (!id || !content || content === "") {
-   return res
-     .status(400)
-     .json({ error: "Content is required and cannot be empty." });
- }
+  console.log(content);
+  console.log(id);
 
- console.log(content);
- console.log(id);
+  const editComment = await Comment.findByIdAndUpdate(
+    id,
+    { content },
+    { new: true }
+  );
 
- const editComment = await Comment.findByIdAndUpdate(
-   id,
-   { content },
-   { new: true }
- );
-
- res.json({ success: true, content });
+  res.json({ success: true, content });
 });
 
-  
 app.delete("/delete-comment/:id", async (req, res) => {
   const { id } = req.params;
 
