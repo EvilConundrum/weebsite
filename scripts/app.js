@@ -9,6 +9,7 @@ const multer = require("multer");
 const fs = require("fs");
 
 const app = express();
+const upload = multer({ dest: "uploads/" });
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "../views"));
@@ -50,7 +51,6 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 // Add JSON parsing middleware
 app.use(express.json());
-const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
 app.use(
   "/images/profile-pictures",
@@ -115,17 +115,6 @@ app.get("/home", isAuthenticated, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-
-// app.get("/home", async (req, res) => {
-//   try {
-//     const posts = await Post.find().lean();
-//     console.log("Posts fetched successfully:", posts);
-//     res.render(path.join(__dirname, "../views/index.hbs"), { posts });
-//   } catch (error) {
-//     console.error("Error fetching posts:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;
@@ -239,6 +228,8 @@ app.post("/create-post", upload.single("image"), async (req, res) => {
   const { title, description, tags, author } = req.body;
   const image = req.file;
 
+  const images = image ? [image.filename] : [];
+
   try {
     await createPost(title, description, tags, author, images);
     res.status(201).json({ message: "Post created successfully!" }); // Send success response
@@ -258,7 +249,7 @@ app.post("/api/notifications", async (req, res) => {
 
   try {
     const notification = await createNotification(userID, content, type);
-    console.log("hello");
+
     res
       .status(201)
       .json({ message: "Notification created successfully!", notification });

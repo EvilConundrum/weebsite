@@ -83,7 +83,7 @@ async function getUserData() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username: username, password: password }),
+      body: { username: username, password: password },
     });
 
     if (response.ok) {

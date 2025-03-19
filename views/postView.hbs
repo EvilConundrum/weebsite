@@ -105,26 +105,26 @@
           <div class="reactionsContainer">
             <!-- Thumbs Up Box -->
             <div class="reactionBox">
-              <button class="actionButton like-button" aria-label="Thumbs Up" onclick="upvotePost('{{_id}}')">
+              <button class="actionButton like-button" aria-label="Thumbs Up" onclick="upvotePost('{{post._id}}')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M1 21h4V9H1v12z M23 10c0-1.1-0.9-2-2-2h-6.31l0.95-4.57a1.983 1.983 0 0 0-0.44-1.74L14.17 1l-6.58 6.59A2 2 0 0 0 7 9v10a2 2 0 0 0 2 2h9c0.83 0 1.54-0.5 1.84-1.22l3.02-7.05c0.09-0.23 0.14-0.47 0.14-0.73v-2z"
                   />
                 </svg>
               </button>
-              <span class="voteCount" id="upvotes-{{_id}}">{{post.upvotes}}</span>
+              <span class="voteCount" id="upvotes-{{post._id}}">{{post.upvotes}}</span>
             </div>
 
             <!-- Thumbs Down Box -->
             <div class="reactionBox">
-              <button class="actionButton dislike-button" aria-label="Thumbs Down" onclick="downvotePost('{{_id}}')">
+              <button class="actionButton dislike-button" aria-label="Thumbs Down" onclick="downvotePost('{{post._id}}')">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                   <path
                     d="M23 3h-4v12h4V3z M1 14c0 1.1 0.9 2 2 2h6.31l-0.95 4.57a1.983 1.983 0 0 0 0.44 1.74L9.83 23l6.58-6.59c0.36-0.36 0.58-0.86 0.58-1.41V5a2 2 0 0 0-2-2H5c-0.83 0-1.54 0.5-1.84 1.22L0.14 11.27c-0.09 0.23-0.14 0.47-0.14 0.73v2z"
                   />
                 </svg>
               </button>
-              <span class="voteCount" id="downvotes-{{_id}}">{{post.downvotes}}</span>
+              <span class="voteCount" id="downvotes-{{post._id}}">{{post.downvotes}}</span>
             </div>
 
             <!-- Comment Box -->

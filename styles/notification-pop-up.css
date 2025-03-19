@@ -10,7 +10,8 @@ body {
 }
 
 .shift-left {
-  left: 68%;
+  left: 75%;
+  top: 10%;
 }
 
 .notification-content{
@@ -74,7 +75,6 @@ body {
 
 .popup #topic {
   display: flex;
-  justify-content: center;
 
   position: absolute;
   left: 40%;
