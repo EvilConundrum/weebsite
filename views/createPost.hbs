@@ -49,7 +49,7 @@
       </div>
 
       <!-- Share Form -->
-           <form class="share-form" id="post-form">
+           <form class="share-form" action="create-post" id="post-form" enctype="multipart/form-data">
         <div class="share-title">Share Your Content</div>
         <label for="title"><b>Title</b></label>
         <input
@@ -69,7 +69,7 @@
           ></textarea>
             <div id="drop-area">
               <label for="image-upload">Upload an Image:</label>
-                <input type="file" id="image-upload" accept="image/*" hidden>
+                <input type="file" id="image-upload" name="image" accept="image/*" hidden>
                 <img id="preview" src="#" alt="Image Preview" style="display:none;">
             </div>
         </div>
