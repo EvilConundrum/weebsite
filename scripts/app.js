@@ -494,7 +494,7 @@ app.get("/community/:name", async (req, res) => {
   const { name } = req.params;
 
   try {
-    const community = await Community.findOne({ name }).lean();
+    const community = await community.findOne({ name }).lean();
     if (!community) {
       return res.status(404).send("Community not found");
     }
