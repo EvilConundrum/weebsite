@@ -645,4 +645,12 @@
     </div>
     <!-- End of Main Content Area -->
   </body>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userData = {{{json userData}}};
+    if (userData && userData.username) {
+      localStorage.setItem('username', userData.username);
+    }
+  });
+</script>
 </html>
