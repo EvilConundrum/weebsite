@@ -14,7 +14,7 @@ body {
   top: 10%;
 }
 
-.notification-content{
+.notification-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,8 +26,7 @@ body {
   box-shadow: 0 0 2px 2px 5px var(--text-main);
 }
 
-
-.popup-content header{
+.popup-content header {
   display: flex;
   align-items: absolute;
 

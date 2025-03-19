@@ -1,6 +1,6 @@
 async function loadNotification() {
   try {
-    const response = await fetch("/api/notifications");  
+    const response = await fetch("/api/notifications");
     if (!response.ok) throw new Error("Failed to fetch notifications");
 
     const notifications = await response.json();
@@ -14,11 +14,12 @@ async function loadNotification() {
     `;
 
     if (notifications.length === 0) {
-      notifContainer.innerHTML += '<div class="header" style="font-size: var(--S);padding-top: 10px;margin: 0;">You are caught up 😊</div>';
+      notifContainer.innerHTML +=
+        '<div class="header" style="font-size: var(--S);padding-top: 10px;margin: 0;">You are caught up 😊</div>';
       return;
     }
 
-    notifications.forEach(notif => {
+    notifications.forEach((notif) => {
       const notifElement = document.createElement("div");
       notifElement.classList.add("notification-line");
       notifElement.innerHTML = `
@@ -44,7 +45,10 @@ async function sendNotification(userID, content, type, button) {
     });
 
     if (!response.ok) {
-      console.error(`Failed to create ${type} notification:`, response.statusText);
+      console.error(
+        `Failed to create ${type} notification:`,
+        response.statusText
+      );
     } else {
       console.log(`${type} notification created successfully!`);
       await loadNotification();
@@ -64,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const likeButtons = document.querySelectorAll(".like-button");
   const dislikeButtons = document.querySelectorAll(".dislike-button");
 
-  likeButtons.forEach(button => {
+  likeButtons.forEach((button) => {
     if (!button.hasEventListener) {
       button.addEventListener("click", async () => {
         const isLiked = button.getAttribute("data-liked") === "true";
@@ -77,13 +81,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  dislikeButtons.forEach(button => {
+  dislikeButtons.forEach((button) => {
     if (!button.hasEventListener) {
       button.addEventListener("click", async () => {
         const isDisliked = button.getAttribute("data-liked") === "true";
         if (isDisliked) return; // 🚫 Prevent duplicate dislikes
 
-        await sendNotification(69, "Your post has been disliked!", "Dislike", button);
+        await sendNotification(
+          69,
+          "Your post has been disliked!",
+          "Dislike",
+          button
+        );
       });
 
       button.hasEventListener = true;
