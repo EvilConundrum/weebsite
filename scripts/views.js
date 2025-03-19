@@ -168,3 +168,8 @@ async function downvotePost(postId) {
   }
 }
 
+function switchPage(path) {
+  window.location.href = `/${path}`;
+}
+
+}
