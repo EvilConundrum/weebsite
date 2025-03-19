@@ -101,12 +101,15 @@ async function getUserData() {
     console.error("Error connecting to the server:", error.message);
     alert("Error connecting to the server: " + error.message);
   }
+}
 
 async function upvotePost(postId) {
   const button = document.getElementById(`upvotes-${postId}`);
   const oppBtn = document.getElementById(`downvotes-${postId}`);
   const isActive = button.classList.contains("active");
   const isOppActive = oppBtn.classList.contains("active");
+
+  console.log(postId);
 
   const body = {};
 
@@ -167,4 +170,3 @@ async function downvotePost(postId) {
     oppBtn.classList.remove("active");
   }
 }
-
