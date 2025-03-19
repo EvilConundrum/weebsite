@@ -96,6 +96,7 @@ app.engine("hbs", hbs.engine({
   partialsDir: path.join(__dirname, "../views/partials"),
   helpers: {
     timestamp: () => Date.now() // Cache busting
+    json: (context) => JSON.stringify(context)
   }
 }));
 
