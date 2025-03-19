@@ -3,12 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <title>{{userData.username}}'s Profile</title>
-    <link rel="stylesheet" href="/styles/profile.css" />
-    <link rel="stylesheet" href="/styles/indexstyles.css" />
-    <link rel="stylesheet" href="/styles/variables.css" />
-    <link rel="stylesheet" href="/styles/post.css" />
-    <script src="/scripts/include.js" defer></script>
-    <script src="/scripts/button.js" defer></script>
+    <link rel="stylesheet" href="styles/profile.css" />
+    <link rel="stylesheet" href="styles/indexstyles.css" />
+    <link rel="stylesheet" href="styles/variables.css" />
+    <link rel="stylesheet" href="styles/post.css" />
+    <link rel="stylesheet" href="styles/layout.css" />
+    <script src="scripts/include.js" defer></script>
+    <script src="scripts/button.js" defer></script>
+    <script src="scripts/views.js" defer></script>
   </head>
   <body>
     {{> layout userData=userData}}
@@ -114,7 +116,5 @@
             }
         });
     </script>
-
-
   </body>
 </html>
