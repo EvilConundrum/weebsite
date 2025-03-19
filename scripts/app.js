@@ -494,13 +494,13 @@ app.get("/community/:name", async (req, res) => {
   const { name } = req.params;
 
   try {
-    const community = await community.findOne({ name }).lean();
+    const community = await Community.findOne({ name }).lean(); // Corrected to 'Community'
     if (!community) {
       return res.status(404).send("Community not found");
     }
 
     const posts = await Post.find({ community: name }).lean();
-    res.render("community", { community, posts });
+    res.render(path.join(__dirname, "../views/community.hbs"), { community, posts });
   } catch (error) {
     console.error("Error loading community:", error);
     res.status(500).send("Error loading community");

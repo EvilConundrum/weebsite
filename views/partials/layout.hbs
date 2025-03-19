@@ -38,7 +38,7 @@
             />
           </svg>
         </button>
-        <button class="hiddenButton" onclick="window.open('/profile', '_self')">
+        <button class="hiddenButton" onclick="switchPage('profile')">
           {{#if userData}}
             <img id="layoutpfp" src="{{userData.profilePicture}}" alt="Profile Picture">
           {{else}}

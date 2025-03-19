@@ -13,12 +13,13 @@ function viewPost(id) {
 function switchPage(page, id = null) {
   console.log(`Switching page to ${page}`);
 
-  window.history.replaceState(null, "", window.location.origin);
+  // Ensure the URL starts from the root
+  const basePath = window.location.origin;
 
   if (id) {
-    window.location.href = `/${page}/${id}`;
+    window.location.href = `${basePath}/${page}/${id}`;
   } else {
-    window.location.href = `/${page}`;
+    window.location.href = `${basePath}/${page}`;
   }
 }
 

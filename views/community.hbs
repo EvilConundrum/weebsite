@@ -1,15 +1,16 @@
 <head>
-  <link rel="stylesheet" href="/weebsite/styles/variables.css" />
-  <link rel="stylesheet" href="/weebsite/styles/indexstyles.css" />
-  <link rel="stylesheet" href="/weebsite/styles/community.css" />
-  <link rel="stylesheet" href="/weebsite/styles/post.css" />
+  <link rel="stylesheet" href="/styles/variables.css" />
+  <link rel="stylesheet" href="/styles/indexstyles.css" />
+  <link rel="stylesheet" href="/styles/community.css" />
+  <link rel="stylesheet" href="/styles/post.css" />
+  <link rel="stylesheet" href="/styles/layout.css" />
 
-  <script src="/weebsite/scripts/include.js" defer></script>
-  <script src="/weebsite/scripts/button.js" defer></script>
+  <script src="/scripts/include.js" defer></script>
+  <script src="/scripts/button.js" defer></script>
   <title></title>
 </head>
 <body>
-  <div id="layout-container"></div>
+  {{> layout}}
 
   <div class="main-content">
     <div class="community-header">
@@ -38,7 +39,7 @@
       <div class="communityBanner">
         <img src="{{community.bannerPfp}}" class="communityBannerImage" />
         <div class="communityBannerText">
-          <div class="communityTitle">{{community.name}}</div>
+          <div class="communityTitle">w/{{community.name}}</div>
         </div>
         <img
           src="{{community.communityPfp}}"
@@ -49,13 +50,7 @@
 
     <div class="posts-container">
       {{#each posts}}
-      <div class="post">
-        <div class="postContent">
-          <h2 class="postTitle" onclick="switchPage('post/{{this._id}}')">{{this.title}}</h2>
-          <p>{{this.content}}</p>
-          <span>Posted by u/{{this.author}}</span>
-        </div>
-      </div>
+        {{> posts}}
       {{/each}}
     </div>
   </div>
