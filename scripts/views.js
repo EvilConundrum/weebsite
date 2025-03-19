@@ -101,7 +101,6 @@ async function getUserData() {
     console.error("Error connecting to the server:", error.message);
     alert("Error connecting to the server: " + error.message);
   }
-}
 
 async function upvotePost(postId) {
   const button = document.getElementById(`upvotes-${postId}`);
@@ -168,3 +167,4 @@ async function downvotePost(postId) {
     oppBtn.classList.remove("active");
   }
 }
+
