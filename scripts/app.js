@@ -465,6 +465,7 @@ app.delete("/delete-post/:id", async (req, res) => {
   const { id } = req.params;
 
   const deletedPost = await Post.findByIdAndDelete(id);
+  const commentsPost = await Comment.deleteMany({ postId: id });
 
   if (!deletedPost) {
     return res.status(404).json({ error: "Post not found." });
