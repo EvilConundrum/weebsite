@@ -173,4 +173,3 @@ async function downvotePost(postId) {
     oppBtn.classList.remove("active");
   }
 }
-

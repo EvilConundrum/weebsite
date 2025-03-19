@@ -10,10 +10,11 @@ body {
 }
 
 .shift-left {
-  left: 68%;
+  left: 75%;
+  top: 10%;
 }
 
-.notification-content{
+.notification-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,8 +26,7 @@ body {
   box-shadow: 0 0 2px 2px 5px var(--text-main);
 }
 
-
-.popup-content header{
+.popup-content header {
   display: flex;
   align-items: absolute;
 
@@ -74,7 +74,6 @@ body {
 
 .popup #topic {
   display: flex;
-  justify-content: center;
 
   position: absolute;
   left: 40%;
