@@ -9,7 +9,9 @@ const multer = require("multer");
 const fs = require("fs");
 
 const app = express();
-const upload = multer({ dest: "uploads/" });
+app.use(express.urlencoded({ extended: true }));
+// Add JSON parsing middleware
+app.use(express.json());
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "../views"));
@@ -23,6 +25,7 @@ app.engine(
 );
 
 app.use(express.static("weebsite"));
+
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/weebsiteDB")
@@ -48,14 +51,25 @@ app.use(
     },
   })
 );
-app.use(express.urlencoded({ extended: true }));
-// Add JSON parsing middleware
-app.use(express.json());
+
+
+const postStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../weebsite/images/profile-pictures"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: postStorage });
 
 app.use(
   "/images/profile-pictures",
   express.static(path.join(__dirname, "../weebsite/images/profile-pictures"))
 );
+
+app.use("/images/posts", express.static(path.join(__dirname, "../weebsite/images/posts")));
 
 const profileStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -87,7 +101,6 @@ app.listen(9000, "localhost", () => {
   console.log("Server is listening on port 9000");
 });
 
-
 app.engine(
   "hbs",
   hbs.engine({
@@ -99,7 +112,6 @@ app.engine(
     },
   })
 );
-
 
 app.get("/home", isAuthenticated, async (req, res) => {
   try {
@@ -117,6 +129,17 @@ app.get("/home", isAuthenticated, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+// app.get("/home", async (req, res) => {
+//   try {
+//     const posts = await Post.find().lean();
+//     console.log("Posts fetched successfully:", posts);
+//     res.render(path.join(__dirname, "../views/index.hbs"), { posts });
+//   } catch (error) {
+//     console.error("Error fetching posts:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;
@@ -154,23 +177,10 @@ app.get("/edit-profile", isAuthenticated, (req, res) => {
 });
 
 app.get("/create-post", (req, res) => {
-  res.render(path.join(__dirname, "../views/createPost.hbs"));
+  const userData = req.session.user;
+  res.render("createPost", { userData });
 });
 
-app.post("/create-post", upload.array("images", 5), async (req, res) => {
-  console.log("Received request body:", req.body); // Debugging
-  console.log("Received file:", req.files); // Debugging
-  const { title, content, author, community } = req.body;
-  const imagePath = req.files ? req.files.path : null;
-  const newPost = await Post.create({
-    title,
-    content,
-    author,
-    community,
-    images: imagePath,
-  });
-  console.log("Post saved successfully:", newPost);
-});
 
 app.get("/", (req, res) => {
   res.render("index", {
@@ -206,39 +216,53 @@ app.get("/signup", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  const { username, password } = req.body; // Destructure from req.body
+  const username = req.body.username;
+  const password = req.body.password;
+
+  console.log(req.body);
 
   try {
     const newUser = await createUser(username, password);
+    console.log("User created successfully:", newUser);
+
+    // Set session user after successful signup
     req.session.user = newUser;
-    
-    // Send JSON response with username
-    res.status(201).json({ 
-      success: true,
-      username: newUser.username 
-    });
-    
+
+    // Respond with success message
+    res.status(201).send(newUser.username + " has been created!");
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(500).json({ 
-      success: false,
-      error: "Error creating user: " + error.message 
-    });
+    res.status(500).send("Error creating user: " + error.message);
   }
 });
 
-app.post("/create-post", upload.single("image"), async (req, res) => {
-  const { title, description, tags, author } = req.body;
-  const image = req.file;
-
-  const images = image ? [image.filename] : [];
-
+app.post("/create-post", isAuthenticated, upload.single("image"), async (req, res) => {
   try {
-    await createPost(title, description, tags, author, images);
-    res.status(201).json({ message: "Post created successfully!" }); // Send success response
+    const { title, description, tags } = req.body;
+    const author = req.session.user.username;
+    const image = req.file;
+
+    // Validate required fields
+    if (!title || !description || !tags) {
+      return res.status(400).json({ error: "Title, description, and communities are required." });
+    }
+
+    // Process image upload
+    const images = image ? [`/images/profile-pictures/${image.filename}`] : [];
+
+    // Create post
+    const newPost = await Post.create({
+      title,
+      content: description,
+      community: tags,
+      author,
+      images,
+    });
+
+    res.status(201).json({ message: "Post created successfully!", post: newPost });
   } catch (error) {
     console.error("Error creating post:", error);
-    res.status(500).json({ error: "Failed to create post" });
+    res.status(500).json({ error: "Failed to create post. Please try again." });
   }
 });
 
@@ -252,7 +276,7 @@ app.post("/api/notifications", async (req, res) => {
 
   try {
     const notification = await createNotification(userID, content, type);
-
+    console.log("hello");
     res
       .status(201)
       .json({ message: "Notification created successfully!", notification });
@@ -459,6 +483,7 @@ app.delete("/delete-post/:id", async (req, res) => {
   const { id } = req.params;
 
   const deletedPost = await Post.findByIdAndDelete(id);
+  const commentsPost = await Comment.deleteMany({ postId: id });
 
   if (!deletedPost) {
     return res.status(404).json({ error: "Post not found." });
