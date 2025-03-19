@@ -181,6 +181,7 @@ app.post("/create-post", upload.array("images", 5), async (req, res) => {
   console.log("Post saved successfully:", newPost);
 });
 
+
 app.get("/", (req, res) => {
   res.render("index", {
     userData: req.session.user || null, // Pass null if no user is logged in
@@ -488,3 +489,20 @@ app.delete("/delete-post/:id", async (req, res) => {
 //     res.status(500).json({ error: "Failed to create post" });
 //   }
 // });
+
+app.get("/community/:name", async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    const community = await Community.findOne({ name }).lean();
+    if (!community) {
+      return res.status(404).send("Community not found");
+    }
+
+    const posts = await Post.find({ community: name }).lean();
+    res.render("community", { community, posts });
+  } catch (error) {
+    console.error("Error loading community:", error);
+    res.status(500).send("Error loading community");
+  }
+});
