@@ -219,23 +219,24 @@ app.get("/signup", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  console.log(req.body);
+  const { username, password } = req.body; // Destructure from req.body
 
   try {
     const newUser = await createUser(username, password);
-    console.log("User created successfully:", newUser);
-
-    // Set session user after successful signup
     req.session.user = newUser;
-
-    // Respond with success message
-    res.status(201).send(newUser.username + " has been created!");
+    
+    // Send JSON response with username
+    res.status(201).json({ 
+      success: true,
+      username: newUser.username 
+    });
+    
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(500).send("Error creating user: " + error.message);
+    res.status(500).json({ 
+      success: false,
+      error: "Error creating user: " + error.message 
+    });
   }
 });
 
