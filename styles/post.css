@@ -39,6 +39,9 @@
   font-weight: bolder;
   margin: 0 0 12px 0;
   font-family: var(--secondary-font), sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .postBody {
@@ -292,4 +295,63 @@
 .rightSide img {
   position: relative;
   z-index: 0;
+}
+
+.comment-reply {
+  background-color: var(--background-45);
+  color: var(--background-15);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: var(--M);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-bottom: 25px;
+}
+
+.comment-reply button:hover {
+  background-color: var(--accent-main);
+  transform: translateY(-3px);
+}
+
+.editing {
+  border: 2px solid var(--background-45);
+  border-radius: 8px;
+  padding: 5px;
+  background-color: var(--background-main); /* Slightly different background */
+}
+
+.hiddenEdit {
+  display: none;
+}
+
+.hideBody {
+  display: block;
+}
+
+.innerContent {
+  margin-bottom: 10px;
+  width: 90%;
+}
+
+.editContent {
+  width: 100%;
+  min-height: 50px;
+  max-height: 300px; /* Prevent excessive expansion */
+  overflow: hidden; /* Hide scrollbars */
+  resize: none; /* Prevent manual resizing */
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #444;
+  background-color: #222;
+  color: #fff;
+  background: var(--background-main);
+  font-family: var(--secondary-font);
+  border-radius: 8px;
+}
+
+input {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }

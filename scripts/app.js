@@ -32,8 +32,10 @@ mongoose
   .catch((err) => {
     console.error("MongoDB connection error:", err);
   });
-const { User } = require("./db.js");
-const { createUser, createPost } = require("./data.js");
+
+
+const { User, Post, Notification } = require("./db.js");
+const { createUser, createPost, createNotification } = require("./data.js");
 
 // Middleware
 app.use(
@@ -50,6 +52,7 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 // Add JSON parsing middleware
 app.use(express.json());
+const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
 app.use("/images/profile-pictures", express.static(
   path.join(__dirname, "../weebsite/images/profile-pictures")
@@ -116,6 +119,26 @@ app.get("/post/:id", (req, res) => {
   res.render(path.join(__dirname, "../views/postView.hbs"));
 });
 
+app.get("/home", async (req, res) => {
+  try {
+    const posts = await Post.find().lean();
+    // console.log("Posts fetched successfully:", posts);
+    res.render(path.join(__dirname, "../views/index.hbs"), { posts });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/post/:id", async (req, res) => {
+  const { id } = req.params;
+  const post = await Post.findById(id).lean();
+  const comments = await Comment.find({ postId: id }).lean();
+  console.log("Posts:", post);
+  console.log("Comments:", comments);
+  res.render(path.join(__dirname, "../views/postView.hbs"), { post, comments });
+});
+
 app.get("/profile", isAuthenticated, async (req, res) => {
   try {
     const userData = await User.findById(req.session.user._id)
@@ -146,7 +169,21 @@ app.get("/create-post", (req, res) => {
   res.render(path.join(__dirname, "../views/createPost.hbs"));
 });
 
-// TODO: Add post for creating posts
+
+app.post("/create-post", upload.array("images", 5), async (req, res) => {
+  console.log("Received request body:", req.body); // Debugging
+  console.log("Received file:", req.files); // Debugging
+  const { title, content, author, community } = req.body;
+  const imagePath = req.files ? req.files.path : null;
+  const newPost = await Post.create({
+    title,
+    content,
+    author,
+    community,
+    images: imagePath,
+  });
+  console.log("Post saved successfully:", newPost);
+});
 
 app.get('/', (req, res) => {
   res.render('index', {
@@ -190,10 +227,10 @@ app.post("/signup", async (req, res) => {
   try {
     const newUser = await createUser(username, password);
     console.log("User created successfully:", newUser);
-    
+
     // Set session user after successful signup
     req.session.user = newUser;
-    
+
     // Respond with success message
     res.status(201).send(newUser.username + " has been created!");
   } catch (error) {
@@ -202,26 +239,132 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-const upload = multer({ dest: 'uploads/' }); // Temporary storage for uploaded files
+const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
-app.post('/create-post', upload.single('image'), async (req, res) => {
+app.post("/create-post", upload.single("image"), async (req, res) => {
   const { title, description, tags, author } = req.body;
   const image = req.file;
 
-  const images = image ? [image.filename] : [];
-
   try {
-      await createPost(title, description, tags, author, images);
-      res.status(201).json({ message: 'Post created successfully!' });  // Send success response
+    await createPost(title, description, tags, author, images);
+    res.status(201).json({ message: "Post created successfully!" }); // Send success response
   } catch (error) {
-      console.error('Error creating post:', error);
-      res.status(500).json({ error: 'Failed to create post' });
+    console.error("Error creating post:", error);
+    res.status(500).json({ error: "Failed to create post" });
   }
 });
 
+app.post("/api/notifications", async (req, res) => {
+  const { userID, content, type } = req.body;
 
+  // Validate data
+  if (!userID || !content || !type) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
 
+  try {
+    const notification = await createNotification(userID, content, type);
+    console.log("hello");
+    res.status(201).json({ message: "Notification created successfully!", notification });
+  } catch (error) {
+    console.error("Error creating notification:", error);
+    res.status(500).json({ error: "Failed to create notification." });
+  }
+});
 
+app.get("/api/notifications", async (req, res) => {
+  try {
+    const notifications = await Notification.find();
+    res.json(notifications);
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "Failed to load notifications." });
+  }});
+
+  app.put("/upvote/:id", async (req, res) => {
+  const { action, oppaction } = req.body;
+  console.log("Action:", action);
+  console.log("Opp Action:", oppaction);
+
+  let update = {};
+
+  if (action === "add") {
+    update.upvotes = 1;
+  } else if (action === "remove") {
+    update.upvotes = -1;
+  }
+
+  if (oppaction === "remove") {
+    update.downvotes = -1;
+  }
+
+  if (Object.keys(update).length === 0) {
+    return res
+      .status(400)
+      .json({ error: "Invalid request. No valid action provided." });
+  }
+
+  const post = await Post.findByIdAndUpdate(
+    req.params.id,
+    { $inc: update },
+    { new: true }
+  );
+
+  res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
+});
+
+app.put("/downvote/:id", async (req, res) => {
+  const { action, oppaction } = req.body;
+  console.log("Action:", action);
+  console.log("Opp Action:", oppaction);
+
+  let update = {};
+
+  if (action === "add") {
+    update.downvotes = 1;
+  } else if (action === "remove") {
+    update.downvotes = -1;
+  }
+
+  if (oppaction === "remove") {
+    update.upvotes = -1;
+  }
+
+  const post = await Post.findByIdAndUpdate(
+    req.params.id,
+    { $inc: update },
+    { new: true }
+  );
+
+  if (!post) {
+    return res.status(404).json({ error: "Post not found" });
+  }
+
+  res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
+});
+
+app.post("/create-comment", upload.none(), async (req, res) => {
+  const { author, content, postId } = req.body;
+
+  // if (!author) {
+  //   return res.status(400).json({ error: "Missing author fields" });
+  // }
+  // if (!content) {
+  //   return res.status(400).json({ error: "Missing content fields" });
+  // }
+  // if (!postId) {
+  //   return res.status(400).json({ error: "Missing post id fields" });
+  // }
+
+  // console.log("Author: ", author);
+  // console.log("Content: ", content);
+  // console.log("Post ID: ", postId);
+  const newComment = await Comment.create({
+    author,
+    content,
+    postId,
+  });
+});
 
 // Profile update route
 app.post('/update-profile', 
@@ -265,3 +408,86 @@ app.post('/logout', (req, res) => {
     res.redirect('/'); // Redirect to root after logout
   });
 });
+
+
+ app.put("/edit-comment", upload.none(), async (req, res) => {
+ const { content, id } = req.body;
+
+ if (!id || !content || content === "") {
+   return res
+     .status(400)
+     .json({ error: "Content is required and cannot be empty." });
+ }
+
+ console.log(content);
+ console.log(id);
+
+ const editComment = await Comment.findByIdAndUpdate(
+   id,
+   { content },
+   { new: true }
+ );
+
+ res.json({ success: true, content });
+});
+
+  
+app.delete("/delete-comment/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const deletedComment = await Comment.findByIdAndDelete(id);
+
+  if (!deletedComment) {
+    return res.status(404).json({ error: "Comment not found." });
+  }
+
+  res.json({ success: true, message: "Comment deleted successfully." });
+});
+
+app.put("/edit-post", upload.none(), async (req, res) => {
+  const { content, id } = req.body;
+
+  if (!id || !content || content === "") {
+    return res
+      .status(400)
+      .json({ error: "Content is required and cannot be empty." });
+  }
+
+  console.log(content);
+  console.log(id);
+
+  const editComment = await Post.findByIdAndUpdate(
+    id,
+    { content },
+    { new: true }
+  );
+
+  res.json({ success: true, content });
+});
+
+app.delete("/delete-post/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const deletedPost = await Post.findByIdAndDelete(id);
+
+  if (!deletedPost) {
+    return res.status(404).json({ error: "Post not found." });
+  }
+
+  res.json({ success: true, message: "Post deleted successfully." });
+});
+
+// app.post("/create-post", upload.single("image"), async (req, res) => {
+//   const { title, description, tags, author } = req.body;
+//   const image = req.file;
+
+//   const images = image ? [image.filename] : [];
+
+//   try {
+//     await createPost(title, description, tags, author, images);
+//     res.status(201).json({ message: "Post created successfully!" }); // Send success response
+//   } catch (error) {
+//     console.error("Error creating post:", error);
+//     res.status(500).json({ error: "Failed to create post" });
+//   }
+// });

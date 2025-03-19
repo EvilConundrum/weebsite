@@ -8,9 +8,9 @@ const createPost = async (title, content, author, community, images = []) => {
       content,
       author,
       community,
-      upvotes: 0,        // Default values to ensure proper initialization
+      upvotes: 0, // Default values to ensure proper initialization
       downvotes: 0,
-      images
+      images,
     });
 
     await newPost.save(); // Explicit save for flexibility
@@ -41,7 +41,7 @@ const createUser = async (username, password) => {
       username: username,
       password: password,
     });
-    
+
     // Save the user to the database
     await user.save();
     console.log("User saved successfully:", user);
@@ -75,14 +75,21 @@ const createCommunity = async (
 };
 
 const createNotification = async (userID, content, type, read) => {
-  const newNotification = await Notification.create({
-    userID,
-    content,
-    type,
-    read,
-  });
+  try {
+    const newNotification = new Notification({
+      userID,
+      content,
+      type,
+      read: false, // should default be unread?
+    });
 
-  return newNotification;
+    await newNotification.save();
+    console.log(`Notification  for user ${userID} created successfully:`, newNotification);
+    return newNotification;
+  } catch (error) {
+    console.log(`Error creating notification  for user ${userID}:`, newNotification);
+    throw error;
+  }
 };
 
 // THIS IS ONLY HERE BECAUSE WE DONT HAVE THE GODDAMN FILE UPLOAD
