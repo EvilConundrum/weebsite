@@ -4,12 +4,10 @@
       <div class="postHeaderLeft">
         <span
           class="actionButton"
-          onclick="window.open('community.html', '_self')"
+          onclick="switchPage('community/{{community}}')"
         >
-          {{!community pfp  }}
-          <img src="images/interspeciesReviewers.png" class="pfp" alt="" />
-          {{! community name }}
-          <span class="postUsername">{{community}} /</span>
+          <img src="{{communityPfp}}" class="pfp" alt="" />
+          <span class="postUsername">w/{{community}} /</span>
         </span>
         <span
           class="actionButton"
