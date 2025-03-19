@@ -180,3 +180,30 @@ async function deletePost(postId) {
 
   switchPage("home");
 }
+
+
+document.getElementById("post-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(document.getElementById("post-form"));
+
+  try {
+    const response = await fetch("/create-post", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
+
+    const result = await response.json();
+    console.log(result);
+    alert("Post created successfully!");
+    window.location.href = "/home"; // Redirect to the home page after successful post creation
+  } catch (error) {
+    console.error("Failed to create post:", error);
+    alert("Failed to create post: " + error.message);
+  }
+});
