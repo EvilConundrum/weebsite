@@ -167,8 +167,8 @@ app.get("/create-post", (req, res) => {
 });
 
 app.post("/create-post", upload.array("images", 5), async (req, res) => {
-  console.log("Received request body:", req.body); // Debugging
-  console.log("Received file:", req.files); // Debugging
+  // console.log("Received request body:", req.body); // Debugging
+  // console.log("Received file:", req.files); // Debugging
   const { title, content, author, community } = req.body;
   const imagePath = req.files ? req.files.path : null;
   const newPost = await Post.create({
