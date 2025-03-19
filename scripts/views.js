@@ -25,29 +25,32 @@ function switchPage(page, id = null) {
 window.switchPage = switchPage;
 
 async function getPostData() {
-  const formData = new FormData();
-  formData.append("title", document.getElementById("title").value);
-  formData.append("content", document.getElementById("description").value);
-  formData.append("author", "cleevayang");
-  formData.append("community", document.getElementById("tags").value);
-  const image = document.getElementById("image-upload").files[0];
-  if (image) {
-    formData.append("images", image);
+  const author = localStorage.getItem('username'); // Retrieve the logged-in user's name
+  if (!author) {
+    alert('You must be logged in to create a post.');
+    return;
   }
 
+  const formData = new FormData();
+  formData.append("title", document.getElementById("title").value);
+  formData.append("description", document.getElementById("description").value);
+  formData.append("tags", document.getElementById("tags").value);
+  formData.append("author", author); // Use dynamic author value
+
+  const image = document.getElementById("image-upload").files[0];
   if (image) formData.append("image", image);
 
   try {
     const response = await fetch("/create-post", {
       method: "POST",
-      body: formData, // No need for `Content-Type`, FormData sets it automatically
+      body: formData,
     });
 
     if (response.ok) {
       const result = await response.json();
-      // console.log("Post created successfully:", result);
+      console.log("Post created successfully:", result);
       alert("Post created successfully!");
-      switchPage("home");
+      switchPage('home');
     } else {
       const errorText = await response.text();
       console.error("Failed to create post:", errorText);
@@ -55,6 +58,7 @@ async function getPostData() {
     }
   } catch (error) {
     console.error("Error connecting to the server:", error.message);
+    alert("Error connecting to the server: " + error.message);
   }
 }
 
@@ -77,30 +81,32 @@ async function getUserData() {
 
   console.log("Submitting user data:", username, password);
 
-  try {
+ try {
     const response = await fetch("/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: { username: username, password: password },
+      body: JSON.stringify({ username, password }),
     });
 
     if (response.ok) {
-      const result = await response.text();
-      console.log("User signed up successfully:", result);
+      const result = await response.json();
+      
+      // Store username in localStorage
+      localStorage.setItem('username', result.username);
+      
       alert("User signed up successfully!");
-      // Redirect to login page after successful signup
-      switchPage("login");
+      switchPage('home'); // Redirect to home after signup
     } else {
-      const errorText = await response.text();
-      console.error("Failed to sign up:", response.statusText, errorText);
-      alert("Failed to sign up: " + response.statusText);
+      const errorData = await response.json();
+      alert("Failed to sign up: " + errorData.error);
     }
   } catch (error) {
     console.error("Error connecting to the server:", error.message);
     alert("Error connecting to the server: " + error.message);
   }
+}
 
 async function upvotePost(postId) {
   const button = document.getElementById(`upvotes-${postId}`);
