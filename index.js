@@ -161,6 +161,13 @@ app.get('/view-post', isAuthenticated, async (req, res) => {
   res.render('content', { posts, user: userData });
 });
 
+// Community page route
+app.get('/community/:communityName', async (req, res) => {
+  const { communityName } = req.params;
+  const posts = await Post.find({ community: communityName }).lean();
+  res.render('community', { communityName, posts });
+});
+
 // Edit profile route (GET)
 app.get("/edit-profile", isAuthenticated, (req, res) => {
   const userData = req.session.user;
