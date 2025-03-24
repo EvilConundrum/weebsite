@@ -171,7 +171,6 @@ app.post("/create-post", upload.array("images", 5), async (req, res) => {
   console.log("Post saved successfully:", newPost);
 });
 
-
 app.get("/", (req, res) => {
   res.render("index", {
     userData: req.session.user || null, // Pass null if no user is logged in
@@ -490,9 +489,48 @@ app.get("/community/:name", async (req, res) => {
     }
 
     const posts = await Post.find({ community: name }).lean();
-    res.render(path.join(__dirname, "../views/community.hbs"), { community, posts });
+    res.render(path.join(__dirname, "../views/community.hbs"), {
+      community,
+      posts,
+    });
   } catch (error) {
     console.error("Error loading community:", error);
     res.status(500).send("Error loading community");
+  }
+});
+
+app.get("/popular", isAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    const sortedPosts = await Post.find().sort({ upvotes: -1 }).lean();
+
+    res.render(path.join(__dirname, "../views/popular.hbs"), {
+      userData: {
+        profilePicture: user.profilePicture,
+        username: user.username,
+      },
+      sortedPosts,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
+});
+
+app.get("/explore", isAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    const communities = await Community.find().lean();
+
+    res.render(path.join(__dirname, "../views/explore.hbs"), {
+      userData: {
+        profilePicture: user.profilePicture,
+        username: user.username,
+      },
+      communities,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
   }
 });

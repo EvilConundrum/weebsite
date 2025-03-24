@@ -1,0 +1,23 @@
+<div class="post">
+  <div class="postContent">
+    <div class="postHeader">
+      <div class="postHeaderLeft">
+        <span class="actionButton" onclick="switchPage('community/{{name}}')">
+          <img src="{{communityPfp}}" class="pfp" alt="" />
+          <span class="postUsername">w/{{name}}</span>
+        </span>
+        {{! time since it was posted }}
+        {{!-- <span class="postTime">{{time}}</span> --}}
+      </div>
+    </div>
+
+    <h2
+      class="postTitle"
+      onclick="switchPage('community/{{name}}')"
+    >{{name}}</h2>
+
+    <div class="postBody" onclick="switchPage('community/{{name}}')">
+      <p>{{description}}</p>
+    </div>
+  </div>
+</div>

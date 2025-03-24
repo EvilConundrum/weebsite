@@ -10,7 +10,6 @@ function viewPost(id) {
   window.location.href = `/post/${id}`;
 }
 
-
 function switchPage(page, id = null) {
   console.log(`Switching page to ${page}`);
 
@@ -20,12 +19,9 @@ function switchPage(page, id = null) {
   // Replace the full URL with absolute path
   window.history.replaceState(null, "", newPath);
   window.location.href = newPath;
-}
 
-function goHome(){
-  window.location.href = "/home"
+  location.reload();
 }
-
 
 window.switchPage = switchPage;
 
@@ -173,4 +169,3 @@ async function downvotePost(postId) {
     oppBtn.classList.remove("active");
   }
 }
-
