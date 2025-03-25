@@ -172,7 +172,7 @@ app.post("/create-post", upload.array("images", 5), async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.render("index", {
+  res.render("logout", {
     userData: req.session.user || null, // Pass null if no user is logged in
   });
 });

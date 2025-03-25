@@ -79,12 +79,16 @@
   </div>
   {{! editing field thats hidden lol }}
   <div class="userComment hiddenComment" id="editComment-{{_id}}">
-    <input
+    {{! <input
       type="text"
       class="searchBar commentBar"
       placeholder="Write down a comment..."
       maxlength="1000"
-    />
+    /> }}
+    <textarea
+      class="searchBar commentBar editComment"
+      maxlength="1000"
+    ></textarea>
     <button class="comment-reply" onclick="editComment('{{_id}}')">Edit</button>
   </div>
 </div>

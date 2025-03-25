@@ -147,7 +147,8 @@ function toggleEditComment(commentId) {
   const displayComment = document.getElementById(
     `commentSectionText-${commentId}`
   );
-  const editField = document.querySelector(`input.commentBar`);
+
+  const editField = document.querySelector(`.editComment`);
   const textValue = displayComment.textContent.trim();
 
   const isDisplayed =
@@ -165,6 +166,8 @@ function toggleEditComment(commentId) {
   if (dropdown && dropdown.style.display !== "none") {
     dropdown.style.display = "none";
   }
+
+  editField.value = textValue.textContent.trim();
 }
 
 document.addEventListener("DOMContentLoaded", function () {

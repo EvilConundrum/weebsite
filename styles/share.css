@@ -203,8 +203,8 @@ nav .logo:hover::after {
   height: 320px;
   background-color: var(--background-15);
   border: 1px solid var(--background-25);
-  align-items: center;   
-  justify-content: center; 
+  align-items: center;
+  justify-content: center;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -229,7 +229,7 @@ nav .logo:hover::after {
   left: 0;
   right: 0;
   bottom: 0;
-  margin: auto; 
+  margin: auto;
 }
 
 /* Footer */
@@ -260,4 +260,8 @@ footer a {
 
 footer a:hover {
   text-decoration: underline;
+}
+
+.quickLinkText {
+  font-family: var(--secondary-font);
 }

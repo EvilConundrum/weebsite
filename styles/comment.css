@@ -79,3 +79,11 @@
 .userComment {
   gap: 15px;
 }
+
+.editComment {
+  display: flex;
+  align-items: center;
+  resize: none;
+  line-height: 32px;
+  overflow: hidden;
+}
