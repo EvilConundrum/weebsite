@@ -10,9 +10,12 @@
           <span class="postUsername">w/{{community}} /</span>
         </span>
         <span class="actionButton" onclick="switchPage('profile')">
-          {{! user pfp }}
-          <img src="images/pfp.png" class="pfp" alt="" />
-          {{! username }}
+          <img 
+            src="{{authorProfilePicture}}" 
+            class="pfp" 
+            alt="Profile Picture"
+            onerror="this.onerror=null; this.src='/images/anonymous.png'"
+          />
           <span class="postUsername">u/{{author}}</span>
         </span>
         {{! time since it was posted }}
@@ -39,6 +42,9 @@
           <button
             class="actionButton like-button"
             aria-label="Thumbs Up"
+            data-author="{{author}}"
+            data-post-id="{{_id}}"
+            data-liked="false"
             onclick="upvotePost('{{_id}}')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -54,6 +60,9 @@
           <button
             class="actionButton dislike-button"
             aria-label="Thumbs Down"
+            data-author="{{author}}"
+            data-post-id="{{_id}}"
+            data-disliked="false"
             onclick="downvotePost('{{_id}}')"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

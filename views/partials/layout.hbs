@@ -39,10 +39,11 @@
           </svg>
         </button>
         <button class="hiddenButton" onclick="switchPage('profile')">
-          {{#if userData}}
+          {{#if userData.profilePicture}}
             <img id="layoutpfp" src="{{userData.profilePicture}}" alt="Profile Picture">
           {{else}}
-            <img id="layoutpfp" src="/images/pikachu.png" alt="Default Profile Picture">
+            {{!-- Show default if profilePicture is null, undefined, or empty string --}}
+            <img id="layoutpfp" src="/images/anonymous.png" alt="Default Profile Picture">
           {{/if}}
         </button>
       </div>

@@ -36,20 +36,27 @@ const { User, Post, Notification, Comment, Community } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
 
 // Middleware
+// In app.js session config
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// Ensure proper middleware order
+app.use(cookieParser());
 app.use(
   session({
     secret: "secret-key",
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: false, // Set to true if using HTTPS
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
+    cookie: { 
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
   })
 );
-app.use(express.urlencoded({ extended: true }));
+
 // Add JSON parsing middleware
-app.use(express.json());
+
 const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
 
 app.use(
@@ -76,6 +83,10 @@ const isAuthenticated = (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
+    // For API routes, return JSON error
+    if (req.originalUrl.startsWith("/api")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     res.redirect("/login");
   }
 };
@@ -95,8 +106,15 @@ app.engine(
     defaultLayout: false,
     partialsDir: path.join(__dirname, "../views/partials"),
     helpers: {
-      timestamp: () => Date.now(), // Cache busting
-    },
+      // Add this helper
+      includes: function(array, value, options) {
+        if (array && array.includes(value)) {
+          return options.fn(this);
+        }
+        return options.inverse(this);
+      },
+      timestamp: () => Date.now()
+    }
   })
 );
 
@@ -104,12 +122,29 @@ app.get("/home", isAuthenticated, async (req, res) => {
   try {
     const user = await User.findById(req.session.user._id);
     const posts = await Post.find().lean();
+
+    // Get all unique author usernames from posts
+    const usernames = [...new Set(posts.map(post => post.author))];
+
+    // Fetch profile pictures for all authors
+    const users = await User.find({ username: { $in: usernames } }, "username profilePicture").lean();
+    const profilePictureMap = users.reduce((acc, user) => {
+      acc[user.username] = user.profilePicture || "/images/anonymous.png"; // Fallback
+      return acc;
+    }, {});
+
+    // Attach profile pictures to posts
+    const postsWithProfilePictures = posts.map(post => ({
+      ...post,
+      authorProfilePicture: profilePictureMap[post.author],
+    }));
+
     res.render("index", {
       userData: {
         profilePicture: user.profilePicture,
         username: user.username,
       },
-      posts,
+      posts: postsWithProfilePictures, // Pass enriched posts
     });
   } catch (error) {
     console.error(error);
@@ -119,11 +154,44 @@ app.get("/home", isAuthenticated, async (req, res) => {
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;
-  const post = await Post.findById(id).lean();
-  const comments = await Comment.find({ postId: id }).lean();
-  console.log("Posts:", post);
-  console.log("Comments:", comments);
-  res.render(path.join(__dirname, "../views/postView.hbs"), { post, comments });
+  try {
+    let userData = null;
+    if (req.session.user) {
+      const user = await User.findById(req.session.user._id).lean();
+      userData = {
+        profilePicture: user.profilePicture || "/images/anonymous.png",
+        username: user.username,
+      };
+    }
+
+    const post = await Post.findById(id).lean();
+    const authorUser = await User.findOne({ username: post.author }).lean();
+    post.authorProfilePicture = authorUser?.profilePicture || "/images/anonymous.png";
+
+    // Get comments with authors' profile pictures
+    const comments = await Comment.find({ postId: id }).lean();
+    const commentAuthors = [...new Set(comments.map(c => c.author))];
+    const commentUsers = await User.find({ username: { $in: commentAuthors } }, "username profilePicture").lean();
+    
+    const commentProfileMap = commentUsers.reduce((acc, user) => {
+      acc[user.username] = user.profilePicture || "/images/anonymous.png";
+      return acc;
+    }, {});
+
+    const commentsWithPictures = comments.map(comment => ({
+      ...comment,
+      authorProfilePicture: commentProfileMap[comment.author]
+    }));
+
+    res.render("postView", {
+      userData,
+      post,
+      comments: commentsWithPictures
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
 });
 
 app.get("/profile/", isAuthenticated, async (req, res) => {
@@ -152,24 +220,11 @@ app.get("/edit-profile", isAuthenticated, (req, res) => {
   res.render("edit-profile", { userData });
 });
 
-app.get("/create-post", (req, res) => {
+app.get("/create-post", isAuthenticated, (req, res) => {
   res.render(path.join(__dirname, "../views/createPost.hbs"));
 });
 
-app.post("/create-post", upload.array("images", 5), async (req, res) => {
-  // console.log("Received request body:", req.body); // Debugging
-  // console.log("Received file:", req.files); // Debugging
-  const { title, content, author, community } = req.body;
-  const imagePath = req.files ? req.files.path : null;
-  const newPost = await Post.create({
-    title,
-    content,
-    author,
-    community,
-    images: imagePath,
-  });
-  console.log("Post saved successfully:", newPost);
-});
+
 
 app.get("/", (req, res) => {
   res.render("logout", {
@@ -186,13 +241,17 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username: username });
-
+    const user = await User.findOne({ username });
     if (user && user.password === password) {
-      req.session.user = user;
+      // Store essential user data in session
+      req.session.user = {
+        _id: user._id,
+        username: user.username,
+        profilePicture: user.profilePicture
+      };
       res.redirect("/home");
     } else {
-      res.redirect("/login?error=invalid_credentials"); // Redirect with error flag
+      res.redirect("/login?error=invalid_credentials");
     }
   } catch (error) {
     console.error("Login error:", error);
@@ -225,46 +284,74 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.post("/create-post", upload.single("image"), async (req, res) => {
-  const { title, description, tags, author } = req.body;
-  const image = req.file;
+app.post(
+  "/create-post",
+  isAuthenticated,
+  upload.array("images", 5),
+  async (req, res) => {
+    try {
+      const { title, content, community } = req.body;
+      const author = req.session.user.username; // Use username instead of _id
 
-  try {
-    await createPost(title, description, tags, author, images);
-    res.status(201).json({ message: "Post created successfully!" }); // Send success response
-  } catch (error) {
-    console.error("Error creating post:", error);
-    res.status(500).json({ error: "Failed to create post" });
+      const imagePaths = req.files 
+        ? req.files.map(file => file.path) 
+        : [];
+
+      const newPost = await Post.create({
+        title,
+        content,
+        author, // Now stores the username string
+        community,
+        images: imagePaths,
+      });
+
+      res.redirect("/home");
+    } catch (error) {
+      console.error("Error creating post:", error);
+      res.status(500).send("Failed to create post");
+    }
   }
-});
-
-app.post("/api/notifications", async (req, res) => {
-  const { userID, content, type } = req.body;
-
-  // Validate data
-  if (!userID || !content || !type) {
-    return res.status(400).json({ error: "All fields are required." });
-  }
-
-  try {
-    const notification = await createNotification(userID, content, type);
-    console.log("hello");
-    res
-      .status(201)
-      .json({ message: "Notification created successfully!", notification });
-  } catch (error) {
-    console.error("Error creating notification:", error);
-    res.status(500).json({ error: "Failed to create notification." });
-  }
-});
+);
 
 app.get("/api/notifications", async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: "Unauthorized" });
+
   try {
-    const notifications = await Notification.find();
+    const notifications = await Notification.find({
+      user: req.session.user._id
+    }).sort({ createdAt: -1 });
+    
     res.json(notifications);
   } catch (error) {
     console.error("Error fetching notifications:", error);
-    res.status(500).json({ error: "Failed to load notifications." });
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Notification route
+// Update the notification route
+app.post("/api/notifications", async (req, res) => {
+  try {
+    const { postId, postAuthor, type } = req.body; // Add 'type' to destructuring
+    const likerId = req.session.user._id;
+
+    const postOwner = await User.findOne({ username: postAuthor });
+    if (!postOwner) return res.status(404).json({ error: "User not found" });
+
+    const notification = await Notification.create({
+      user: postOwner._id,
+      type: type, // Use the type from request body
+      content: type === "Like" 
+        ? "Your post has been liked!" 
+        : "Your post has been disliked.",
+      postId,
+      read: false
+    });
+
+    res.status(201).json({ notification });
+  } catch (error) {
+    console.error("Notification error:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
@@ -302,19 +389,27 @@ app.put("/upvote/:id", async (req, res) => {
 
 app.put("/downvote/:id", async (req, res) => {
   const { action, oppaction } = req.body;
-  console.log("Action:", action);
-  console.log("Opp Action:", oppaction);
+  console.log("Downvote Action:", action);
+  console.log("Opposite Action:", oppaction);
 
   let update = {};
 
+  // Handle main downvote action
   if (action === "add") {
     update.downvotes = 1;
   } else if (action === "remove") {
     update.downvotes = -1;
   }
 
+  // Handle opposite vote removal
   if (oppaction === "remove") {
     update.upvotes = -1;
+  }
+
+  if (Object.keys(update).length === 0) {
+    return res
+      .status(400)
+      .json({ error: "Invalid request. No valid action provided." });
   }
 
   const post = await Post.findByIdAndUpdate(
@@ -323,35 +418,32 @@ app.put("/downvote/:id", async (req, res) => {
     { new: true }
   );
 
-  if (!post) {
-    return res.status(404).json({ error: "Post not found" });
+  res.json({ downvotes: post.downvotes, upvotes: post.upvotes });
+});
+
+
+app.post(
+  "/create-comment",
+  isAuthenticated, // Add authentication check
+  upload.none(),
+  async (req, res) => {
+    try {
+      const { content, postId } = req.body;
+      const author = req.session.user.username; // Get username from session
+
+      const newComment = await Comment.create({
+        author, // Use session username
+        content,
+        postId,
+      });
+
+      res.redirect(`/post/${postId}`); // Redirect back to the post
+    } catch (error) {
+      console.error("Error creating comment:", error);
+      res.status(500).send("Failed to create comment");
+    }
   }
-
-  res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
-});
-
-app.post("/create-comment", upload.none(), async (req, res) => {
-  const { author, content, postId } = req.body;
-
-  // if (!author) {
-  //   return res.status(400).json({ error: "Missing author fields" });
-  // }
-  // if (!content) {
-  //   return res.status(400).json({ error: "Missing content fields" });
-  // }
-  // if (!postId) {
-  //   return res.status(400).json({ error: "Missing post id fields" });
-  // }
-
-  // console.log("Author: ", author);
-  // console.log("Content: ", content);
-  // console.log("Post ID: ", postId);
-  const newComment = await Comment.create({
-    author,
-    content,
-    postId,
-  });
-});
+);
 
 // Profile update route
 app.post(
