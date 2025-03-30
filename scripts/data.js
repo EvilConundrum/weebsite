@@ -1,5 +1,6 @@
 // Sample Data and Data Creation Functions
 const { Post, Comment, User, Community, Notification } = require("./db.js");
+const bcrypt = require('bcrypt');
 
 const createPost = async (title, content, author, community, images = []) => {
   try {
@@ -34,12 +35,14 @@ const createComment = async (author, content, postID) => {
 };
 
 const createUser = async (username, password) => {
-  console.log(username + " " + password);
   try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const user = new User({
       profilePicture: "/images/profile-pictures/deafult.gif",
       username: username,
-      password: password,
+      password: hashedPassword,
     });
 
     // Save the user to the database
