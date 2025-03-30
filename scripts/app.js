@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const multer = require("multer");
 const fs = require("fs");
+const bcrypt = require('bcrypt');
 
 const app = express();
 
@@ -188,7 +189,8 @@ app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username: username });
 
-    if (user && user.password === password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
       req.session.user = user;
       res.redirect("/home");
     } else {
@@ -463,21 +465,6 @@ app.delete("/delete-post/:id", async (req, res) => {
 
   res.json({ success: true, message: "Post deleted successfully." });
 });
-
-// app.post("/create-post", upload.single("image"), async (req, res) => {
-//   const { title, description, tags, author } = req.body;
-//   const image = req.file;
-
-//   const images = image ? [image.filename] : [];
-
-//   try {
-//     await createPost(title, description, tags, author, images);
-//     res.status(201).json({ message: "Post created successfully!" }); // Send success response
-//   } catch (error) {
-//     console.error("Error creating post:", error);
-//     res.status(500).json({ error: "Failed to create post" });
-//   }
-// });
 
 app.get("/community/:name", async (req, res) => {
   const { name } = req.params;
