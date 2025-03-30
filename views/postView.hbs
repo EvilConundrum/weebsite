@@ -14,7 +14,7 @@
     <script src="/scripts/share.js" defer></script>
 </head>
 <body>
-    {{> layout}}
+    {{> layout userData=userData}}
     <!--the layout show load here (sidebar and navbar)-->
 
   <div class="main-content">
@@ -32,12 +32,15 @@
                 <img src="images/interspeciesReviewers.png" class="pfp" alt="" />
                 <span class="postUsername">{{post.community}} /</span>
               </span>
-            <span
-                class="actionButton"
-                onclick="switchPage('profile')">
-                <img src="images/pfp.png" class="pfp" alt="" />
-                <span class="postUsername">{{post.author}}</span>
-              </span>
+            <span class="actionButton" onclick="switchPage('profile')">
+              <img 
+                src="{{post.authorProfilePicture}}" 
+                class="pfp" 
+                alt="Profile Picture"
+                onerror="this.onerror=null; this.src='/images/anonymous.png'"
+              />
+              <span class="postUsername">u/{{post.author}}</span>
+            </span>
             <span class="postTime"> 2 hours ago</span>
           </div>
 
@@ -170,8 +173,13 @@
     </div>
     <div id="commentBox">
       <div class="postHeaderLeft commentUser yourComment">
-        <img src="images/pfp.png" class="pfp"  alt=""/>
-        <span class="postUsername">u/ishigamiYu</span>
+        <img 
+          src="{{#if userData.profilePicture}}{{userData.profilePicture}}{{else}}/images/anonymous.png{{/if}}" 
+          class="pfp"  
+          alt="Profile Picture"
+          onerror="this.onerror=null; this.src='/images/anonymous.png'"
+        />
+        <span class="postUsername">u/{{userData.username}}</span>
         <span class="postTime"> 3 hours ago</span>
       </div>
       <div class="usersComment">

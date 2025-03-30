@@ -1,7 +1,12 @@
 <div class="comment-section">
   <div class="postHeader">
     <div class="postHeaderLeft commentUser">
-      <img src="images/pfp.png" class="pfp" alt="" />
+      <img 
+        src="{{authorProfilePicture}}" 
+        class="pfp" 
+        alt="Profile Picture"
+        onerror="this.onerror=null; this.src='/images/anonymous.png'"
+      />
       <span class="postUsername">u/{{author}}</span>
       <span class="postTime"> 12 hours ago</span>
     </div>

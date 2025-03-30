@@ -19,7 +19,10 @@
       <div id="main-content">
         <div id="bio-header">u/{{userData.username}}</div>
         <div id="bio">
-          <img id="bio-image" src="{{userData.profilePicture}}" alt="Profile Picture" />
+         <img id="bio-image" 
+          src="{{#if userData.profilePicture}}{{userData.profilePicture}}{{else}}/images/anonymous.png{{/if}}" 
+          alt="{{#if userData.profilePicture}}Profile Picture{{else}}Default Profile Picture{{/if}}"
+          onerror="this.onerror=null; this.src='/images/anonymous.png'">
           <div id="bio-content">
             <p>
               {{userData.bio}}

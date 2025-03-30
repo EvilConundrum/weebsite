@@ -1,3 +1,4 @@
+
 const { Schema, model } = require("mongoose");
 
 const postSchema = new Schema({
@@ -39,10 +40,11 @@ const communitySchema = new Schema({
 });
 
 const notificationSchema = new Schema({
-  userID: { type: Number, required: true },
+  user: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Changed to reference User
   content: { type: String, required: true },
   type: { type: String, required: true },
-  read: { type: Boolean, required: true },
+  read: { type: Boolean, default: false }, // Added default value
+  createdAt: { type: Date, default: Date.now } // Useful for sorting
 });
 
 const Post = model("Post", postSchema);
