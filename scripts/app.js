@@ -32,7 +32,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-const { User, Post, Notification, Comment, Community } = require("./db.js");
+const { User, Post, Notification, Comment } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
 
 // Middleware
@@ -94,9 +94,8 @@ app.use("/styles", express.static(path.join(__dirname, "../styles")));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 
-const PORT = process.env.PORT || 9000;
-app.listen(PORT, "localhost", () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(9000, "localhost", () => {
+  console.log("Server is listening on port 9000");
 });
 
 app.engine(
@@ -151,6 +150,17 @@ app.get("/home", isAuthenticated, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
+// app.get("/home", async (req, res) => {
+//   try {
+//     const posts = await Post.find().lean();
+//     console.log("Posts fetched successfully:", posts);
+//     res.render(path.join(__dirname, "../views/index.hbs"), { posts });
+//   } catch (error) {
+//     console.error("Error fetching posts:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;
@@ -224,10 +234,24 @@ app.get("/create-post", isAuthenticated, (req, res) => {
   res.render(path.join(__dirname, "../views/createPost.hbs"));
 });
 
+app.post("/create-post", upload.array("images", 5), async (req, res) => {
+  // console.log("Received request body:", req.body); // Debugging
+  // console.log("Received file:", req.files); // Debugging
+  const { title, content, author, community } = req.body;
+  const imagePath = req.files ? req.files.path : null;
+  const newPost = await Post.create({
+    title,
+    content,
+    author,
+    community,
+    images: imagePath,
+  });
+  console.log("Post saved successfully:", newPost);
+});
 
 
 app.get("/", (req, res) => {
-  res.render("logout", {
+  res.render("index", {
     userData: req.session.user || null, // Pass null if no user is logged in
   });
 });
@@ -575,16 +599,13 @@ app.get("/community/:name", async (req, res) => {
   const { name } = req.params;
 
   try {
-    const community = await Community.findOne({ name }).lean(); // Corrected to 'Community'
+    const community = await Community.findOne({ name }).lean();
     if (!community) {
       return res.status(404).send("Community not found");
     }
 
     const posts = await Post.find({ community: name }).lean();
-    res.render(path.join(__dirname, "../views/community.hbs"), {
-      community,
-      posts,
-    });
+    res.render("community", { community, posts });
   } catch (error) {
     console.error("Error loading community:", error);
     res.status(500).send("Error loading community");
