@@ -1,6 +1,6 @@
 // Sample Data and Data Creation Functions
 const { Post, Comment, User, Community, Notification } = require("./db.js");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const createPost = async (title, content, author, community, images = []) => {
   try {
@@ -35,12 +35,10 @@ const createComment = async (author, content, postID) => {
 };
 
 const createUser = async (username, password) => {
-
   try {
-
     const existingUser = await User.findOne({ username: username });
     if (existingUser) {
-      throw new Error("Username already taken. Please choose another.");
+      return null;
     }
 
     const saltRounds = 10;
@@ -94,10 +92,16 @@ const createNotification = async (userID, content, type, read) => {
     });
 
     await newNotification.save();
-    console.log(`Notification  for user ${userID} created successfully:`, newNotification);
+    console.log(
+      `Notification  for user ${userID} created successfully:`,
+      newNotification
+    );
     return newNotification;
   } catch (error) {
-    console.log(`Error creating notification  for user ${userID}:`, newNotification);
+    console.log(
+      `Error creating notification  for user ${userID}:`,
+      newNotification
+    );
     throw error;
   }
 };
@@ -123,4 +127,3 @@ module.exports = {
   createNotification,
   testPost,
 };
-

@@ -1,4 +1,3 @@
-
 const { Schema, model } = require("mongoose");
 
 const postSchema = new Schema({
@@ -22,10 +21,11 @@ const userSchema = new Schema({
   username: { type: String, required: true },
   bio: { type: String },
   password: { type: String, required: true },
-  posts: { type: Schema.Types.ObjectId, ref: "Post" },
-  comments: { type: Schema.Types.ObjectId, ref: "Comment" },
-  upvoteList: { type: Schema.Types.ObjectId, ref: "Post" },
-  downvoteList: { type: Schema.Types.ObjectId, ref: "Post" },
+  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  upvoteList: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  downvoteList: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  communityList: [{ type: Schema.Types.ObjectId, ref: "Community" }],
 });
 
 const communitySchema = new Schema({
@@ -44,7 +44,7 @@ const notificationSchema = new Schema({
   content: { type: String, required: true },
   type: { type: String, required: true },
   read: { type: Boolean, default: false }, // Added default value
-  createdAt: { type: Date, default: Date.now } // Useful for sorting
+  createdAt: { type: Date, default: Date.now }, // Useful for sorting
 });
 
 const Post = model("Post", postSchema);

@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const multer = require("multer");
 const fs = require("fs");
+const bcrypt = require("bcrypt");
 
 const app = express();
 
@@ -154,6 +155,36 @@ app.get("/home", isAuthenticated, async (req, res) => {
   }
 });
 
+// home for guests
+// app.get("/home", async (req, res) => {
+//   try {
+//     const posts = await Post.find().lean();
+
+//     // Get all unique author usernames from posts
+//     const usernames = [...new Set(posts.map((post) => post.author))];
+
+//     // Fetch profile pictures for all authors
+
+//     const profilePictureMap = users.reduce((acc, user) => {
+//       acc[user.username] = user.profilePicture || "/images/anonymous.png"; // Fallback
+//       return acc;
+//     }, {});
+
+//     // Attach profile pictures to posts
+//     const postsWithProfilePictures = posts.map((post) => ({
+//       ...post,
+//       authorProfilePicture: profilePictureMap[post.author],
+//     }));
+
+//     res.render("index", {
+//       posts: postsWithProfilePictures, // Pass enriched posts
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Server error");
+//   }
+// });
+
 // app.get("/home", async (req, res) => {
 //   try {
 //     const posts = await Post.find().lean();
@@ -243,21 +274,6 @@ app.get("/create-post", isAuthenticated, (req, res) => {
   res.render(path.join(__dirname, "../views/createPost.hbs"));
 });
 
-app.post("/create-post", upload.array("images", 5), async (req, res) => {
-  // console.log("Received request body:", req.body); // Debugging
-  // console.log("Received file:", req.files); // Debugging
-  const { title, content, author, community } = req.body;
-  const imagePath = req.files ? req.files.path : null;
-  const newPost = await Post.create({
-    title,
-    content,
-    author,
-    community,
-    images: imagePath,
-  });
-  console.log("Post saved successfully:", newPost);
-});
-
 app.get("/", (req, res) => {
   res.render("index", {
     userData: req.session.user || null, // Pass null if no user is logged in
@@ -273,17 +289,14 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username });
-    if (user && user.password === password) {
-      // Store essential user data in session
-      req.session.user = {
-        _id: user._id,
-        username: user.username,
-        profilePicture: user.profilePicture,
-      };
+    const user = await User.findOne({ username: username });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+      req.session.user = user;
       res.redirect("/home");
     } else {
-      res.redirect("/login?error=invalid_credentials");
+      res.redirect("/login?error=invalid_credentials"); // Redirect with error flag
     }
   } catch (error) {
     console.error("Login error:", error);
