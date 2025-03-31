@@ -151,6 +151,8 @@ function toggleEditComment(commentId) {
   const editField = document.querySelector(`.editComment`);
   const textValue = displayComment.textContent.trim();
 
+  editField.value = textValue;
+
   const isDisplayed =
     window.getComputedStyle(displayComment).display !== "none";
 
@@ -161,13 +163,12 @@ function toggleEditComment(commentId) {
   } else {
     displayComment.style.display = "flex";
     editComment.style.display = "none";
+    editField.value = textValue;
   }
 
   if (dropdown && dropdown.style.display !== "none") {
     dropdown.style.display = "none";
   }
-
-  editField.value = textValue.textContent.trim();
 }
 
 document.addEventListener("DOMContentLoaded", function () {

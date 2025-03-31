@@ -32,7 +32,7 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
-const { User, Post, Notification, Comment } = require("./db.js");
+const { User, Post, Notification, Comment, Community } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
 
 // Middleware
@@ -46,12 +46,12 @@ app.use(
     secret: "secret-key",
     resave: false,
     saveUninitialized: false,
-    cookie: { 
+    cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
   })
 );
 
@@ -106,14 +106,14 @@ app.engine(
     partialsDir: path.join(__dirname, "../views/partials"),
     helpers: {
       // Add this helper
-      includes: function(array, value, options) {
+      includes: function (array, value, options) {
         if (array && array.includes(value)) {
           return options.fn(this);
         }
         return options.inverse(this);
       },
-      timestamp: () => Date.now()
-    }
+      timestamp: () => Date.now(),
+    },
   })
 );
 
@@ -123,17 +123,20 @@ app.get("/home", isAuthenticated, async (req, res) => {
     const posts = await Post.find().lean();
 
     // Get all unique author usernames from posts
-    const usernames = [...new Set(posts.map(post => post.author))];
+    const usernames = [...new Set(posts.map((post) => post.author))];
 
     // Fetch profile pictures for all authors
-    const users = await User.find({ username: { $in: usernames } }, "username profilePicture").lean();
+    const users = await User.find(
+      { username: { $in: usernames } },
+      "username profilePicture"
+    ).lean();
     const profilePictureMap = users.reduce((acc, user) => {
       acc[user.username] = user.profilePicture || "/images/anonymous.png"; // Fallback
       return acc;
     }, {});
 
     // Attach profile pictures to posts
-    const postsWithProfilePictures = posts.map(post => ({
+    const postsWithProfilePictures = posts.map((post) => ({
       ...post,
       authorProfilePicture: profilePictureMap[post.author],
     }));
@@ -176,27 +179,33 @@ app.get("/post/:id", async (req, res) => {
 
     const post = await Post.findById(id).lean();
     const authorUser = await User.findOne({ username: post.author }).lean();
-    post.authorProfilePicture = authorUser?.profilePicture || "/images/anonymous.png";
+    post.authorProfilePicture =
+      authorUser?.profilePicture || "/images/anonymous.png";
 
     // Get comments with authors' profile pictures
     const comments = await Comment.find({ postId: id }).lean();
-    const commentAuthors = [...new Set(comments.map(c => c.author))];
-    const commentUsers = await User.find({ username: { $in: commentAuthors } }, "username profilePicture").lean();
-    
+    const commentAuthors = [...new Set(comments.map((c) => c.author))];
+    const commentUsers = await User.find(
+      { username: { $in: commentAuthors } },
+      "username profilePicture"
+    ).lean();
+
     const commentProfileMap = commentUsers.reduce((acc, user) => {
       acc[user.username] = user.profilePicture || "/images/anonymous.png";
       return acc;
     }, {});
 
-    const commentsWithPictures = comments.map(comment => ({
+    const commentsWithPictures = comments.map((comment) => ({
       ...comment,
-      authorProfilePicture: commentProfileMap[comment.author]
+      authorProfilePicture: commentProfileMap[comment.author],
+      isAuthor: userData && userData.username === comment.author,
     }));
 
     res.render("postView", {
       userData,
       post,
-      comments: commentsWithPictures
+      comments: commentsWithPictures,
+      isAuthor: userData && userData.username === post.author,
     });
   } catch (error) {
     console.error(error);
@@ -249,7 +258,6 @@ app.post("/create-post", upload.array("images", 5), async (req, res) => {
   console.log("Post saved successfully:", newPost);
 });
 
-
 app.get("/", (req, res) => {
   res.render("index", {
     userData: req.session.user || null, // Pass null if no user is logged in
@@ -271,7 +279,7 @@ app.post("/login", async (req, res) => {
       req.session.user = {
         _id: user._id,
         username: user.username,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
       };
       res.redirect("/home");
     } else {
@@ -317,9 +325,7 @@ app.post(
       const { title, content, community } = req.body;
       const author = req.session.user.username; // Use username instead of _id
 
-      const imagePaths = req.files 
-        ? req.files.map(file => file.path) 
-        : [];
+      const imagePaths = req.files ? req.files.map((file) => file.path) : [];
 
       const newPost = await Post.create({
         title,
@@ -342,9 +348,9 @@ app.get("/api/notifications", async (req, res) => {
 
   try {
     const notifications = await Notification.find({
-      user: req.session.user._id
+      user: req.session.user._id,
     }).sort({ createdAt: -1 });
-    
+
     res.json(notifications);
   } catch (error) {
     console.error("Error fetching notifications:", error);
@@ -365,11 +371,12 @@ app.post("/api/notifications", async (req, res) => {
     const notification = await Notification.create({
       user: postOwner._id,
       type: type, // Use the type from request body
-      content: type === "Like" 
-        ? "Your post has been liked!" 
-        : "Your post has been disliked.",
+      content:
+        type === "Like"
+          ? "Your post has been liked!"
+          : "Your post has been disliked.",
       postId,
-      read: false
+      read: false,
     });
 
     res.status(201).json({ notification });
@@ -444,7 +451,6 @@ app.put("/downvote/:id", async (req, res) => {
 
   res.json({ downvotes: post.downvotes, upvotes: post.upvotes });
 });
-
 
 app.post(
   "/create-comment",

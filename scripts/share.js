@@ -49,11 +49,11 @@ async function getComment(postId) {
   const comment = document.querySelector(".commentBar").value;
   const formData = new FormData();
 
-  console.log(postId);
-
-  formData.append("author", "cleevayang");
+  formData.append("author", "cleevayang"); //TODO: ADD SESSION MANAGEMENT HERE
   formData.append("content", comment);
   formData.append("postId", postId);
+
+  console.log(formData);
 
   const res = await fetch("/create-comment", {
     method: "POST",
