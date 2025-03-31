@@ -35,7 +35,14 @@ const createComment = async (author, content, postID) => {
 };
 
 const createUser = async (username, password) => {
+
   try {
+
+    const existingUser = await User.findOne({ username: username });
+    if (existingUser) {
+      throw new Error("Username already taken. Please choose another.");
+    }
+
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
