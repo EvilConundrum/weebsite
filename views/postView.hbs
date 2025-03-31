@@ -45,6 +45,7 @@
           </div>
 
           <div class="postHeaderRight" style="flex-direction: column;">
+            {{#if isAuthor}}
             <div class="dropdown-container">
               <button class="actionButton kebabMenu" aria-label="More options" style=" margin-left: auto;" onclick="togglePostDropdownVisibility()">
                 <!-- Kebab Icon -->
@@ -78,6 +79,7 @@
                 </div>
               </div>
               <!-- END OF DROPDOWN -->
+              {{/if}}
             </div>
           </div>
         </div>

@@ -29,7 +29,7 @@ async function getPostData() {
   const formData = new FormData();
   formData.append("title", document.getElementById("title").value);
   formData.append("content", document.getElementById("description").value);
-  formData.append("author", "cleevayang");
+  formData.append("author", "cleevayang"); //TODO: ADD SESSION MANAGEMENT HERE
   formData.append("community", document.getElementById("tags").value);
   const image = document.getElementById("image-upload").files[0];
   if (image) {
