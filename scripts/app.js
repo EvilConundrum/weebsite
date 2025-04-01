@@ -348,6 +348,10 @@ app.post(
         images: imagePaths,
       });
 
+      await User.findByIdAndUpdate(req.session.user._id, {
+        $addToSet: { posts: newPost._id },
+      });
+
       res.redirect("/home");
     } catch (error) {
       console.error("Error creating post:", error);
@@ -537,6 +541,10 @@ app.post(
         author, // Use session username
         content,
         postId,
+      });
+
+      await User.findByIdAndUpdate(req.session.user._id, {
+        $addToSet: { comments: newComment._id },
       });
 
       res.redirect(`/post/${postId}`); // Redirect back to the post
