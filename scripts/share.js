@@ -175,3 +175,31 @@ async function deletePost(postId) {
 
   switchPage("home");
 }
+
+async function followCommunity(communityName) {
+  console.log(communityName);
+
+  const res = await fetch("/follow-community", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ communityName }),
+  });
+
+  if (res.ok) {
+    return res.status(200);
+  }
+}
+
+async function unfollowCommunity(communityName) {
+  console.log(communityName);
+
+  const res = await fetch("/unfollow-community", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ communityName }),
+  });
+
+  if (res.ok) {
+    return res.status(200);
+  }
+}

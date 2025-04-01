@@ -400,69 +400,128 @@ app.post("/api/notifications", async (req, res) => {
 });
 
 app.put("/upvote/:id", async (req, res) => {
-  const { action, oppaction } = req.body;
-  console.log("Action:", action);
-  console.log("Opp Action:", oppaction);
+  try {
+    const { action, oppaction, postId } = req.body;
+    console.log(req.session.user._id);
+    const userId = req.session.user._id;
 
-  let update = {};
+    if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
-  if (action === "add") {
-    update.upvotes = 1;
-  } else if (action === "remove") {
-    update.upvotes = -1;
+    // console.log("Action:", action);
+    // console.log("Opposite Action:", oppaction);
+
+    let update = {}; // Track vote count changes
+
+    // SAVE USER AND POST RELATED DATA
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (!user.upvoteList.includes(postId)) {
+      update.upvotes = action === "add" ? 1 : -1; // Upvote action
+
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { upvoteList: postId },
+      });
+
+      await Post.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { upvotes: 1 } },
+        { new: true }
+      );
+
+      if (user.downvoteList.includes(postId)) {
+        update.downvotes = -1; // Remove downvote if switching vote
+        await User.findByIdAndUpdate(userId, {
+          $pull: { downvoteList: postId },
+        });
+        await Post.findByIdAndUpdate(
+          req.params.id,
+          { $inc: { downvotes: -1 } },
+          { new: true }
+        );
+      }
+    } else {
+      await Post.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { upvotes: -1 } },
+        { new: true }
+      );
+      await User.findByIdAndUpdate(userId, { $pull: { upvoteList: postId } });
+    }
+
+    const post = await Post.findById(req.params.id).lean();
+
+    console.log("Upvotes:", post.upvotes);
+    console.log("Downvotes:", post.downvotes);
+
+    res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
+  } catch (error) {
+    console.error("Error in upvote:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  if (oppaction === "remove") {
-    update.downvotes = -1;
-  }
-
-  if (Object.keys(update).length === 0) {
-    return res
-      .status(400)
-      .json({ error: "Invalid request. No valid action provided." });
-  }
-
-  const post = await Post.findByIdAndUpdate(
-    req.params.id,
-    { $inc: update },
-    { new: true }
-  );
-
-  res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
 });
 
 app.put("/downvote/:id", async (req, res) => {
-  const { action, oppaction } = req.body;
-  console.log("Downvote Action:", action);
-  console.log("Opposite Action:", oppaction);
+  try {
+    const { action, oppaction, postId } = req.body;
+    const userId = req.session.user._id;
 
-  let update = {};
+    if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
-  // Handle main downvote action
-  if (action === "add") {
-    update.downvotes = 1;
-  } else if (action === "remove") {
-    update.downvotes = -1;
+    // console.log("Downvote Action:", action);
+    // console.log("Opposite Action:", oppaction);
+
+    let update = {}; // Track vote count changes
+
+    // SAVE USER AND POST RELATED DATA
+
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (!user.downvoteList.includes(postId)) {
+      update.downvotes = action === "add" ? 1 : -1; // Downvote action
+
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { downvoteList: postId },
+      });
+
+      await Post.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { downvotes: 1 } },
+        { new: true }
+      );
+
+      if (user.upvoteList.includes(postId)) {
+        update.upvotes = -1; // Remove upvote if switching vote
+        await User.findByIdAndUpdate(userId, { $pull: { upvoteList: postId } });
+
+        await Post.findByIdAndUpdate(
+          req.params.id,
+          { $inc: { upvotes: -1 } },
+          { new: true }
+        );
+      }
+    } else {
+      await Post.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { downvotes: -1 } },
+        { new: true }
+      );
+      await User.findByIdAndUpdate(userId, { $pull: { downvoteList: postId } });
+    }
+
+    const post = await Post.findById(req.params.id).lean();
+
+    console.log("Upvotes:", post.upvotes);
+    console.log("Downvotes:", post.downvotes);
+
+    res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
+  } catch (error) {
+    console.error("Error in downvote:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  // Handle opposite vote removal
-  if (oppaction === "remove") {
-    update.upvotes = -1;
-  }
-
-  if (Object.keys(update).length === 0) {
-    return res
-      .status(400)
-      .json({ error: "Invalid request. No valid action provided." });
-  }
-
-  const post = await Post.findByIdAndUpdate(
-    req.params.id,
-    { $inc: update },
-    { new: true }
-  );
-
-  res.json({ downvotes: post.downvotes, upvotes: post.upvotes });
 });
 
 app.post(
@@ -665,4 +724,54 @@ app.get("/explore", isAuthenticated, async (req, res) => {
     console.error(error);
     res.status(500).send("Server error");
   }
+});
+
+app.put("/follow-community", isAuthenticated, async (req, res) => {
+  try {
+    const { communityName } = req.body;
+
+    const comm = await Community.findOne({ name: communityName }).lean();
+    const commID = comm._id;
+
+    const follow = await User.findByIdAndUpdate(
+      req.session.user._id,
+      { $addToSet: { communityList: commID } },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Community followed successfully", updatedUser });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.put("/unfollow-community", isAuthenticated, async (req, res) => {
+  try {
+    const { communityName } = req.body;
+
+    const comm = await Community.findOne({ name: communityName }).lean();
+    const commID = comm._id;
+
+    const follow = await User.findByIdAndUpdate(
+      req.session.user._id,
+      { $pull: { communityList: commID } },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Community unfollowed successfully", updatedUser });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.get("/user-votes", isAuthenticated, async (req, res) => {
+  const selectedUser = await User.findById(req.session.user._id)
+    .select("upvoteList downvoteList")
+    .lean();
+
+  res.json(selectedUser);
 });

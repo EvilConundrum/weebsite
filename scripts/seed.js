@@ -154,52 +154,11 @@ mongoose
       },
     ];
 
-    // Sample notifications
-    const sampleNotifications = [
-      {
-        userID: 1,
-        content: "You have a new comment!",
-        type: "comment",
-        read: false,
-      },
-      {
-        userID: 2,
-        content: "Your post was upvoted!",
-        type: "upvote",
-        read: true,
-      },
-      {
-        userID: 3,
-        content: "Your cosplay post is trending!",
-        type: "trending",
-        read: false,
-      },
-      {
-        userID: 4,
-        content: "Someone mentioned you in a comment.",
-        type: "mention",
-        read: false,
-      },
-      {
-        userID: 5,
-        content: "Your Isekai post is popular!",
-        type: "trending",
-        read: false,
-      },
-      {
-        userID: 6,
-        content: "Your manga tip post received 40 upvotes!",
-        type: "upvote",
-        read: true,
-      },
-    ];
-
     // Insert sample data into the database
     return Promise.all([
       User.insertMany(sampleUsers),
       Community.insertMany(sampleCommunities),
       Post.insertMany(samplePosts),
-      Notification.insertMany(sampleNotifications),
     ]);
   })
   .then(() => {

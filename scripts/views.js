@@ -106,10 +106,12 @@ async function getUserData() {
 async function upvotePost(postId) {
   const button = document.getElementById(`upvotes-${postId}`);
   const oppBtn = document.getElementById(`downvotes-${postId}`);
-  const isActive = button.classList.contains("active");
-  const isOppActive = oppBtn.classList.contains("active");
+  const isActive = button.classList.contains("activeLike");
+  const isOppActive = oppBtn.classList.contains("activeDislike");
 
-  const body = {};
+  const body = {
+    postId,
+  };
 
   if (!isActive) {
     body.action = "add";
@@ -128,8 +130,13 @@ async function upvotePost(postId) {
 
   if (res.ok) {
     const data = await res.json();
-    button.textContent = data.upvotes;
-    oppBtn.textContent = data.downvotes;
+    // console.log(data);
+    setTimeout(() => {
+      button.textContent = data.upvotes;
+      oppBtn.textContent = data.downvotes;
+    }, 10);
+    // console.log(button.textContent);
+    // console.log(oppBtn.textContent);
 
     button.classList.toggle("active");
     oppBtn.classList.remove("active");
@@ -139,15 +146,18 @@ async function upvotePost(postId) {
 async function downvotePost(postId) {
   const button = document.getElementById(`downvotes-${postId}`);
   const oppBtn = document.getElementById(`upvotes-${postId}`);
-  const isActive = button.classList.contains("active");
-  const isOppActive = oppBtn.classList.contains("active");
+  const isActive = button.classList.contains("activeDislike");
+  const isOppActive = oppBtn.classList.contains("activeLike");
 
-  const body = {};
+  const body = {
+    postId,
+  };
 
   if (!isActive) {
     body.action = "add";
     if (isOppActive) {
       body.oppaction = "remove";
+      // TODO: Remove from database
     }
   } else {
     body.action = "remove";
@@ -161,8 +171,13 @@ async function downvotePost(postId) {
 
   if (res.ok) {
     const data = await res.json();
-    button.textContent = data.downvotes;
-    oppBtn.textContent = data.upvotes;
+    // console.log(data);
+    setTimeout(() => {
+      button.textContent = data.downvotes;
+      oppBtn.textContent = data.upvotes;
+    }, 10);
+    // console.log(button.textContent);
+    // console.log(oppBtn.textContent);
 
     button.classList.toggle("active");
     oppBtn.classList.remove("active");
