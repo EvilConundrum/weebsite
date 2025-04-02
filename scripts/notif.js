@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Sync with actual server count
       const data = await response.json();
       voteCountElement.textContent = data.upvotes;
+    
 
     } catch (error) {
       console.error("Error:", error);
@@ -144,6 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Sync with actual server count
       const data = await response.json();
       voteCountElement.textContent = data.downvotes;
+      
 
     } catch (error) {
       console.error("Error:", error);
@@ -161,9 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const dislikeButton = e.target.closest(".dislike-button");
     if (dislikeButton) handleDislike(dislikeButton);
   });
-
-
-
 
 
 
