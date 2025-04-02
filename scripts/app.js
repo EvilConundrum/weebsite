@@ -408,40 +408,66 @@ app.post(
   upload.array("images", 5),
   async (req, res) => {
     try {
-      const { title, content, community } = req.body;
-      const author = req.session.user.username; // Use username instead of _id
+      // Debug log the entire request body
+      console.log("Full request body:", req.body);
 
-      // Check if community exists, create if not
-      let existingCommunity = await Community.findOne({ name: community });
-      if (!existingCommunity) {
-        existingCommunity = await Community.create({
-          name: community,
-          members: 1,
-          onlineMembers: 0,
-          dateCreated: new Date(),
-          description: `A community dedicated to ${community}.`,
-          communityPfp: "/images/default-community-pfp.png",
-          bannerPfp: "/images/default-banner-pfp.png",
+      if (!req.body.title || !req.body.community) {
+        return res.status(400).json({ 
+          error: "Title and community are required",
+          message: "Please fill in all required fields."
         });
       }
 
-      const imagePaths = req.files ? req.files.map((file) => file.path) : [];
+      // First check if community exists before proceeding
+      const existingCommunity = await Community.findOne({ 
+        name: req.body.community 
+      }).lean();
 
-      const newPost = await Post.create({
-        title,
-        content,
-        author, // Now stores the username string
-        community,
-        images: imagePaths,
-      });
+      if (!existingCommunity) {
+        return res.status(404).json({ 
+          error: "Community not found",
+          message: "This community does not exist. Please select a valid community."
+        });
+      }
 
+      // Only proceed with post creation if community exists
+      const postData = {
+        title: req.body.title.trim(),
+        content: req.body.content ? req.body.content.trim() : "",
+        community: req.body.community,
+        author: req.session.user.username,
+        images: req.files ? req.files.map((file) => file.path) : []
+      };
+
+      // Create the post
+      const newPost = await Post.create(postData);
+      console.log("Created post:", newPost);
+
+      // Update user's posts array
       await User.findByIdAndUpdate(req.session.user._id, {
         $addToSet: { posts: newPost._id },
       });
 
+      // Find followers and create notifications
+      const followers = await User.find({ communityList: existingCommunity._id });
+      if (followers?.length > 0) {
+        const notifications = followers.map(follower => ({
+          user: follower._id,
+          content: `${postData.community}: ${postData.title}`,
+          type: 'New Post',
+          postId: newPost._id,
+          read: false,
+          createdAt: new Date()
+        }));
+
+        await Notification.insertMany(notifications);
+        console.log('Created notifications for:', followers.length, 'followers');
+      }
+
       res.redirect("/home");
     } catch (error) {
       console.error("Error creating post:", error);
+      console.error("Error details:", error.stack);
       res.status(500).send("Failed to create post");
     }
   }
@@ -744,21 +770,6 @@ app.delete("/delete-post/:id", async (req, res) => {
   res.json({ success: true, message: "Post deleted successfully." });
 });
 
-// app.post("/create-post", upload.single("image"), async (req, res) => {
-//   const { title, description, tags, author } = req.body;
-//   const image = req.file;
-
-//   const images = image ? [image.filename] : [];
-
-//   try {
-//     await createPost(title, description, tags, author, images);
-//     res.status(201).json({ message: "Post created successfully!" }); // Send success response
-//   } catch (error) {
-//     console.error("Error creating post:", error);
-//     res.status(500).json({ error: "Failed to create post" });
-//   }
-// });
-
 app.get("/community/:name", isAuthenticated, async (req, res) => {
   // Add isAuthenticated middleware
   const { name } = req.params;
@@ -856,7 +867,7 @@ app.put("/follow-community", isAuthenticated, async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Community followed successfully", updatedUser });
+      .json({ message: "Community followed successfully" });
   } catch (error) {
     console.error(error);
   }
@@ -877,7 +888,7 @@ app.put("/unfollow-community", isAuthenticated, async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Community unfollowed successfully", updatedUser });
+      .json({ message: "Community unfollowed successfully"});
   } catch (error) {
     console.error(error);
   }

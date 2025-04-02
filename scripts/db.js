@@ -36,16 +36,17 @@ const communitySchema = new Schema({
   dateCreated: { type: Date, required: true },
   description: { type: String, required: true },
   communityPfp: { type: String, required: true },
-  bannerPfp: { type: String, required: true },
-  posts: { type: Schema.Types.ObjectId, ref: "Post" },
+  followers: [{ type: Schema.Types.ObjectId, ref: "User" }], // Add this line
+  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }], 
 });
 
 const notificationSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Changed to reference User
+  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   content: { type: String, required: true },
   type: { type: String, required: true },
-  read: { type: Boolean, default: false }, // Added default value
-  createdAt: { type: Date, default: Date.now }, // Useful for sorting
+  postId: { type: Schema.Types.ObjectId, ref: "Post" },
+  read: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }
 });
 
 const Post = model("Post", postSchema);

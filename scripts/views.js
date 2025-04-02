@@ -25,38 +25,62 @@ function switchPage(page, id = null) {
 
 window.switchPage = switchPage;
 
-async function getPostData() {
-  const formData = new FormData();
-  formData.append("title", document.getElementById("title").value);
-  formData.append("content", document.getElementById("description").value);
-  formData.append("community", document.getElementById("tags").value);
-  const image = document.getElementById("image-upload").files[0];
-  if (image) {
-    formData.append("images", image);
-  }
+async function getPostData(event) {
+  // Prevent default form submission
+  event.preventDefault();
 
-  if (image) formData.append("image", image);
+  // Get form data
+  const formData = new FormData(event.target);
 
   try {
-    const response = await fetch("/create-post", {
-      method: "POST",
-      body: formData, // No need for `Content-Type`, FormData sets it automatically
+    // Add debug log for FormData
+    console.log("Sending form data:", {
+      title: formData.get('title'),
+      content: formData.get('content'),
+      community: formData.get('community')
     });
 
-    if (response.ok) {
-      const result = await response.json();
-      // console.log("Post created successfully:", result);
-      alert("Post created successfully!");
-      switchPage("home");
-    } else {
-      const errorText = await response.text();
-      console.error("Failed to create post:", errorText);
-      alert("Failed to create post: " + errorText);
+    const response = await fetch("/create-post", {
+      method: "POST",
+      body: formData
+    });
+
+    // Debug log raw response
+    console.log("Raw response status:", response.status);
+
+    // Try to parse response 
+    const responseText = await response.text();
+    console.log("Response text:", responseText);
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+      console.log("Parsed response data:", data);
+    } catch (e) {
+      console.log("Response is not JSON:", responseText);
+      data = { message: responseText };
     }
+
+    // Handle response based on status
+    if (response.status === 201 || response.status === 200) {
+      alert("Post created successfully!");
+      window.location.href = "/home";
+    } else if (response.status === 404) {
+      alert(data.message || "Community not found. Please select a valid community.");
+    } else if (response.status === 400) {
+      alert(data.message || "Please fill in all required fields.");
+    } else {
+      throw new Error(data.message || "Server error");
+    }
+
   } catch (error) {
-    console.error("Error connecting to the server:", error.message);
+    console.error("Error details:", error);
+    alert(error.message || "Error creating post. Please try again.");
   }
 }
+
+// Make function globally available
+window.getPostData = getPostData;
 
 async function getUserData() {
   // Get form values directly from input elements
