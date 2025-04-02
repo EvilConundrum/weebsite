@@ -18,12 +18,14 @@ app.engine(
   hbs.engine({
     extname: "hbs",
     defaultLayout: false,
-
     partialsDir: path.join(__dirname, "../views/partials"),
   })
 );
 
-app.use(express.static("weebsite"));
+app.use(express.static(path.join(__dirname, "..")));
+app.use("/styles", express.static(path.join(__dirname, "../styles")));
+app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
+app.use("/images", express.static(path.join(__dirname, "../images")));
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/weebsiteDB")
@@ -92,9 +94,6 @@ const isAuthenticated = (req, res, next) => {
     res.redirect("/login");
   }
 };
-app.use("/styles", express.static(path.join(__dirname, "../styles")));
-app.use("/images", express.static(path.join(__dirname, "../images")));
-app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 
 app.listen(9000, "localhost", () => {
   console.log("Server is listening on port 9000");
