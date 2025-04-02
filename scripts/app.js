@@ -26,7 +26,7 @@ app.engine(
 app.use(express.static("weebsite"));
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/weebsiteDB")
+  .connect("mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/")
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -395,7 +395,7 @@ app.post("/signup", async (req, res) => {
     // Set session user after successful signup
     req.session.user = newUser;
 
-    // Respond with success message
+    // Respond with success messageabout:blank#blocked
     res.status(201).send(newUser.username + " has been created!");
   } catch (error) {
     console.error("Error creating user:", error);

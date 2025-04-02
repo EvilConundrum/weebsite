@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, 'views'));
 hbs.registerPartials(path.join(__dirname, 'views/partials'));
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/weebsiteDB', {
+mongoose.connect('mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
