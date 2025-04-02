@@ -109,7 +109,7 @@ app.engine(
     helpers: {
       // Add the json helper here
       json: (context) => {
-        return JSON.stringify(context).replace(/</g, '\\u003c');
+        return JSON.stringify(context).replace(/</g, "\\u003c");
       },
       includes: function (array, value, options) {
         if (array && array.includes(value)) {
@@ -328,7 +328,7 @@ app.get("/", async (req, res) => {
     }
 
     const posts = await Post.find().lean();
-    const usernames = [...new Set(posts.map(post => post.author))];
+    const usernames = [...new Set(posts.map((post) => post.author))];
     const users = await User.find(
       { username: { $in: usernames } },
       "username profilePicture"
@@ -339,7 +339,7 @@ app.get("/", async (req, res) => {
       return acc;
     }, {});
 
-    const postsWithProfilePictures = posts.map(post => ({
+    const postsWithProfilePictures = posts.map((post) => ({
       ...post,
       authorProfilePicture: profilePictureMap[post.author],
     }));
@@ -412,19 +412,19 @@ app.post(
       const { title, content, community } = req.body;
       const author = req.session.user.username; // Use username instead of _id
 
-       // Check if community exists, create if not
-       let existingCommunity = await Community.findOne({ name: community });
-       if (!existingCommunity) {
-         existingCommunity = await Community.create({
-           name: community,
-           members: 1,
-           onlineMembers: 0,
-           dateCreated: new Date(),
-           description: `A community dedicated to ${community}.`,
-           communityPfp: "/images/default-community-pfp.png",
-           bannerPfp: "/images/default-banner-pfp.png",
-         });
-       }
+      // Check if community exists, create if not
+      let existingCommunity = await Community.findOne({ name: community });
+      if (!existingCommunity) {
+        existingCommunity = await Community.create({
+          name: community,
+          members: 1,
+          onlineMembers: 0,
+          dateCreated: new Date(),
+          description: `A community dedicated to ${community}.`,
+          communityPfp: "/images/default-community-pfp.png",
+          bannerPfp: "/images/default-banner-pfp.png",
+        });
+      }
 
       const imagePaths = req.files ? req.files.map((file) => file.path) : [];
 
@@ -469,7 +469,6 @@ app.post("/api/notifications", isAuthenticated, async (req, res) => {
   try {
     const { postId, postAuthor, type } = req.body; // Add 'type' to destructuring
     const likerId = req.session.user._id;
-    
 
     const postOwner = await User.findOne({ username: postAuthor });
     if (!postOwner) return res.status(404).json({ error: "User not found" });
@@ -497,61 +496,57 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
   console.log("Action:", action);
   console.log("Opp Action:", oppaction);
 
-    if (!userId) return res.status(401).json({ error: "Not authenticated" });
+  if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
-    // console.log("Action:", action);
-    // console.log("Opposite Action:", oppaction);
+  // console.log("Action:", action);
+  // console.log("Opposite Action:", oppaction);
 
-    let update = {}; // Track vote count changes
+  let update = {}; // Track vote count changes
 
-    // SAVE USER AND POST RELATED DATA
-    const user = await User.findById(userId);
+  // SAVE USER AND POST RELATED DATA
+  const user = await User.findById(userId);
 
-    if (!user) return res.status(404).json({ error: "User not found" });
+  if (!user) return res.status(404).json({ error: "User not found" });
 
-    if (!user.upvoteList.includes(postId)) {
-      update.upvotes = action === "add" ? 1 : -1; // Upvote action
+  if (!user.upvoteList.includes(postId)) {
+    update.upvotes = action === "add" ? 1 : -1; // Upvote action
 
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { upvoteList: postId },
+    });
+
+    await Post.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { upvotes: 1 } },
+      { new: true }
+    );
+
+    if (user.downvoteList.includes(postId)) {
+      update.downvotes = -1; // Remove downvote if switching vote
       await User.findByIdAndUpdate(userId, {
-        $addToSet: { upvoteList: postId },
+        $pull: { downvoteList: postId },
       });
-
       await Post.findByIdAndUpdate(
         req.params.id,
-        { $inc: { upvotes: 1 } },
+        { $inc: { downvotes: -1 } },
         { new: true }
       );
-
-      if (user.downvoteList.includes(postId)) {
-        update.downvotes = -1; // Remove downvote if switching vote
-        await User.findByIdAndUpdate(userId, {
-          $pull: { downvoteList: postId },
-        });
-        await Post.findByIdAndUpdate(
-          req.params.id,
-          { $inc: { downvotes: -1 } },
-          { new: true }
-        );
-      }
-    } else {
-      await Post.findByIdAndUpdate(
-        req.params.id,
-        { $inc: { upvotes: -1 } },
-        { new: true }
-      );
-      await User.findByIdAndUpdate(userId, { $pull: { upvoteList: postId } });
     }
-
-    const post = await Post.findById(req.params.id).lean();
-
-    console.log("Upvotes:", post.upvotes);
-    console.log("Downvotes:", post.downvotes);
-
-    res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
-  } catch (error) {
-    console.error("Error in upvote:", error);
-    res.status(500).json({ error: "Internal server error" });
+  } else {
+    await Post.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { upvotes: -1 } },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(userId, { $pull: { upvoteList: postId } });
   }
+
+  const post = await Post.findById(req.params.id).lean();
+
+  console.log("Upvotes:", post.upvotes);
+  console.log("Downvotes:", post.downvotes);
+
+  res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
 });
 
 app.put("/downvote/:id", isAuthenticated, async (req, res) => {
@@ -559,61 +554,57 @@ app.put("/downvote/:id", isAuthenticated, async (req, res) => {
   console.log("Downvote Action:", action);
   console.log("Opposite Action:", oppaction);
 
-    if (!userId) return res.status(401).json({ error: "Not authenticated" });
+  if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
-    // console.log("Downvote Action:", action);
-    // console.log("Opposite Action:", oppaction);
+  // console.log("Downvote Action:", action);
+  // console.log("Opposite Action:", oppaction);
 
-    let update = {}; // Track vote count changes
+  let update = {}; // Track vote count changes
 
-    // SAVE USER AND POST RELATED DATA
+  // SAVE USER AND POST RELATED DATA
 
-    const user = await User.findById(userId);
+  const user = await User.findById(userId);
 
-    if (!user) return res.status(404).json({ error: "User not found" });
+  if (!user) return res.status(404).json({ error: "User not found" });
 
-    if (!user.downvoteList.includes(postId)) {
-      update.downvotes = action === "add" ? 1 : -1; // Downvote action
+  if (!user.downvoteList.includes(postId)) {
+    update.downvotes = action === "add" ? 1 : -1; // Downvote action
 
-      await User.findByIdAndUpdate(userId, {
-        $addToSet: { downvoteList: postId },
-      });
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { downvoteList: postId },
+    });
+
+    await Post.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { downvotes: 1 } },
+      { new: true }
+    );
+
+    if (user.upvoteList.includes(postId)) {
+      update.upvotes = -1; // Remove upvote if switching vote
+      await User.findByIdAndUpdate(userId, { $pull: { upvoteList: postId } });
 
       await Post.findByIdAndUpdate(
         req.params.id,
-        { $inc: { downvotes: 1 } },
+        { $inc: { upvotes: -1 } },
         { new: true }
       );
-
-      if (user.upvoteList.includes(postId)) {
-        update.upvotes = -1; // Remove upvote if switching vote
-        await User.findByIdAndUpdate(userId, { $pull: { upvoteList: postId } });
-
-        await Post.findByIdAndUpdate(
-          req.params.id,
-          { $inc: { upvotes: -1 } },
-          { new: true }
-        );
-      }
-    } else {
-      await Post.findByIdAndUpdate(
-        req.params.id,
-        { $inc: { downvotes: -1 } },
-        { new: true }
-      );
-      await User.findByIdAndUpdate(userId, { $pull: { downvoteList: postId } });
     }
-
-    const post = await Post.findById(req.params.id).lean();
-
-    console.log("Upvotes:", post.upvotes);
-    console.log("Downvotes:", post.downvotes);
-
-    res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
-  } catch (error) {
-    console.error("Error in downvote:", error);
-    res.status(500).json({ error: "Internal server error" });
+  } else {
+    await Post.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { downvotes: -1 } },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(userId, { $pull: { downvoteList: postId } });
   }
+
+  const post = await Post.findById(req.params.id).lean();
+
+  console.log("Upvotes:", post.upvotes);
+  console.log("Downvotes:", post.downvotes);
+
+  res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
 });
 
 app.post(
@@ -769,7 +760,8 @@ app.delete("/delete-post/:id", async (req, res) => {
 //   }
 // });
 
-app.get("/community/:name", isAuthenticated, async (req, res) => { // Add isAuthenticated middleware
+app.get("/community/:name", isAuthenticated, async (req, res) => {
+  // Add isAuthenticated middleware
   const { name } = req.params;
 
   try {
@@ -786,7 +778,7 @@ app.get("/community/:name", isAuthenticated, async (req, res) => { // Add isAuth
     const posts = await Post.find({ community: name }).lean();
 
     // Attach author and community profile pictures
-    const usernames = [...new Set(posts.map(post => post.author))];
+    const usernames = [...new Set(posts.map((post) => post.author))];
     const users = await User.find(
       { username: { $in: usernames } },
       "username profilePicture"
@@ -797,7 +789,7 @@ app.get("/community/:name", isAuthenticated, async (req, res) => { // Add isAuth
       return acc;
     }, {});
 
-    const postsWithPictures = posts.map(post => ({
+    const postsWithPictures = posts.map((post) => ({
       ...post,
       authorProfilePicture: profilePictureMap[post.author],
       communityPfp: community.communityPfp,
