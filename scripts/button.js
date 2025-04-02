@@ -294,3 +294,28 @@ function handleNotificationClick() {
   // User is authenticated, show notifications
   toggleNotificationVisibility();
 }
+
+function handleSearch() {
+  const searchBar = document.getElementById("searchBar");
+  const query = searchBar.value;
+
+  if (query) {
+    // Redirect to the search results page with the query as a URL parameter
+    window.location.href = `/search?query=${encodeURIComponent(query)}`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const searchBar = document.getElementById("searchBar");
+  console.log("Search bar element:", searchBar);
+  if (searchBar) {
+    searchBar.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        console.log("Enter key pressed, handling search...");
+        handleSearch();
+      }
+    });
+  } else {
+    console.error("Search bar element not found!");
+  }
+});

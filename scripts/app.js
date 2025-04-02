@@ -909,3 +909,150 @@ app.put("/share-post", isAuthenticated, async (req, res) => {
     res.status(500).json({ error: "Failed to share post" });
   }
 });
+
+app.get("/search", isAuthenticated, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id);
+    const { query } = req.query;
+
+    if (!query) {
+      return res.redirect("/home"); // Redirect to home if no query is provided
+    }
+
+    // Fetch posts from the database
+    const posts = await Post.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } }, // Case-insensitive search in title
+        { content: { $regex: query, $options: "i" } }, // Case-insensitive search in content
+      ],
+    }).lean();
+
+    // Get all unique author usernames from posts
+    const usernames = [...new Set(posts.map((post) => post.author))];
+
+    // Fetch profile pictures for all authors
+    const users = await User.find(
+      { username: { $in: usernames } },
+      "username profilePicture"
+    ).lean();
+
+    const profilePictureMap = users.reduce((acc, user) => {
+      acc[user.username] = user.profilePicture || "/images/anonymous.png"; // Fallback
+      return acc;
+    }, {});
+
+    // Attach profile pictures to posts
+    const postsWithProfilePictures = posts.map((post) => ({
+      ...post,
+      authorProfilePicture: profilePictureMap[post.author],
+    }));
+
+    res.render("search", {
+      userData: {
+        profilePicture: user.profilePicture,
+        username: user.username,
+      },
+      query,
+      posts: postsWithProfilePictures,
+    });
+  } catch (error) {
+    console.error("Error in /search route:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// app.get("/profile/", isAuthenticated, async (req, res) => {
+//   try {
+//     const { tabName: tabName } = req.query;
+//     const userData = await User.findById(req.session.user._id)
+//       .populate("posts")
+//       .populate("comments")
+//       .lean();
+
+//     let data = {};
+//     let isPostsTab = false;
+//     let isSharedPostsTab = false;
+//     let isUpvotesTab = false;
+//     let isDownvotesTab = false;
+
+//     switch (tabName) {
+//       case "posts":
+//         console.log("Tab Name:", tabName);
+//         data.posts = await Post.find({ _id: { $in: userData.posts } }).lean();
+//         isPostsTab = true;
+//         break;
+//       case "shared-posts":
+//         console.log("Tab Name:", tabName);
+//         data.sharedPosts = await Post.find({
+//           _id: { $in: userData.sharedPosts },
+//         }).lean();
+//         isSharedPostsTab = true;
+//         break;
+//       case "upvotes":
+//         console.log("Tab Name:", tabName);
+//         data.upvotedPosts = await Post.find({
+//           _id: { $in: userData.upvoteList },
+//         }).lean();
+//         isUpvotesTab = true;
+//         break;
+//       case "downvotes":
+//         console.log("Tab Name:", tabName);
+//         data.downvotedPosts = await Post.find({
+//           _id: { $in: userData.downvoteList },
+//         }).lean();
+//         isDownvotesTab = true;
+//         break;
+//       default:
+//         return res.status(400).send("Invalid tab");
+//     }
+
+//     res.render("profile", {
+//       userData, // No need to manually destructure
+//       ...data, // This spreads posts, upvotedPosts, etc.
+//       isPostsTab,
+//       isSharedPostsTab,
+//       isUpvotesTab,
+//       isDownvotesTab,
+//     });
+//   } catch (error) {
+//     console.error("Profile load error:", error);
+//     res.status(500).send("Error loading profile");
+//   }
+// });
+
+// app.get("/home", isAuthenticated, async (req, res) => {
+//   try {
+//     const user = await User.findById(req.session.user._id);
+//     const posts = await Post.find().lean();
+
+//     // Get all unique author usernames from posts
+//     const usernames = [...new Set(posts.map((post) => post.author))];
+
+//     // Fetch profile pictures for all authors
+//     const users = await User.find(
+//       { username: { $in: usernames } },
+//       "username profilePicture"
+//     ).lean();
+//     const profilePictureMap = users.reduce((acc, user) => {
+//       acc[user.username] = user.profilePicture || "/images/anonymous.png"; // Fallback
+//       return acc;
+//     }, {});
+
+//     // Attach profile pictures to posts
+//     const postsWithProfilePictures = posts.map((post) => ({
+//       ...post,
+//       authorProfilePicture: profilePictureMap[post.author],
+//     }));
+
+//     res.render("index", {
+//       userData: {
+//         profilePicture: user.profilePicture,
+//         username: user.username,
+//       },
+//       posts: postsWithProfilePictures, // Pass enriched posts
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Server error");
+//   }
+// });

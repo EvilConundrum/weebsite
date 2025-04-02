@@ -2,12 +2,13 @@
     <div class="navBar">
       <div class="title">WEEBSITE</div>
       <div class="searchBarContainer">
-        <input type="text" class="searchBar" placeholder="Search Weebsite..." />
+        <input type="text" id="searchBar" class="searchBar" placeholder="Search Weebsite..." />
         <svg
           class="searchIcon size-4"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
           fill="currentColor"
+          onclick="handleSearch()"
         >
           <path
             fill-rule="evenodd"
