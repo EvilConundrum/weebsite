@@ -7,7 +7,8 @@
   <script src="/scripts/include.js" defer></script>
   <script src="/scripts/button.js" defer></script>
   <script src="/scripts/views.js" defer></script>
-  <title></title>
+  <script src="/scripts/share.js" defer></script>
+  <title>w/{{community.name}} - Community</title>
 </head>
 <body>
   {{> layout userData=userData}}
@@ -31,7 +32,8 @@
             <p class="stat-name">Created</p>
           </div>
         </div>
-        <button class="follow-com-button">Follow</button>
+        <button class="follow-com-button" onclick="toggleCommunityFollow(); followCommunity('{{community.name}}');">Follow</button>
+        <button class="followed-com-button" onclick="toggleCommunityFollow(); unfollowCommunity('{{community.name}}');">Following</button>
       </div>
       <div class="communityBanner">
         <img src="{{community.bannerPfp}}" class="communityBannerImage" />

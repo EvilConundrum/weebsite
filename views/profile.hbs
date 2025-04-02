@@ -39,47 +39,40 @@
         </div>
         <div id="filter-menu">
           <!-- Static filter buttons as per original HTML -->
-          <div class="filter-button"><p>Overview</p></div>
-          <div class="filter-button"><p>Posts</p></div>
-          <div class="filter-button"><p>Comments</p></div>
-          <div class="filter-button"><p>Upvoted</p></div>
-          <div class="filter-button"><p>Downvoted</p></div>
+          <div class="filter-button" data-page="posts" onclick="switchProfileTab('posts')"><p>Posts</p></div>
+          <div class="filter-button" data-page="shared-posts" onclick="switchProfileTab('shared-posts')"><p>Shared Posts</p></div>
+          <div class="filter-button" data-page="upvotes" onclick="switchProfileTab('upvotes')"><p>Upvoted</p></div>
+          <div class="filter-button" data-page="downvotes" onclick="switchProfileTab('downvotes')"><p>Downvoted</p></div>
         </div>
         <div id="filter-results">
-          <div class="content-section" data-content="posts">
-                    <!-- Posts Section -->
-                    {{#each userData.posts}}
-                    <!-- Post template from earlier -->
-                    {{/each}}
-                </div>
+          {{#if isPostsTab}}
+            {{#each posts}}
+              {{> posts}}
+            {{/each}}
+          {{/if}}
 
-                <!-- Comments Section -->
-                <div class="content-section" data-content="comments">
-                    {{#each userData.comments}}
-                    <div class="comment">
-                        <!-- Comment template -->
-                    </div>
-                    {{/each}}
-                </div>
+          {{#if isSharedPostsTab}}
+            {{#each sharedPosts}}
+              {{> posts}}
+            {{/each}}
+          {{/if}}
 
-                <!-- Upvoted Content Section -->
-                <div class="content-section" data-content="upvoted">
-                    {{#each userData.upvoteList}}
-                    <!-- Post template with upvote indicator -->
-                    {{/each}}
-                </div>
+          {{#if isUpvotesTab}}
+            {{#each upvotedPosts}}
+              {{> posts}}
+            {{/each}}
+          {{/if}}
 
-                <!-- Downvoted Content Section -->
-                <div class="content-section" data-content="downvoted">
-                    {{#each userData.downvoteList}}
-                    <!-- Post template with downvote indicator -->
-                    {{/each}}
-                </div>
+          {{#if isDownvotesTab}}
+            {{#each downvotedPosts}}
+              {{> posts}}
+            {{/each}}
+          {{/if}}
         </div>
       </div>
     </div>
 
-  <script>
+  {{!-- <script>
         document.addEventListener('DOMContentLoaded', () => {
             const filters = document.querySelectorAll('.filter-button');
             const contentSections = document.querySelectorAll('.content-section');
@@ -118,6 +111,6 @@
                 }
             }
         });
-    </script>
+    </script> --}}
   </body>
 </html>

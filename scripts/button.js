@@ -1,9 +1,9 @@
-window.onload = function () {
+window.onload = async function () {
   console.log("button.js loaded");
   console.log("Window loaded, searching for buttons...");
 
   const buttons = document.querySelectorAll(".sidebarButton");
-  console.log("Buttons found:", buttons.length);
+  const profileButtons = document.querySelectorAll(".filter-button");
 
   function loadPage(page) {
     console.log("Loading page:", page);
@@ -27,6 +27,10 @@ window.onload = function () {
 
         // Update active button highlighting
         buttons.forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.page === page);
+        });
+
+        profileButtons.forEach((btn) => {
           btn.classList.toggle("active", btn.dataset.page === page);
         });
 
@@ -63,8 +67,10 @@ window.onload = function () {
     }
   };
 
+  initializeVotes();
+
+  // console.log("Like Buttons found:", likeButtons.length);
   const likeButtons = document.querySelectorAll(".like-button");
-  console.log("Like Buttons found:", likeButtons.length);
 
   likeButtons.forEach((button) => {
     button.addEventListener("click", function () {
@@ -78,7 +84,7 @@ window.onload = function () {
   });
 
   const dislikeButtons = document.querySelectorAll(".dislike-button");
-  console.log("Dislike Buttons found:", dislikeButtons.length);
+  // console.log("Dislike Buttons found:", dislikeButtons.length);
 
   dislikeButtons.forEach((button) => {
     button.addEventListener("click", function () {
@@ -91,6 +97,40 @@ window.onload = function () {
     });
   });
 };
+
+async function getUserVoteData() {
+  try {
+    const res = await fetch("/user-votes");
+    if (!res.ok) throw new Error("Failed to fetch user votes");
+
+    const userData = await res.json();
+    return userData;
+  } catch (error) {
+    console.error("Error fetching user votes:", error);
+    return null;
+  }
+}
+
+async function initializeVotes() {
+  const userData = await getUserVoteData();
+
+  const likeButtons = document.querySelectorAll(".like-button");
+  const dislikeButtons = document.querySelectorAll(".dislike-button");
+
+  likeButtons.forEach((button) => {
+    const postId = button.dataset.postId;
+    if (userData.upvoteList.includes(postId)) {
+      button.classList.toggle("activeLike");
+    }
+  });
+
+  dislikeButtons.forEach((button) => {
+    const postId = button.dataset.postId;
+    if (userData.downvoteList.includes(postId)) {
+      button.classList.toggle("activeDislike");
+    }
+  });
+}
 
 function toggleCommentVisibility() {
   let div = document.getElementById("commentBox");
@@ -168,6 +208,22 @@ function toggleEditComment(commentId) {
 
   if (dropdown && dropdown.style.display !== "none") {
     dropdown.style.display = "none";
+  }
+}
+
+function toggleCommunityFollow() {
+  const followButton = document.querySelector(".follow-com-button");
+  const followedButton = document.querySelector(".followed-com-button");
+
+  if (
+    followedButton.style.display === "none" ||
+    followedButton.style.display === ""
+  ) {
+    followButton.style.display = "none"; // Show div
+    followedButton.style.display = "block";
+  } else {
+    followedButton.style.display = "none";
+    followButton.style.display = "block"; // Hide div okay
   }
 }
 

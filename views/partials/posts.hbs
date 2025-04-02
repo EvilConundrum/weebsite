@@ -7,9 +7,9 @@
           <span class="postUsername">w/{{community}}</span>
         </span>
         <span class="actionButton" onclick="switchPage('profile')">
-          <img 
-            src="{{authorProfilePicture}}" 
-            class="pfp" 
+          <img
+            src="{{authorProfilePicture}}"
+            class="pfp"
             alt="Profile Picture"
             onerror="this.onerror=null; this.src='/images/anonymous.png'"
           />
@@ -95,7 +95,11 @@
 
         <!-- Share Box -->
         <div class="reactionBox">
-          <button class="actionButton" aria-label="Share">
+          <button
+            class="actionButton"
+            aria-label="Share"
+            onclick="sharePost('{{_id}}')"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
