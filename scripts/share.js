@@ -203,3 +203,16 @@ async function unfollowCommunity(communityName) {
     return res.status(200);
   }
 }
+
+async function sharePost(postId) {
+  const res = await fetch("/share-post", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ postId }),
+  });
+
+  if (res.ok) {
+    alert("Post shared successfully!");
+    return res.status(200);
+  }
+}

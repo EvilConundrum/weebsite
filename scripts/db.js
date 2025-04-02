@@ -22,6 +22,7 @@ const userSchema = new Schema({
   bio: { type: String },
   password: { type: String, required: true },
   posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  sharedPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   upvoteList: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   downvoteList: [{ type: Schema.Types.ObjectId, ref: "Post" }],
