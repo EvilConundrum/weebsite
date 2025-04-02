@@ -3,7 +3,7 @@ window.onload = async function () {
   console.log("Window loaded, searching for buttons...");
 
   const buttons = document.querySelectorAll(".sidebarButton");
-  console.log("Buttons found:", buttons.length);
+  const profileButtons = document.querySelectorAll(".filter-button");
 
   function loadPage(page) {
     console.log("Loading page:", page);
@@ -27,6 +27,10 @@ window.onload = async function () {
 
         // Update active button highlighting
         buttons.forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.page === page);
+        });
+
+        profileButtons.forEach((btn) => {
           btn.classList.toggle("active", btn.dataset.page === page);
         });
 

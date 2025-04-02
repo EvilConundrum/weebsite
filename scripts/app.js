@@ -246,18 +246,56 @@ app.get("/post/:id", async (req, res) => {
 
 app.get("/profile/", isAuthenticated, async (req, res) => {
   try {
+    const { tabName: tabName } = req.query;
     const userData = await User.findById(req.session.user._id)
       .populate("posts")
       .populate("comments")
       .lean();
 
+    let data = {};
+    let isPostsTab = false;
+    let isSharedPostsTab = false;
+    let isUpvotesTab = false;
+    let isDownvotesTab = false;
+
+    switch (tabName) {
+      case "posts":
+        console.log("Tab Name:", tabName);
+        data.posts = await Post.find({ _id: { $in: userData.posts } }).lean();
+        isPostsTab = true;
+        break;
+      case "shared-posts":
+        console.log("Tab Name:", tabName);
+        data.sharedPosts = await Post.find({
+          _id: { $in: userData.sharedPosts },
+        }).lean();
+        isSharedPostsTab = true;
+        break;
+      case "upvotes":
+        console.log("Tab Name:", tabName);
+        data.upvotedPosts = await Post.find({
+          _id: { $in: userData.upvoteList },
+        }).lean();
+        isUpvotesTab = true;
+        break;
+      case "downvotes":
+        console.log("Tab Name:", tabName);
+        data.downvotedPosts = await Post.find({
+          _id: { $in: userData.downvoteList },
+        }).lean();
+        isDownvotesTab = true;
+        break;
+      default:
+        return res.status(400).send("Invalid tab");
+    }
+
     res.render("profile", {
-      userData: {
-        ...userData,
-        username: userData.username,
-        profilePicture: userData.profilePicture,
-        bio: userData.bio,
-      },
+      userData, // No need to manually destructure
+      ...data, // This spreads posts, upvotedPosts, etc.
+      isPostsTab,
+      isSharedPostsTab,
+      isUpvotesTab,
+      isDownvotesTab,
     });
   } catch (error) {
     console.error("Profile load error:", error);
@@ -782,4 +820,22 @@ app.get("/user-votes", isAuthenticated, async (req, res) => {
     .lean();
 
   res.json(selectedUser);
+});
+
+app.put("/share-post", isAuthenticated, async (req, res) => {
+  const { postId } = req.body;
+
+  try {
+    const postToShare = await Post.findById(postId).lean();
+
+    // Update the user's shared posts list
+    await User.findByIdAndUpdate(req.session.user._id, {
+      $addToSet: { sharedPosts: postToShare._id },
+    });
+
+    res.status(201).json({ message: "Post shared successfully!" });
+  } catch (error) {
+    console.error("Error sharing post:", error);
+    res.status(500).json({ error: "Failed to share post" });
+  }
 });

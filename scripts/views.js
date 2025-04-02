@@ -183,3 +183,15 @@ async function downvotePost(postId) {
     oppBtn.classList.remove("active");
   }
 }
+
+async function switchProfileTab(tabName) {
+  try {
+    const response = await fetch(`/profile?tabName=${tabName}`);
+    if (!response.ok) throw new Error("Failed to load data");
+    window.location.href = "profile?tabName=" + tabName;
+
+    await response.json();
+  } catch (error) {
+    console.error("Error loading tab:", error);
+  }
+}
