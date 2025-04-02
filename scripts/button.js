@@ -284,3 +284,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   observer.observe(document.body, { childList: true, subtree: true });
 });
+
+function handleNotificationClick() {
+  // Check if userData exists and has a username (logged in)
+  if (!window.userData || !window.userData.username) {
+    window.location.href = "/login";
+    return;
+  }
+  // User is authenticated, show notifications
+  toggleNotificationVisibility();
+}

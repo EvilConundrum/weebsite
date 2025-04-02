@@ -18,6 +18,7 @@ app.engine(
   hbs.engine({
     extname: "hbs",
     defaultLayout: false,
+
     partialsDir: path.join(__dirname, "../views/partials"),
   })
 );
@@ -106,7 +107,10 @@ app.engine(
     defaultLayout: false,
     partialsDir: path.join(__dirname, "../views/partials"),
     helpers: {
-      // Add this helper
+      // Add the json helper here
+      json: (context) => {
+        return JSON.stringify(context).replace(/</g, '\\u003c');
+      },
       includes: function (array, value, options) {
         if (array && array.includes(value)) {
           return options.fn(this);
@@ -196,7 +200,7 @@ app.get("/home", isAuthenticated, async (req, res) => {
 //   }
 // });
 
-app.get("/post/:id", async (req, res) => {
+app.get("/post/:id", isAuthenticated, async (req, res) => {
   const { id } = req.params;
   try {
     let userData = null;
@@ -312,10 +316,42 @@ app.get("/create-post", isAuthenticated, (req, res) => {
   res.render(path.join(__dirname, "../views/createPost.hbs"));
 });
 
-app.get("/", (req, res) => {
-  res.render("index", {
-    userData: req.session.user || null, // Pass null if no user is logged in
-  });
+app.get("/", async (req, res) => {
+  try {
+    let userData = null;
+    if (req.session.user) {
+      const user = await User.findById(req.session.user._id).lean();
+      userData = {
+        profilePicture: user.profilePicture,
+        username: user.username,
+      };
+    }
+
+    const posts = await Post.find().lean();
+    const usernames = [...new Set(posts.map(post => post.author))];
+    const users = await User.find(
+      { username: { $in: usernames } },
+      "username profilePicture"
+    ).lean();
+
+    const profilePictureMap = users.reduce((acc, user) => {
+      acc[user.username] = user.profilePicture || "/images/anonymous.png";
+      return acc;
+    }, {});
+
+    const postsWithProfilePictures = posts.map(post => ({
+      ...post,
+      authorProfilePicture: profilePictureMap[post.author],
+    }));
+
+    res.render("index", {
+      userData: userData, // Pass null for guests
+      posts: postsWithProfilePictures,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
+  }
 });
 
 app.get("/login", (req, res) => {
@@ -376,6 +412,20 @@ app.post(
       const { title, content, community } = req.body;
       const author = req.session.user.username; // Use username instead of _id
 
+       // Check if community exists, create if not
+       let existingCommunity = await Community.findOne({ name: community });
+       if (!existingCommunity) {
+         existingCommunity = await Community.create({
+           name: community,
+           members: 1,
+           onlineMembers: 0,
+           dateCreated: new Date(),
+           description: `A community dedicated to ${community}.`,
+           communityPfp: "/images/default-community-pfp.png",
+           bannerPfp: "/images/default-banner-pfp.png",
+         });
+       }
+
       const imagePaths = req.files ? req.files.map((file) => file.path) : [];
 
       const newPost = await Post.create({
@@ -398,7 +448,7 @@ app.post(
   }
 );
 
-app.get("/api/notifications", async (req, res) => {
+app.get("/api/notifications", isAuthenticated, async (req, res) => {
   if (!req.session.user) return res.status(401).json({ error: "Unauthorized" });
 
   try {
@@ -415,10 +465,11 @@ app.get("/api/notifications", async (req, res) => {
 
 // Notification route
 // Update the notification route
-app.post("/api/notifications", async (req, res) => {
+app.post("/api/notifications", isAuthenticated, async (req, res) => {
   try {
     const { postId, postAuthor, type } = req.body; // Add 'type' to destructuring
     const likerId = req.session.user._id;
+    
 
     const postOwner = await User.findOne({ username: postAuthor });
     if (!postOwner) return res.status(404).json({ error: "User not found" });
@@ -441,11 +492,10 @@ app.post("/api/notifications", async (req, res) => {
   }
 });
 
-app.put("/upvote/:id", async (req, res) => {
-  try {
-    const { action, oppaction, postId } = req.body;
-    console.log(req.session.user._id);
-    const userId = req.session.user._id;
+app.put("/upvote/:id", isAuthenticated, async (req, res) => {
+  const { action, oppaction } = req.body;
+  console.log("Action:", action);
+  console.log("Opp Action:", oppaction);
 
     if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
@@ -504,10 +554,10 @@ app.put("/upvote/:id", async (req, res) => {
   }
 });
 
-app.put("/downvote/:id", async (req, res) => {
-  try {
-    const { action, oppaction, postId } = req.body;
-    const userId = req.session.user._id;
+app.put("/downvote/:id", isAuthenticated, async (req, res) => {
+  const { action, oppaction } = req.body;
+  console.log("Downvote Action:", action);
+  console.log("Opposite Action:", oppaction);
 
     if (!userId) return res.status(401).json({ error: "Not authenticated" });
 
@@ -719,17 +769,45 @@ app.delete("/delete-post/:id", async (req, res) => {
 //   }
 // });
 
-app.get("/community/:name", async (req, res) => {
+app.get("/community/:name", isAuthenticated, async (req, res) => { // Add isAuthenticated middleware
   const { name } = req.params;
 
   try {
+    // Fetch the latest user data from the database
+    const user = await User.findById(req.session.user._id).lean();
+    const userData = {
+      profilePicture: user.profilePicture || "/images/anonymous.png",
+      username: user.username,
+    };
+
     const community = await Community.findOne({ name }).lean();
-    if (!community) {
-      return res.status(404).send("Community not found");
-    }
+    if (!community) return res.status(404).send("Community not found");
 
     const posts = await Post.find({ community: name }).lean();
-    res.render("community", { community, posts });
+
+    // Attach author and community profile pictures
+    const usernames = [...new Set(posts.map(post => post.author))];
+    const users = await User.find(
+      { username: { $in: usernames } },
+      "username profilePicture"
+    ).lean();
+
+    const profilePictureMap = users.reduce((acc, user) => {
+      acc[user.username] = user.profilePicture || "/images/anonymous.png";
+      return acc;
+    }, {});
+
+    const postsWithPictures = posts.map(post => ({
+      ...post,
+      authorProfilePicture: profilePictureMap[post.author],
+      communityPfp: community.communityPfp,
+    }));
+
+    res.render("community", {
+      userData, // Pass updated user data
+      community,
+      posts: postsWithPictures,
+    });
   } catch (error) {
     console.error("Error loading community:", error);
     res.status(500).send("Error loading community");

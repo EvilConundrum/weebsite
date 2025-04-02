@@ -21,7 +21,7 @@
           CREATE
         </button>
 
-        <button class="hiddenButton" onclick="toggleNotificationVisibility()">
+        <button class="hiddenButton" onclick="handleNotificationClick()">
           <div id="notification-container">
             {{> notification-pop-up}}
           </div>
@@ -206,5 +206,6 @@
           console.error('Logout failed:', error);
         }
       }
+      window.userData = {{{json userData}}} || null;
     </script>
 
