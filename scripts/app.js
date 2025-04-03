@@ -27,16 +27,21 @@ app.use("/styles", express.static(path.join(__dirname, "../styles")));
 app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
-mongoose
-  .connect(
-    "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/"
-  )
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-  });
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/";
+
+if (!MONGO_URI) {
+    console.error("MONGO_URI is missing. Check your environment variables.");
+    process.exit(1);
+}
+
+mongoose.connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 30000, 
+})
+.then(() => console.log('MongoDB Connected'))
+.catch(err => {
+    console.error('MongoDB Connection Error:', err);
+    process.exit(1);
+});
 
 const { User, Post, Notification, Comment, Community } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
