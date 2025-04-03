@@ -38,6 +38,17 @@ mongoose
     console.error("MongoDB connection error:", err);
   });
 
+  app.use(
+    session({
+      store: MongoStore.create({
+        mongoUrl: "mongodb+srv://weebsite-cluster.1kjr1.mongodb.net/",
+      }),
+      secret: "sirartismygoat",
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
+
 const { User, Post, Notification, Comment, Community } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
 
