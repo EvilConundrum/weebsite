@@ -97,9 +97,11 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-app.listen(9000, "localhost", () => {
-  console.log("Server is listening on port 9000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
+
 
 app.engine(
   "hbs",
