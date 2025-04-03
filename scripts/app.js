@@ -18,15 +18,19 @@ app.engine(
   hbs.engine({
     extname: "hbs",
     defaultLayout: false,
-
     partialsDir: path.join(__dirname, "../views/partials"),
   })
 );
 
-app.use(express.static("weebsite"));
+app.use(express.static(path.join(__dirname, "..")));
+app.use("/styles", express.static(path.join(__dirname, "../styles")));
+app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
+app.use("/images", express.static(path.join(__dirname, "../images")));
 
 mongoose
-  .connect("mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/")
+  .connect(
+    "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/"
+  )
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -92,9 +96,6 @@ const isAuthenticated = (req, res, next) => {
     res.redirect("/login");
   }
 };
-app.use("/styles", express.static(path.join(__dirname, "../styles")));
-app.use("/images", express.static(path.join(__dirname, "../images")));
-app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 
 app.listen(9000, "localhost", () => {
   console.log("Server is listening on port 9000");
@@ -409,40 +410,73 @@ app.post(
   upload.array("images", 5),
   async (req, res) => {
     try {
-      const { title, content, community } = req.body;
-      const author = req.session.user.username; // Use username instead of _id
+      // Debug log the entire request body
+      console.log("Full request body:", req.body);
 
-      // Check if community exists, create if not
-      let existingCommunity = await Community.findOne({ name: community });
-      if (!existingCommunity) {
-        existingCommunity = await Community.create({
-          name: community,
-          members: 1,
-          onlineMembers: 0,
-          dateCreated: new Date(),
-          description: `A community dedicated to ${community}.`,
-          communityPfp: "/images/default-community-pfp.png",
-          bannerPfp: "/images/default-banner-pfp.png",
+      if (!req.body.title || !req.body.community) {
+        return res.status(400).json({
+          error: "Title and community are required",
+          message: "Please fill in all required fields.",
         });
       }
 
-      const imagePaths = req.files ? req.files.map((file) => file.path) : [];
+      // First check if community exists before proceeding
+      const existingCommunity = await Community.findOne({
+        name: req.body.community,
+      }).lean();
 
-      const newPost = await Post.create({
-        title,
-        content,
-        author, // Now stores the username string
-        community,
-        images: imagePaths,
-      });
+      if (!existingCommunity) {
+        return res.status(404).json({
+          error: "Community not found",
+          message:
+            "This community does not exist. Please select a valid community.",
+        });
+      }
 
+      // Only proceed with post creation if community exists
+      const postData = {
+        title: req.body.title.trim(),
+        content: req.body.content ? req.body.content.trim() : "",
+        community: req.body.community,
+        author: req.session.user.username,
+        images: req.files ? req.files.map((file) => file.path) : [],
+      };
+
+      // Create the post
+      const newPost = await Post.create(postData);
+      console.log("Created post:", newPost);
+
+      // Update user's posts array
       await User.findByIdAndUpdate(req.session.user._id, {
         $addToSet: { posts: newPost._id },
       });
 
+      // Find followers and create notifications
+      const followers = await User.find({
+        communityList: existingCommunity._id,
+      });
+      if (followers?.length > 0) {
+        const notifications = followers.map((follower) => ({
+          user: follower._id,
+          content: `${postData.community}: ${postData.title}`,
+          type: "New Post",
+          postId: newPost._id,
+          read: false,
+          createdAt: new Date(),
+        }));
+
+        await Notification.insertMany(notifications);
+        console.log(
+          "Created notifications for:",
+          followers.length,
+          "followers"
+        );
+      }
+
       res.redirect("/home");
     } catch (error) {
       console.error("Error creating post:", error);
+      console.error("Error details:", error.stack);
       res.status(500).send("Failed to create post");
     }
   }
@@ -492,11 +526,12 @@ app.post("/api/notifications", isAuthenticated, async (req, res) => {
 });
 
 app.put("/upvote/:id", isAuthenticated, async (req, res) => {
-  const { action, oppaction } = req.body;
+  const { action, oppaction, postId } = req.body;
   console.log("Action:", action);
   console.log("Opp Action:", oppaction);
 
-  if (!userId) return res.status(401).json({ error: "Not authenticated" });
+  if (!req.session.user._id)
+    return res.status(401).json({ error: "Not authenticated" });
 
   // console.log("Action:", action);
   // console.log("Opposite Action:", oppaction);
@@ -504,14 +539,14 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
   let update = {}; // Track vote count changes
 
   // SAVE USER AND POST RELATED DATA
-  const user = await User.findById(userId);
+  const user = await User.findById(req.session.user._id);
 
   if (!user) return res.status(404).json({ error: "User not found" });
 
   if (!user.upvoteList.includes(postId)) {
     update.upvotes = action === "add" ? 1 : -1; // Upvote action
 
-    await User.findByIdAndUpdate(userId, {
+    await User.findByIdAndUpdate(req.session.user._id, {
       $addToSet: { upvoteList: postId },
     });
 
@@ -523,7 +558,7 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
 
     if (user.downvoteList.includes(postId)) {
       update.downvotes = -1; // Remove downvote if switching vote
-      await User.findByIdAndUpdate(userId, {
+      await User.findByIdAndUpdate(req.session.user._id, {
         $pull: { downvoteList: postId },
       });
       await Post.findByIdAndUpdate(
@@ -538,7 +573,9 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
       { $inc: { upvotes: -1 } },
       { new: true }
     );
-    await User.findByIdAndUpdate(userId, { $pull: { upvoteList: postId } });
+    await User.findByIdAndUpdate(req.session.user._id, {
+      $pull: { upvoteList: postId },
+    });
   }
 
   const post = await Post.findById(req.params.id).lean();
@@ -550,11 +587,12 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
 });
 
 app.put("/downvote/:id", isAuthenticated, async (req, res) => {
-  const { action, oppaction } = req.body;
+  const { action, oppaction, postId } = req.body;
   console.log("Downvote Action:", action);
   console.log("Opposite Action:", oppaction);
 
-  if (!userId) return res.status(401).json({ error: "Not authenticated" });
+  if (!req.session.user._id)
+    return res.status(401).json({ error: "Not authenticated" });
 
   // console.log("Downvote Action:", action);
   // console.log("Opposite Action:", oppaction);
@@ -563,14 +601,14 @@ app.put("/downvote/:id", isAuthenticated, async (req, res) => {
 
   // SAVE USER AND POST RELATED DATA
 
-  const user = await User.findById(userId);
+  const user = await User.findById(req.session.user._id);
 
   if (!user) return res.status(404).json({ error: "User not found" });
 
   if (!user.downvoteList.includes(postId)) {
     update.downvotes = action === "add" ? 1 : -1; // Downvote action
 
-    await User.findByIdAndUpdate(userId, {
+    await User.findByIdAndUpdate(req.session.user._id, {
       $addToSet: { downvoteList: postId },
     });
 
@@ -582,7 +620,9 @@ app.put("/downvote/:id", isAuthenticated, async (req, res) => {
 
     if (user.upvoteList.includes(postId)) {
       update.upvotes = -1; // Remove upvote if switching vote
-      await User.findByIdAndUpdate(userId, { $pull: { upvoteList: postId } });
+      await User.findByIdAndUpdate(req.session.user._id, {
+        $pull: { upvoteList: postId },
+      });
 
       await Post.findByIdAndUpdate(
         req.params.id,
@@ -596,7 +636,9 @@ app.put("/downvote/:id", isAuthenticated, async (req, res) => {
       { $inc: { downvotes: -1 } },
       { new: true }
     );
-    await User.findByIdAndUpdate(userId, { $pull: { downvoteList: postId } });
+    await User.findByIdAndUpdate(req.session.user._id, {
+      $pull: { downvoteList: postId },
+    });
   }
 
   const post = await Post.findById(req.params.id).lean();
@@ -745,21 +787,6 @@ app.delete("/delete-post/:id", async (req, res) => {
   res.json({ success: true, message: "Post deleted successfully." });
 });
 
-// app.post("/create-post", upload.single("image"), async (req, res) => {
-//   const { title, description, tags, author } = req.body;
-//   const image = req.file;
-
-//   const images = image ? [image.filename] : [];
-
-//   try {
-//     await createPost(title, description, tags, author, images);
-//     res.status(201).json({ message: "Post created successfully!" }); // Send success response
-//   } catch (error) {
-//     console.error("Error creating post:", error);
-//     res.status(500).json({ error: "Failed to create post" });
-//   }
-// });
-
 app.get("/community/:name", isAuthenticated, async (req, res) => {
   // Add isAuthenticated middleware
   const { name } = req.params;
@@ -855,9 +882,7 @@ app.put("/follow-community", isAuthenticated, async (req, res) => {
       { new: true }
     );
 
-    res
-      .status(200)
-      .json({ message: "Community followed successfully", updatedUser });
+    res.status(200).json({ message: "Community followed successfully" });
   } catch (error) {
     console.error(error);
   }
@@ -876,9 +901,7 @@ app.put("/unfollow-community", isAuthenticated, async (req, res) => {
       { new: true }
     );
 
-    res
-      .status(200)
-      .json({ message: "Community unfollowed successfully", updatedUser });
+    res.status(200).json({ message: "Community unfollowed successfully" });
   } catch (error) {
     console.error(error);
   }
