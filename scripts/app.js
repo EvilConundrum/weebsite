@@ -52,6 +52,7 @@ mongoose.connect(MONGO_URI, {
       secret: "0930bf6414bf7b802c18a165a151eeca015a4edf7a945aa75b365c716b99ecfd",
       resave: false,
       saveUninitialized: false,
+      autoIndex: false,
     })
   );
 
