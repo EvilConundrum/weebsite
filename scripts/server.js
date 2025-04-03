@@ -4,6 +4,7 @@ const server = http.createServer((req, res) => {
   console.log("Server is up!");
 });
 
-server.listen(9000, "localhost", () => {
-  console.log("Server is listening on port 9000");
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
