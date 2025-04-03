@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const multer = require("multer");
 const fs = require("fs");
-const bcrypt = require("bcrypt");
 
 const app = express();
 
