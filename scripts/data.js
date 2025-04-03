@@ -1,6 +1,6 @@
 // Sample Data and Data Creation Functions
 const { Post, Comment, User, Community, Notification } = require("./db.js");
-const bcrypt = require("bcrypt");
+const argon2 = require("argon2");
 
 const createPost = async (title, content, author, community, images = []) => {
   try {
@@ -41,8 +41,13 @@ const createUser = async (username, password) => {
       return null;
     }
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await argon2.hash(password, {
+      type: argon2.argon2id,
+      memoryCost: 65536, 
+      timeCost: 3,
+      parallelism: 4,
+      saltLength: 16
+    });
 
     const user = new User({
       profilePicture: "/images/profile-pictures/deafult.gif",
@@ -50,7 +55,6 @@ const createUser = async (username, password) => {
       password: hashedPassword,
     });
 
-    // Save the user to the database
     await user.save();
     console.log("User saved successfully:", user);
     return user;

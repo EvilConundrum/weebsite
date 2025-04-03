@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const multer = require("multer");
 const fs = require("fs");
+const argon2 = require("argon2");
 
 const app = express();
 
@@ -26,16 +27,21 @@ app.use("/styles", express.static(path.join(__dirname, "../styles")));
 app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
-mongoose
-  .connect(
-    "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/"
-  )
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-  });
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/";
+
+if (!MONGO_URI) {
+    console.error("MONGO_URI is missing. Check your environment variables.");
+    process.exit(1);
+}
+
+mongoose.connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 30000, 
+})
+.then(() => console.log('MongoDB Connected'))
+.catch(err => {
+    console.error('MongoDB Connection Error:', err);
+    process.exit(1);
+});
 
   app.use(
     session({
@@ -377,20 +383,22 @@ app.post("/login", async (req, res) => {
 
   try {
     const user = await User.findOne({ username: username });
+    if (!user) {
+      return res.redirect("/login?error=invalid_credentials");
+    }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await argon2.verify(user.password, password);
     if (isMatch) {
       req.session.user = user;
       res.redirect("/home");
     } else {
-      res.redirect("/login?error=invalid_credentials"); // Redirect with error flag
+      res.redirect("/login?error=invalid_credentials");
     }
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).send("Internal server error.");
   }
 });
-
 app.get("/signup", async (req, res) => {
   res.render(path.join(__dirname, "../views/signup-pop-up.hbs"));
 });
