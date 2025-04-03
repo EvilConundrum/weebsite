@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const multer = require("multer");
 const fs = require("fs");
-const bcrypt = require("bcrypt");
+const argon2 = require("argon2");
 
 const app = express();
 
@@ -372,20 +372,22 @@ app.post("/login", async (req, res) => {
 
   try {
     const user = await User.findOne({ username: username });
+    if (!user) {
+      return res.redirect("/login?error=invalid_credentials");
+    }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await argon2.verify(user.password, password);
     if (isMatch) {
       req.session.user = user;
       res.redirect("/home");
     } else {
-      res.redirect("/login?error=invalid_credentials"); // Redirect with error flag
+      res.redirect("/login?error=invalid_credentials");
     }
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).send("Internal server error.");
   }
 });
-
 app.get("/signup", async (req, res) => {
   res.render(path.join(__dirname, "../views/signup-pop-up.hbs"));
 });
