@@ -1,33 +1,36 @@
 {
-  "name": "ccapdev",
+  "name": "weebsite",
   "version": "1.0.0",
-  "description": "",
-  "main": "scripts/server.js",
+  "description": "Anime community website",
+  "main": "scripts/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "devStart": "nodemon scripts/app.js"
+    "start": "node scripts/app.js",
+    "dev": "nodemon scripts/app.js",
+    "build": "echo 'No build step required'",
+    "postinstall": "node scripts/postinstall.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
-    "express": "^4.21.2",
-    "express-fileupload": "^1.5.1",
-    "express-handlebars": "^8.0.1",
-    "express-rate-limit": "^7.5.0",
-    "express-session": "^1.18.1",
-    "fs": "^0.0.1-security",
-    "hbs": "^4.2.0",
-    "http": "^0.0.1-security",
-    "mongodb": "^6.15.0",
-    "mongoose": "^8.13.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
+    "express-handlebars": "^7.1.2",
+    "express-rate-limit": "^7.1.5",
+    "express-session": "^1.17.3",
+    "helmet": "^7.1.0",
+    "mongoose": "^8.0.3",
     "multer": "^1.4.5-lts.1",
-    "path": "^0.12.7"
+    "sanitize-html": "^2.11.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
-  }
+    "nodemon": "^3.0.2"
+  },
+  "private": true
 }
