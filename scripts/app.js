@@ -919,13 +919,34 @@ app.put("/share-post", isAuthenticated, async (req, res) => {
   const { postId } = req.body;
 
   try {
+    // Find the post and include author information
     const postToShare = await Post.findById(postId).lean();
+    if (!postToShare) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    // Find the original post author
+    const postAuthor = await User.findOne({ username: postToShare.author });
+    if (!postAuthor) {
+      return res.status(404).json({ error: "Post author not found" });
+    }
 
     // Update the user's shared posts list
     await User.findByIdAndUpdate(req.session.user._id, {
       $addToSet: { sharedPosts: postToShare._id },
     });
 
+    // Create notification for original post author
+    await Notification.create({
+      user: postAuthor._id,
+      content: `${req.session.user.username} shared your post.`,
+      type: "Share",
+      postId: postToShare._id,
+      read: false,
+      createdAt: new Date(),
+    });
+
+    console.log(`Created share notification for user: ${postAuthor.username}`);
     res.status(201).json({ message: "Post shared successfully!" });
   } catch (error) {
     console.error("Error sharing post:", error);
