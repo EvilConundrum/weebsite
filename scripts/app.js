@@ -72,14 +72,7 @@ app.use(
     }
   })
 );
-// Add before routes
-app.use((req, res, next) => {
-  console.log("\n--- Session Debug ---");
-  console.log("Session ID:", req.sessionID);
-  console.log("Session data:", req.session);
-  console.log("Cookies:", req.headers.cookie || "No cookies");
-  next();
-});
+
 // Add JSON parsing middleware
 
 const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
@@ -105,7 +98,10 @@ const profileUpload = multer({
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
+  console.log("Session data:", req.session); // Debugging line
+  console.log("User data:", req.session.user); // Debugging line
   if (req.session.user) {
+    console.log("User is authenticated:", req.session.user);
     next();
   } else {
     // For API routes, return JSON error
@@ -145,7 +141,6 @@ app.engine(
 );
 
 app.get("/home", isAuthenticated, async (req, res) => {
-  console.log("Rendering home page"); // Add this line
   try {
     const user = await User.findById(req.session.user._id);
     const posts = await Post.find().lean();
@@ -386,30 +381,24 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username: username.trim() }); // Trim whitespace
+    const user = await User.findOne({ username: username });
     if (!user) {
       return res.redirect("/login?error=invalid_credentials");
     }
 
-    // Verify hashed password
-    const isMatch = await argon2.verify(user.password, password.trim()); // Trim input
-    console.log("Password match:", isMatch);
+    console.log(user.password);
+    console.log(password);
 
+    // const isMatch = await argon2.verify(user.password, password);
+    const isMatch = user.password === password; // Use plain password for now 
+
+    console.log("Password match:", isMatch);
+    
     if (isMatch) {
-      // Store minimal user data in the session
-      req.session.user = {
-        _id: user._id.toString(),
-        username: user.username,
-        profilePicture: user.profilePicture,
-      };
-      // Save the session explicitly before redirecting
-      req.session.save((err) => {
-        if (err) {
-          console.error("Session save error:", err);
-          return res.status(500).send("Internal server error");
-        }
-        res.redirect("/home");
-      });
+      req.session.user = user;
+      console.log("User session set:", req.session.user);
+      console.log("User session set:", user);
+      res.redirect("/home");
     } else {
       res.redirect("/login?error=invalid_credentials");
     }
