@@ -44,17 +44,7 @@ mongoose.connect(MONGO_URI, {
     process.exit(1);
 });
 
-  app.use(
-    session({
-      store: MongoStore.create({
-        mongoUrl: "mongodb+srv://weebsite-cluster.1kjr1.mongodb.net/",
-      }),
-      secret: "0930bf6414bf7b802c18a165a151eeca015a4edf7a945aa75b365c716b99ecfd",
-      resave: false,
-      saveUninitialized: false,
-      autoIndex: false,
-    })
-  );
+
 
 const { User, Post, Notification, Comment, Community } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
@@ -67,7 +57,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   session({
-    secret: "secret-key",
+    store: MongoStore.create({
+      mongoUrl: MONGO_URI, // Use the same URI as mongoose connection
+      ttl: 24 * 60 * 60, // Session TTL (optional)
+    }),
+    secret: "0930bf6414bf7b802c18a165a151eeca015a4edf7a945aa75b365c716b99ecfd", // Use a strong secret
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -75,7 +69,7 @@ app.use(
       httpOnly: true,
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
+    }
   })
 );
 
