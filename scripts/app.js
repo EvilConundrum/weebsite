@@ -90,6 +90,7 @@ app.use(
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
+    user: null,
   })
 );
 
@@ -118,7 +119,10 @@ const profileUpload = multer({
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
+  console.log("Session data:", req.session); // Debugging line
+  console.log("User data:", req.session.user); // Debugging line
   if (req.session.user) {
+    console.log("User is authenticated:", req.session.user);
     next();
   } else {
     // For API routes, return JSON error
@@ -431,9 +435,17 @@ app.post("/login", async (req, res) => {
       return res.redirect("/login?error=invalid_credentials");
     }
 
-    const isMatch = await argon2.verify(user.password, password);
+    console.log(user.password);
+    console.log(password);
+
+    // const isMatch = await argon2.verify(user.password, password);
+    const isMatch = user.password === password; // Use plain password for now
+
+    console.log("Password match:", isMatch);
+
     if (isMatch) {
       req.session.user = user;
+      console.log("User session set:", req.session.user);
       res.redirect("/home");
     } else {
       res.redirect("/login?error=invalid_credentials");
@@ -443,6 +455,7 @@ app.post("/login", async (req, res) => {
     res.status(500).send("Internal server error.");
   }
 });
+
 app.get("/signup", async (req, res) => {
   res.render(path.join(__dirname, "../views/signup-pop-up.hbs"));
 });
