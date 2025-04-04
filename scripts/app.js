@@ -399,6 +399,31 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/signup", async (req, res) => {
+  res.render(path.join(__dirname, "../views/signup-pop-up.hbs"));
+});
+
+app.post("/signup", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  console.log(req.body);
+
+  try {
+    const newUser = await createUser(username, password);
+    console.log("User created successfully:", newUser);
+
+    // Set session user after successful signup
+    req.session.user = newUser;
+
+    // Respond with success messageabout:blank#blocked
+    res.status(201).send(newUser.username + " has been created!");
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).send("Error creating user: " + error.message);
+  }
+});
+
 app.post(
   "/create-post",
   isAuthenticated,
