@@ -388,6 +388,8 @@ app.post("/login", async (req, res) => {
 
     // const isMatch = await argon2.verify(user.password, password);
     const isMatch = user.password === password; // Use plain password for now 
+
+    console.log("Password match:", isMatch);
     
     if (isMatch) {
       req.session.user = user;
