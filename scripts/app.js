@@ -72,7 +72,14 @@ app.use(
     }
   })
 );
-
+// Add before routes
+app.use((req, res, next) => {
+  console.log("\n--- Session Debug ---");
+  console.log("Session ID:", req.sessionID);
+  console.log("Session data:", req.session);
+  console.log("Cookies:", req.headers.cookie || "No cookies");
+  next();
+});
 // Add JSON parsing middleware
 
 const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
@@ -138,6 +145,7 @@ app.engine(
 );
 
 app.get("/home", isAuthenticated, async (req, res) => {
+  console.log("Rendering home page"); // Add this line
   try {
     const user = await User.findById(req.session.user._id);
     const posts = await Post.find().lean();
