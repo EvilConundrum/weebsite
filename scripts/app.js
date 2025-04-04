@@ -98,7 +98,9 @@ const profileUpload = multer({
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
+  console.log("Session data:", req.session); // Debugging line
   if (req.session.user) {
+    console.log("User is authenticated:", req.session.user);
     next();
   } else {
     // For API routes, return JSON error
