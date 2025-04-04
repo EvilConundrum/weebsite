@@ -381,7 +381,7 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username: username });
+    const user = await User.findOne({ username: username }).lean(); // Add .lean()
     if (!user) {
       return res.redirect("/login?error=invalid_credentials");
     }
@@ -389,8 +389,8 @@ app.post("/login", async (req, res) => {
     console.log(user.password);
     console.log(password);
 
-    // const isMatch = await argon2.verify(user.password, password);
-    const isMatch = user.password === password; // Use plain password for now 
+    const isMatch = await argon2.verify(user.password, password);
+   // const isMatch = user.password === password; // Use plain password for now 
 
     console.log("Password match:", isMatch);
     
@@ -423,7 +423,7 @@ app.post("/signup", async (req, res) => {
     console.log("User created successfully:", newUser);
 
     // Set session user after successful signup
-    req.session.user = newUser;
+   req.session.user = newUser.toObject();
 
     // Respond with success messageabout:blank#blocked
     res.status(201).send(newUser.username + " has been created!");
