@@ -399,7 +399,13 @@ app.post("/login", async (req, res) => {
       req.session.user = user;
       console.log("User session set:", req.session.user);
       console.log("User session set:", user);
-      res.redirect("/home");
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).send("Internal server error");
+        }
+        res.redirect("/home");
+      });
     } else {
       res.redirect("/login?error=invalid_credentials");
     }
