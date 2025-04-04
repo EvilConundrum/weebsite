@@ -393,6 +393,8 @@ app.post("/login", async (req, res) => {
     
     if (isMatch) {
       req.session.user = user;
+      console.log("User session set:", req.session.user);
+      console.log("User session set:", user);
       res.redirect("/home");
     } else {
       res.redirect("/login?error=invalid_credentials");
