@@ -398,6 +398,7 @@ app.post("/login", async (req, res) => {
     res.status(500).send("Internal server error.");
   }
 });
+
 app.get("/signup", async (req, res) => {
   res.render(path.join(__dirname, "../views/signup-pop-up.hbs"));
 });
