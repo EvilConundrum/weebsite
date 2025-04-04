@@ -389,6 +389,9 @@ app.post("/login", async (req, res) => {
       return res.redirect("/login?error=invalid_credentials");
     }
 
+    console.log(user.password);
+    console.log(password);
+
     const isMatch = await argon2.verify(user.password, password);
     if (isMatch) {
       req.session.user = user;
