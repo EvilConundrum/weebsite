@@ -378,17 +378,23 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username: username });
+    const user = await User.findOne({ username: username.trim() }); // Trim whitespace
     if (!user) {
       return res.redirect("/login?error=invalid_credentials");
     }
 
-    const isMatch = user.password === password; // Plain text comparison (temporary)
+    // Verify hashed password
+    const isMatch = await argon2.verify(user.password, password.trim()); // Trim input
+    console.log("Password match:", isMatch);
 
     if (isMatch) {
-      // Convert Mongoose document to a plain object
-      req.session.user = user.toObject(); // Or use specific fields
-      console.log("User session set:", req.session.user);
+      // Store minimal user data in the session
+      req.session.user = {
+        _id: user._id.toString(),
+        username: user.username,
+        profilePicture: user.profilePicture,
+      };
+      console.log("Session updated:", req.session.user);
       res.redirect("/home");
     } else {
       res.redirect("/login?error=invalid_credentials");
