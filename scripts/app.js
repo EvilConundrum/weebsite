@@ -394,8 +394,14 @@ app.post("/login", async (req, res) => {
         username: user.username,
         profilePicture: user.profilePicture,
       };
-      console.log("Session updated:", req.session.user);
-      res.redirect("/home");
+      // Save the session explicitly before redirecting
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).send("Internal server error");
+        }
+        res.redirect("/home");
+      });
     } else {
       res.redirect("/login?error=invalid_credentials");
     }
