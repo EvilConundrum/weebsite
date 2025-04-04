@@ -386,7 +386,9 @@ app.post("/login", async (req, res) => {
     console.log(user.password);
     console.log(password);
 
-    const isMatch = await argon2.verify(user.password, password);
+    // const isMatch = await argon2.verify(user.password, password);
+    const isMatch = (user.password === password);
+    
     if (isMatch) {
       req.session.user = user;
       res.redirect("/home");
