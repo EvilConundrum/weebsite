@@ -252,6 +252,8 @@ async function upvoteComment(commentId) {
     }, 10);
     // console.log(button.textContent);
     // console.log(oppBtn.textContent);
+
+    window.location.reload();
   }
 
   button.classList.toggle("activeLike");
@@ -292,8 +294,10 @@ async function downvoteComment(commentId) {
     }, 10);
     // console.log(button.textContent);
     // console.log(oppBtn.textContent);
+    window.location.reload();
   }
 
   button.classList.toggle("activeDisLike");
   oppBtn.classList.remove("activeLike");
+  console.log("IM RUNNINNG MOTHERFUCKER");
 }
