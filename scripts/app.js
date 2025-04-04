@@ -55,6 +55,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Ensure proper middleware order
 app.use(cookieParser());
+app.set("trust proxy", 1);
 app.use(
   session({
     store: MongoStore.create({
@@ -67,7 +68,7 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     }
   })
