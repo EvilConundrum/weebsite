@@ -177,47 +177,6 @@ app.get("/home", isAuthenticated, async (req, res) => {
   }
 });
 
-// home for guests
-// app.get("/home", async (req, res) => {
-//   try {
-//     const posts = await Post.find().lean();
-
-//     // Get all unique author usernames from posts
-//     const usernames = [...new Set(posts.map((post) => post.author))];
-
-//     // Fetch profile pictures for all authors
-
-//     const profilePictureMap = users.reduce((acc, user) => {
-//       acc[user.username] = user.profilePicture || "/images/anonymous.png"; // Fallback
-//       return acc;
-//     }, {});
-
-//     // Attach profile pictures to posts
-//     const postsWithProfilePictures = posts.map((post) => ({
-//       ...post,
-//       authorProfilePicture: profilePictureMap[post.author],
-//     }));
-
-//     res.render("index", {
-//       posts: postsWithProfilePictures, // Pass enriched posts
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Server error");
-//   }
-// });
-
-// app.get("/home", async (req, res) => {
-//   try {
-//     const posts = await Post.find().lean();
-//     console.log("Posts fetched successfully:", posts);
-//     res.render(path.join(__dirname, "../views/index.hbs"), { posts });
-//   } catch (error) {
-//     console.error("Error fetching posts:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
-
 app.get("/post/:id", isAuthenticated, async (req, res) => {
   const { id } = req.params;
   try {
@@ -397,7 +356,6 @@ app.post("/login", async (req, res) => {
     if (isMatch) {
       req.session.user = user;
       console.log("User session set:", req.session.user);
-      console.log("User session set:", user);
       res.redirect("/home");
     } else {
       res.redirect("/login?error=invalid_credentials");
