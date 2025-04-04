@@ -50,6 +50,20 @@ const { User, Post, Notification, Comment, Community } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
 
 // Middleware
+const isAuthenticated = (req, res, next) => {
+  console.log("Session data:", req.session); // Debugging line
+  console.log("User data:", req.session.user); // Debugging line
+  if (req.session.user) {
+    console.log("User is authenticated:", req.session.user);
+    next();
+  } else {
+    // For API routes, return JSON error
+    if (req.originalUrl.startsWith("/api")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    res.redirect("/");
+  }
+};
 // In app.js session config
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
