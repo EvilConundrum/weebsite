@@ -336,14 +336,17 @@ app.get("/create-post", isAuthenticated, (req, res) => {
 
 app.get("/", async (req, res) => {
   try {
-    let userData = null;
-    if (req.session.user) {
-      const user = await User.findById(req.session.user._id).lean();
-      userData = {
-        profilePicture: user.profilePicture,
-        username: user.username,
-      };
+    // Check if user is logged in
+    if (!req.session.user) {
+      return res.redirect("/login");  // Redirect to the login page if not logged in
     }
+
+    let userData = null;
+    const user = await User.findById(req.session.user._id).lean();
+    userData = {
+      profilePicture: user.profilePicture,
+      username: user.username,
+    };
 
     const posts = await Post.find().lean();
     const usernames = [...new Set(posts.map((post) => post.author))];
@@ -363,7 +366,7 @@ app.get("/", async (req, res) => {
     }));
 
     res.render("index", {
-      userData: userData, // Pass null for guests
+      userData: userData,
       posts: postsWithProfilePictures,
     });
   } catch (error) {
@@ -371,6 +374,7 @@ app.get("/", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
 
 app.get("/login", (req, res) => {
   res.render(path.join(__dirname, "../views/login-pop-up.hbs"));
