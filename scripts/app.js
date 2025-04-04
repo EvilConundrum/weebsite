@@ -1033,4 +1033,3 @@ app.get("/search", isAuthenticated, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
