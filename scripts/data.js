@@ -41,13 +41,15 @@ const createUser = async (username, password) => {
       return null;
     }
 
-    const hashedPassword = await argon2.hash(password, {
-      type: argon2.argon2id,
-      memoryCost: 65536, 
-      timeCost: 3,
-      parallelism: 4,
-      saltLength: 16
-    });
+    const hashedPassword = password; // Use plain password for now
+
+    // const hashedPassword = await argon2.hash(password, {
+    //   type: argon2.argon2id,
+    //   memoryCost: 65536, 
+    //   timeCost: 3,
+    //   parallelism: 4,
+    //   saltLength: 16
+    // });
 
     const user = new User({
       profilePicture: "/images/profile-pictures/deafult.gif",
