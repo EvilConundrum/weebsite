@@ -14,6 +14,13 @@ const commentSchema = new Schema({
   author: { type: String, required: true },
   content: { type: String, required: true },
   postId: { type: Schema.Types.ObjectId, ref: "Post", required: true },
+  upvotes: { type: Number, default: 0 },
+  downvotes: { type: Number, default: 0 },
+  parentCommentId: {
+    type: Schema.Types.ObjectId,
+    ref: "Comment",
+    default: null,
+  },
 });
 
 const userSchema = new Schema({
@@ -26,6 +33,8 @@ const userSchema = new Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   upvoteList: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   downvoteList: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  upvoteCommentList: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  downvoteCommentList: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   communityList: [{ type: Schema.Types.ObjectId, ref: "Community" }],
 });
 
@@ -37,7 +46,7 @@ const communitySchema = new Schema({
   description: { type: String, required: true },
   communityPfp: { type: String, required: true },
   followers: [{ type: Schema.Types.ObjectId, ref: "User" }], // Add this line
-  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }], 
+  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 });
 
 const notificationSchema = new Schema({
@@ -46,7 +55,7 @@ const notificationSchema = new Schema({
   type: { type: String, required: true },
   postId: { type: Schema.Types.ObjectId, ref: "Post" },
   read: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
 const Post = model("Post", postSchema);

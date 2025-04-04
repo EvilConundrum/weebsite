@@ -35,20 +35,20 @@ async function getPostData(event) {
   try {
     // Add debug log for FormData
     console.log("Sending form data:", {
-      title: formData.get('title'),
-      content: formData.get('content'),
-      community: formData.get('community')
+      title: formData.get("title"),
+      content: formData.get("content"),
+      community: formData.get("community"),
     });
 
     const response = await fetch("/create-post", {
       method: "POST",
-      body: formData
+      body: formData,
     });
 
     // Debug log raw response
     console.log("Raw response status:", response.status);
 
-    // Try to parse response 
+    // Try to parse response
     const responseText = await response.text();
     console.log("Response text:", responseText);
 
@@ -66,13 +66,14 @@ async function getPostData(event) {
       alert("Post created successfully!");
       window.location.href = "/home";
     } else if (response.status === 404) {
-      alert(data.message || "Community not found. Please select a valid community.");
+      alert(
+        data.message || "Community not found. Please select a valid community."
+      );
     } else if (response.status === 400) {
       alert(data.message || "Please fill in all required fields.");
     } else {
       throw new Error(data.message || "Server error");
     }
-
   } catch (error) {
     console.error("Error details:", error);
     alert(error.message || "Error creating post. Please try again.");
@@ -181,7 +182,6 @@ async function downvotePost(postId) {
     body.action = "add";
     if (isOppActive) {
       body.oppaction = "remove";
-      // TODO: Remove from database
     }
   } else {
     body.action = "remove";
@@ -200,8 +200,6 @@ async function downvotePost(postId) {
       button.textContent = data.downvotes;
       oppBtn.textContent = data.upvotes;
     }, 10);
-    // console.log(button.textContent);
-    // console.log(oppBtn.textContent);
 
     button.classList.toggle("active");
     oppBtn.classList.remove("active");
@@ -218,4 +216,84 @@ async function switchProfileTab(tabName) {
   } catch (error) {
     console.error("Error loading tab:", error);
   }
+}
+
+async function upvoteComment(commentId) {
+  const button = document.getElementById(`upvotes-${commentId}`);
+  const oppBtn = document.getElementById(`downvotes-${commentId}`);
+  const isActive = button.classList.contains("activeLike");
+  const isOppActive = oppBtn.classList.contains("activeDislike");
+
+  const body = {
+    commentId,
+  };
+
+  if (!isActive) {
+    body.action = "add";
+    if (isOppActive) {
+      body.oppaction = "remove";
+    }
+  } else {
+    body.action = "remove";
+  }
+
+  const res = await fetch(`/upvote-comment/${commentId}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    // console.log(data);
+    setTimeout(() => {
+      button.textContent = data.upvotes;
+      oppBtn.textContent = data.downvotes;
+    }, 10);
+    // console.log(button.textContent);
+    // console.log(oppBtn.textContent);
+  }
+
+  button.classList.toggle("activeLike");
+  oppBtn.classList.remove("activeDislike");
+}
+
+async function downvoteComment(commentId) {
+  const button = document.getElementById(`downvotes-${commentId}`);
+  const oppBtn = document.getElementById(`upvotes-${commentId}`);
+  const isActive = button.classList.contains("activeDislike");
+  const isOppActive = oppBtn.classList.contains("activeLike");
+
+  const body = {
+    commentId,
+  };
+
+  if (!isActive) {
+    body.action = "add";
+    if (isOppActive) {
+      body.oppaction = "remove";
+    }
+  } else {
+    body.action = "remove";
+  }
+
+  const res = await fetch(`/downvote-comment/${commentId}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    // console.log(data);
+    setTimeout(() => {
+      button.textContent = data.downvotes;
+      oppBtn.textContent = data.upvotes;
+    }, 10);
+    // console.log(button.textContent);
+    // console.log(oppBtn.textContent);
+  }
+
+  button.classList.toggle("activeDisLike");
+  oppBtn.classList.remove("activeLike");
 }
