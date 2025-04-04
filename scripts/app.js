@@ -383,9 +383,12 @@ app.post("/login", async (req, res) => {
       return res.redirect("/login?error=invalid_credentials");
     }
 
-    const isMatch = await argon2.verify(user.password, password);
+    const isMatch = user.password === password; // Plain text comparison (temporary)
+
     if (isMatch) {
-      req.session.user = user;
+      // Convert Mongoose document to a plain object
+      req.session.user = user.toObject(); // Or use specific fields
+      console.log("User session set:", req.session.user);
       res.redirect("/home");
     } else {
       res.redirect("/login?error=invalid_credentials");
@@ -393,30 +396,6 @@ app.post("/login", async (req, res) => {
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).send("Internal server error.");
-  }
-});
-app.get("/signup", async (req, res) => {
-  res.render(path.join(__dirname, "../views/signup-pop-up.hbs"));
-});
-
-app.post("/signup", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  console.log(req.body);
-
-  try {
-    const newUser = await createUser(username, password);
-    console.log("User created successfully:", newUser);
-
-    // Set session user after successful signup
-    req.session.user = newUser;
-
-    // Respond with success messageabout:blank#blocked
-    res.status(201).send(newUser.username + " has been created!");
-  } catch (error) {
-    console.error("Error creating user:", error);
-    res.status(500).send("Error creating user: " + error.message);
   }
 });
 
