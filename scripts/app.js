@@ -350,33 +350,9 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
   }
 });
 
-app.get("/edit-profile", isAuthenticated, async (req, res) => {
-  try {
-    const userData = await User.findById(req.session.user._id).lean();
-    res.render("edit-profile", { 
-      userData: userData,
-      profileData: userData // Add this line to maintain consistency
-    });
-  } catch (error) {
-    console.error("Error loading edit profile:", error);
-    res.status(500).send("Error loading edit profile page");
-  }
-});
-
-// Add POST route to handle profile updates
-app.post("/edit-profile", isAuthenticated, async (req, res) => {
-  try {
-    const updates = {
-      bio: req.body.bio,
-      // Add other fields you want to update
-    };
-
-    await User.findByIdAndUpdate(req.session.user._id, updates);
-    res.redirect('/profile/' + req.session.user.username);
-  } catch (error) {
-    console.error("Error updating profile:", error);
-    res.status(500).send("Error updating profile");
-  }
+app.get("/edit-profile", isAuthenticated, (req, res) => {
+  const userData = req.session.user;
+  res.render("edit-profile", { userData });
 });
 
 app.get("/create-post", isAuthenticated, (req, res) => {
@@ -818,34 +794,6 @@ app.post(
   }
 );
 
-// Remove ALL existing /update-profile routes and replace with this one
-app.post('/update-profile', isAuthenticated, profileUpload.single('profilePicture'), async (req, res) => {
-    try {
-        const updates = {
-            bio: req.body.bio
-        };
-
-        if (req.file) {
-            updates.profilePicture = '/images/profile-pictures/' + req.file.filename;
-        }
-
-        const updatedUser = await User.findByIdAndUpdate(
-            req.session.user._id,
-            updates,
-            { new: true }
-        ).lean();
-
-        // Update session data
-        req.session.user = updatedUser;
-
-        // Always redirect to posts tab
-        res.redirect(`/profile/${updatedUser.username}?tabName=posts`);
-    } catch (error) {
-        console.error('Error updating profile:', error);
-        res.status(500).send('Error updating profile');
-    }
-});
-
 app.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -1270,57 +1218,4 @@ app.put("/downvote-comment/:id", isAuthenticated, async (req, res) => {
   console.log("Downvotes:", comment.downvotes);
 
   res.json({ upvotes: comment.upvotes, downvotes: comment.downvotes });
-});
-
-app.get("/profile/:username", async (req, res) => {
-  try {
-    const tabName = req.query.tabName || 'posts'; // Default to posts tab
-    const profileUser = await User.findOne({ username: req.params.username })
-      .populate('posts')
-      .populate('sharedPosts')
-      .populate('upvoteList')
-      .populate('downvoteList')
-      .lean();
-
-    if (!profileUser) {
-      return res.status(404).send("User not found");
-    }
-
-    let layoutUserData = null;
-    if (req.session.user) {
-      layoutUserData = await User.findById(req.session.user._id).lean();
-    }
-
-    // Prepare data based on selected tab
-    const data = {
-      profileData: profileUser,
-      userData: layoutUserData,
-      isOwnProfile: req.session.user && req.session.user.username === req.params.username,
-      isPostsTab: tabName === 'posts',
-      isSharedPostsTab: tabName === 'shared-posts',
-      isUpvotesTab: tabName === 'upvotes',
-      isDownvotesTab: tabName === 'downvotes'
-    };
-
-    // Add the appropriate posts based on tab
-    switch(tabName) {
-      case 'posts':
-        data.posts = await Post.find({ _id: { $in: profileUser.posts } }).populate('author').lean();
-        break;
-      case 'shared-posts':
-        data.sharedPosts = await Post.find({ _id: { $in: profileUser.sharedPosts } }).populate('author').lean();
-        break;
-      case 'upvotes':
-        data.upvotedPosts = await Post.find({ _id: { $in: profileUser.upvoteList } }).populate('author').lean();
-        break;
-      case 'downvotes':
-        data.downvotedPosts = await Post.find({ _id: { $in: profileUser.downvoteList } }).populate('author').lean();
-        break;
-    }
-
-    res.render("profile", data);
-  } catch (error) {
-    console.error("Profile load error:", error);
-    res.status(500).send("Error loading profile");
-  }
 });

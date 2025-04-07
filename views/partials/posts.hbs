@@ -6,15 +6,17 @@
           <img src="{{communityPfp}}" class="pfp" alt="Community Picture" />
           <span class="postUsername">w/{{community}}</span>
         </span>
-        <span class="actionButton" onclick="switchPage('profile/{{author}}')">
+        <span class="actionButton" onclick="switchPage('profile')">
           <img
-            src="{{#if author.profilePicture}}{{author.profilePicture}}{{else}}{{authorProfilePicture}}{{/if}}"
+            src="{{authorProfilePicture}}"
             class="pfp"
             alt="Profile Picture"
             onerror="this.onerror=null; this.src='/images/anonymous.png'"
           />
           <span class="postUsername">u/{{author}}</span>
         </span>
+        {{! time since it was posted }}
+        {{!-- <span class="postTime">{{time}}</span> --}}
       </div>
     </div>
 
