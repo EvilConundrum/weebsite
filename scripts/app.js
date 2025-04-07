@@ -26,7 +26,7 @@ app.engine(
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl: "mongodb://127.0.0.1:27017/",
+      mongoUrl: "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/test",
     }),
     secret: "your_secret_key",
     resave: false,
