@@ -8,7 +8,7 @@
         </span>
         <span class="actionButton" onclick="switchPage('profile/{{author}}')">
           <img
-            src="{{#if authorProfilePicture}}{{authorProfilePicture}}{{else}}{{author.profilePicture}}{{/if}}"
+            src="{{#if author.profilePicture}}{{author.profilePicture}}{{else}}{{authorProfilePicture}}{{/if}}"
             class="pfp"
             alt="Profile Picture"
             onerror="this.onerror=null; this.src='/images/anonymous.png'"

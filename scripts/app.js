@@ -1303,39 +1303,51 @@ app.put("/downvote-comment/:id", isAuthenticated, async (req, res) => {
 
 app.get("/profile/:username", async (req, res) => {
   try {
-    // Get the profile user's data
-    const profileUser = await User.findOne({ username: req.params.username }).lean();
+    const tabName = req.query.tabName || 'posts'; // Default to posts tab
+    const profileUser = await User.findOne({ username: req.params.username })
+      .populate('posts')
+      .populate('sharedPosts')
+      .populate('upvoteList')
+      .populate('downvoteList')
+      .lean();
 
     if (!profileUser) {
       return res.status(404).send("User not found");
     }
-
-    // Get posts with populated author data
-    const posts = await Post.find({ author: profileUser.username })
-      .populate({
-        path: 'author',
-        select: 'username profilePicture'
-      })
-      .lean();
-
-    // Ensure each post has the author's profile picture
-    const populatedPosts = posts.map(post => ({
-      ...post,
-      authorProfilePicture: profileUser.profilePicture || '/images/anonymous.png'
-    }));
 
     let layoutUserData = null;
     if (req.session.user) {
       layoutUserData = await User.findById(req.session.user._id).lean();
     }
 
-    res.render("profile", {
+    // Prepare data based on selected tab
+    const data = {
       profileData: profileUser,
       userData: layoutUserData,
-      posts: populatedPosts,
       isOwnProfile: req.session.user && req.session.user.username === req.params.username,
-      isPostsTab: true
-    });
+      isPostsTab: tabName === 'posts',
+      isSharedPostsTab: tabName === 'shared-posts',
+      isUpvotesTab: tabName === 'upvotes',
+      isDownvotesTab: tabName === 'downvotes'
+    };
+
+    // Add the appropriate posts based on tab
+    switch(tabName) {
+      case 'posts':
+        data.posts = await Post.find({ _id: { $in: profileUser.posts } }).populate('author').lean();
+        break;
+      case 'shared-posts':
+        data.sharedPosts = await Post.find({ _id: { $in: profileUser.sharedPosts } }).populate('author').lean();
+        break;
+      case 'upvotes':
+        data.upvotedPosts = await Post.find({ _id: { $in: profileUser.upvoteList } }).populate('author').lean();
+        break;
+      case 'downvotes':
+        data.downvotedPosts = await Post.find({ _id: { $in: profileUser.downvoteList } }).populate('author').lean();
+        break;
+    }
+
+    res.render("profile", data);
   } catch (error) {
     console.error("Profile load error:", error);
     res.status(500).send("Error loading profile");
