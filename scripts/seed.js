@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Post, Comment, User, Community, Notification } = require("./db.js");
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/weebsiteDB", {
+  .connect("mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/test", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

@@ -26,7 +26,7 @@ app.engine(
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl: "mongodb://127.0.0.1:27017/",
+      mongoUrl: "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/test",
     }),
     secret: "your_secret_key",
     resave: false,
@@ -62,7 +62,7 @@ app.use("/images", express.static(path.join(__dirname, "../images")));
 //   });
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/weebsiteDB")
+  .connect("mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/test")
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -79,6 +79,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Ensure proper middleware order
 app.use(cookieParser());
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: "secret-key",
@@ -87,7 +88,7 @@ app.use(
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
     user: null,
@@ -156,6 +157,13 @@ app.engine(
         return options.inverse(this);
       },
       timestamp: () => Date.now(),
+      formatDate: function(date) {
+        return new Date(date).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+      }
     },
   })
 );
@@ -196,47 +204,6 @@ app.get("/home", isAuthenticated, async (req, res) => {
     res.status(500).send("Server error");
   }
 });
-
-// home for guests
-// app.get("/home", async (req, res) => {
-//   try {
-//     const posts = await Post.find().lean();
-
-//     // Get all unique author usernames from posts
-//     const usernames = [...new Set(posts.map((post) => post.author))];
-
-//     // Fetch profile pictures for all authors
-
-//     const profilePictureMap = users.reduce((acc, user) => {
-//       acc[user.username] = user.profilePicture || "/images/anonymous.png"; // Fallback
-//       return acc;
-//     }, {});
-
-//     // Attach profile pictures to posts
-//     const postsWithProfilePictures = posts.map((post) => ({
-//       ...post,
-//       authorProfilePicture: profilePictureMap[post.author],
-//     }));
-
-//     res.render("index", {
-//       posts: postsWithProfilePictures, // Pass enriched posts
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Server error");
-//   }
-// });
-
-// app.get("/home", async (req, res) => {
-//   try {
-//     const posts = await Post.find().lean();
-//     console.log("Posts fetched successfully:", posts);
-//     res.render(path.join(__dirname, "../views/index.hbs"), { posts });
-//   } catch (error) {
-//     console.error("Error fetching posts:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
 
 function buildCommentTree(comments) {
   const commentMap = {};
@@ -326,6 +293,7 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
     let data = {};
     let isPostsTab = false;
     let isSharedPostsTab = false;
+    let isCommentsTab = false;
     let isUpvotesTab = false;
     let isDownvotesTab = false;
 
@@ -341,6 +309,13 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
           _id: { $in: userData.sharedPosts },
         }).lean();
         isSharedPostsTab = true;
+        break;
+      case "comments":
+        console.log("Tab Name:", tabName);
+        data.comments = await Comment.find({
+          _id: { $in: userData.comments },
+        }).lean();
+        isCommentsTab = true;
         break;
       case "upvotes":
         console.log("Tab Name:", tabName);
@@ -365,6 +340,7 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
       ...data, // This spreads posts, upvotedPosts, etc.
       isPostsTab,
       isSharedPostsTab,
+      isCommentsTab,
       isUpvotesTab,
       isDownvotesTab,
     });
@@ -445,6 +421,7 @@ app.get("/", async (req, res) => {
   }
 });
 
+
 app.get("/login", (req, res) => {
   res.render(path.join(__dirname, "../views/login-pop-up.hbs"));
 });
@@ -454,7 +431,7 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username: username });
+    const user = await User.findOne({ username: username }).lean(); // Add .lean()
     if (!user) {
       return res.redirect("/login?error=invalid_credentials");
     }
@@ -462,15 +439,21 @@ app.post("/login", async (req, res) => {
     console.log(user.password);
     console.log(password);
 
-    // const isMatch = await argon2.verify(user.password, password);
-    const isMatch = user.password === password; // Use plain password for now
+    const isMatch = await argon2.verify(user.password, password);
 
     console.log("Password match:", isMatch);
-
+    
     if (isMatch) {
       req.session.user = user;
       console.log("User session set:", req.session.user);
-      res.redirect("/home");
+      console.log("User session set:", user);
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).send("Internal server error");
+        }
+        res.redirect("/home");
+      });
     } else {
       res.redirect("/login?error=invalid_credentials");
     }
@@ -502,7 +485,7 @@ app.post("/signup", async (req, res) => {
     }
 
     // Set session user after successful signup
-    req.session.user = newUser;
+   req.session.user = newUser.toObject();
 
     // Respond with success messageabout:blank#blocked
     res.status(201).send(newUser.username + " has been created!");
@@ -641,9 +624,6 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
   if (!req.session.user._id)
     return res.status(401).json({ error: "Not authenticated" });
 
-  // console.log("Action:", action);
-  // console.log("Opposite Action:", oppaction);
-
   let update = {}; // Track vote count changes
 
   // SAVE USER AND POST RELATED DATA
@@ -687,9 +667,6 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
   }
 
   const post = await Post.findById(req.params.id).lean();
-
-  console.log("Upvotes:", post.upvotes);
-  console.log("Downvotes:", post.downvotes);
 
   res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
 });
@@ -1184,9 +1161,6 @@ app.put("/upvote-comment/:id", isAuthenticated, async (req, res) => {
   if (!req.session.user._id)
     return res.status(401).json({ error: "Not authenticated" });
 
-  // console.log("Action:", action);
-  // console.log("Opposite Action:", oppaction);
-
   let update = {}; // Track vote count changes
 
   // SAVE USER AND POST RELATED DATA
@@ -1245,9 +1219,6 @@ app.put("/downvote-comment/:id", isAuthenticated, async (req, res) => {
 
   if (!req.session.user._id)
     return res.status(401).json({ error: "Not authenticated" });
-
-  // console.log("Downvote Action:", action);
-  // console.log("Opposite Action:", oppaction);
 
   let update = {}; // Track vote count changes
 
