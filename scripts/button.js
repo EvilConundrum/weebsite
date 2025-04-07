@@ -67,15 +67,8 @@ window.onload = async function () {
     }
   };
 
-  const currentPage = window.location.pathname;
-
-  if (currentPage === "/home") {
-    initializeVotes(); // Only initialize votes for /home (index.hbs)
-  } else if (currentPage.startsWith("/post/")) {
-    initializePostViewVotes(); // Only initialize post view votes for /post/:id (postView.hbs)
-  } else if (currentPage.startsWith("/profile")) {
-    initializePostViewVotes(); // Only initialize post view votes for /post/:id (postView.hbs)
-  }
+  initializeVotes();
+  initializePostViewVotes();
 
   // console.log("Like Buttons found:", likeButtons.length);
   const likeButtons = document.querySelectorAll(".like-button");
@@ -160,28 +153,19 @@ async function initializePostViewVotes() {
   const likeButtons = document.querySelectorAll(".like-button");
   const dislikeButtons = document.querySelectorAll(".dislike-button");
 
-  const postLikeButton = document.querySelector(".like-button[data-post-id]");
-  const postDislikeButton = document.querySelector(
-    ".dislike-button[data-post-id]"
-  );
-
-  if (postLikeButton) {
-    const postId = postLikeButton.dataset.postId;
-    if (postId && userData.upvoteList.includes(postId)) {
-      postLikeButton.classList.add("activeLike"); // Add activeLike class if user has liked the post
-    } else {
-      postLikeButton.classList.remove("activeLike"); // Ensure the class is removed if not liked
+  likeButtons.forEach((button) => {
+    const postId = button.dataset.postId;
+    if (userData.upvoteList.includes(postId)) {
+      button.classList.toggle("activeLike");
     }
-  }
+  });
 
-  if (postDislikeButton) {
-    const postId = postDislikeButton.dataset.postId;
-    if (postId && userData.downvoteList.includes(postId)) {
-      postDislikeButton.classList.add("activeDislike"); // Add activeDislike class if user has disliked the post
-    } else {
-      postDislikeButton.classList.remove("activeDislike"); // Ensure the class is removed if not disliked
+  dislikeButtons.forEach((button) => {
+    const postId = button.dataset.postId;
+    if (userData.downvoteList.includes(postId)) {
+      button.classList.toggle("activeDislike");
     }
-  }
+  });
 
   likeButtons.forEach((button) => {
     const commentId = button.dataset.commentId;

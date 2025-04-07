@@ -104,14 +104,3 @@
   margin-left: 20px; /* Indent nested comments */
   display: none; /* Initially hidden */
 }
-
-.commentBody {
-  color: #ffffff;
-  font-size: 1.5em;
-  font-weight: bolder;
-  margin: 0 0 12px 0;
-  font-family: var(--secondary-font), sans-serif;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}

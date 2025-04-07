@@ -7,3 +7,9 @@ function loadComponent(id, file) {
     })
     .catch((error) => console.error(`Error loading ${file}:`, error));
 }
+
+// Load components after the DOM is fully loaded
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   loadComponent("notification-container", "notification-pop-up.hbs");
+// });
