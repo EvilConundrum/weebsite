@@ -357,6 +357,7 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
     let isSharedPostsTab = false;
     let isUpvotesTab = false;
     let isDownvotesTab = false;
+    let isCommentsTab = false;
 
     switch (tabName) {
       case "posts":
@@ -385,6 +386,13 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
         }).lean();
         isDownvotesTab = true;
         break;
+      case "comments":
+        console.log("Tab Name:", tabName);
+        data.comments = await Comment.find({
+          _id: { $in: userData.comments },
+        }).lean();
+        isCommentsTab = true;
+        break;
       default:
         return res.status(400).send("Invalid tab");
     }
@@ -396,6 +404,7 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
       isSharedPostsTab,
       isUpvotesTab,
       isDownvotesTab,
+      isCommentsTab,
     });
   } catch (error) {
     console.error("Profile load error:", error);

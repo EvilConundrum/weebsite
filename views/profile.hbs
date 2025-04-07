@@ -83,10 +83,10 @@
           {{/if}}
 
           {{#if isCommentsTab}}
-            {{#each comments}}
-            {{> comments}}
-            {{/each}}
-          {{/if}}
+             {{#each comments}}
+               {{> commentProfile}}
+             {{/each}}
+           {{/if}}
 
           {{#if isUpvotesTab}}
             {{#if upvotedPosts}}
