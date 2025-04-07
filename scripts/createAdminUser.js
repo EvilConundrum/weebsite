@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const { User } = require("./db.js");
 
 // Connect to your MongoDB database
-mongoose.connect("mongodb://localhost/weebsiteDB", {
+mongoose.connect("mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
