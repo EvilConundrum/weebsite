@@ -4,12 +4,19 @@ const argon2 = require("argon2");
 
 const createPost = async (title, content, author, community, images = []) => {
   try {
+    // Get author data to include profile picture
+    const userData = await User.findById(author).lean();
+    if (!userData) {
+      throw new Error('Author not found');
+    }
+
     const newPost = new Post({
       title,
       content,
       author,
       community,
-      upvotes: 0, // Default values to ensure proper initialization
+      authorProfilePicture: userData.profilePicture || '/images/anonymous.png',
+      upvotes: 0,
       downvotes: 0,
       images,
     });
@@ -115,11 +122,13 @@ const createNotification = async (userID, content, type, read) => {
 // THIS IS ONLY HERE BECAUSE WE DONT HAVE THE GODDAMN FILE UPLOAD
 
 const testPost = async (title, content, author, community) => {
+  const userData = await User.findById(author).lean();
   const newPost = await Post.create({
     title,
     content,
     author,
     community,
+    authorProfilePicture: userData?.profilePicture || '/images/anonymous.png'
   });
 
   return newPost;

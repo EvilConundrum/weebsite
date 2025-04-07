@@ -8,15 +8,13 @@
         </span>
         <span class="actionButton" onclick="switchPage('profile/{{author}}')">
           <img
-            src="{{authorProfilePicture}}"
+            src="{{#if authorProfilePicture}}{{authorProfilePicture}}{{else}}{{author.profilePicture}}{{/if}}"
             class="pfp"
             alt="Profile Picture"
             onerror="this.onerror=null; this.src='/images/anonymous.png'"
           />
           <span class="postUsername">u/{{author}}</span>
         </span>
-        {{! time since it was posted }}
-        {{!-- <span class="postTime">{{time}}</span> --}}
       </div>
     </div>
 

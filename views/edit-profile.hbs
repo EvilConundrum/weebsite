@@ -48,21 +48,20 @@
     <button 
       type="button"
       id="cancel-changes" 
+      onclick="cancelChanges()"
     >
       Cancel
     </button>
     <button 
       type="submit"
       id="confirm-changes"
-      onclick="return validateForm()"
     >
       Confirm
     </button>
   </div>
 </form>
-    </div>
 
-    <script>
+<script>
       document.getElementById('profile-picture-input').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -88,6 +87,38 @@
         }
         return true;
       }
+
+      function cancelChanges() {
+        window.location.href = '/profile/' + '{{userData.username}}';
+      }
+
+      // Update the form submission handler
+      document.getElementById('profile-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (!validateForm()) {
+            return;
+        }
+
+        const formData = new FormData(this);
+        
+        try {
+            const response = await fetch('/update-profile', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                window.location.href = '/profile/' + '{{userData.username}}';
+            } else {
+                const error = await response.text();
+                alert('Error updating profile: ' + error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error updating profile. Please try again.');
+        }
+      });
     </script>
   </body>
 </html>

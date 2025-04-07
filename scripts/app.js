@@ -841,6 +841,34 @@ app.post(
   }
 );
 
+// Remove ALL existing /update-profile routes and replace with this one
+app.post('/update-profile', isAuthenticated, profileUpload.single('profilePicture'), async (req, res) => {
+    try {
+        const updates = {
+            bio: req.body.bio
+        };
+
+        if (req.file) {
+            updates.profilePicture = '/images/profile-pictures/' + req.file.filename;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.session.user._id,
+            updates,
+            { new: true }
+        ).lean();
+
+        // Update session data
+        req.session.user = updatedUser;
+
+        // Always redirect to posts tab
+        res.redirect(`/profile/${updatedUser.username}?tabName=posts`);
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).send('Error updating profile');
+    }
+});
+
 app.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -1276,30 +1304,38 @@ app.put("/downvote-comment/:id", isAuthenticated, async (req, res) => {
 app.get("/profile/:username", async (req, res) => {
   try {
     // Get the profile user's data
-    const profileUser = await User.findOne({ username: req.params.username })
-      .populate("posts")
-      .populate("comments")
-      .lean();
+    const profileUser = await User.findOne({ username: req.params.username }).lean();
 
     if (!profileUser) {
       return res.status(404).send("User not found");
     }
 
-    // Get the logged-in user's data for layout
+    // Get posts with populated author data
+    const posts = await Post.find({ author: profileUser.username })
+      .populate({
+        path: 'author',
+        select: 'username profilePicture'
+      })
+      .lean();
+
+    // Ensure each post has the author's profile picture
+    const populatedPosts = posts.map(post => ({
+      ...post,
+      authorProfilePicture: profileUser.profilePicture || '/images/anonymous.png'
+    }));
+
     let layoutUserData = null;
     if (req.session.user) {
       layoutUserData = await User.findById(req.session.user._id).lean();
     }
 
-    let data = {
-      profileData: profileUser, // Data for the profile being viewed
-      userData: layoutUserData, // Data for the layout (logged-in user)
-      posts: await Post.find({ _id: { $in: profileUser.posts } }).lean(),
+    res.render("profile", {
+      profileData: profileUser,
+      userData: layoutUserData,
+      posts: populatedPosts,
       isOwnProfile: req.session.user && req.session.user.username === req.params.username,
       isPostsTab: true
-    };
-
-    res.render("profile", data);
+    });
   } catch (error) {
     console.error("Profile load error:", error);
     res.status(500).send("Error loading profile");
