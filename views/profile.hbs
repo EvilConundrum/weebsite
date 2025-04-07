@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles/variables.css" />
     <link rel="stylesheet" href="styles/post.css" />
     <link rel="stylesheet" href="styles/layout.css" />
+    <link rel="stylesheet" href="styles/comment.css" />
     <script src="scripts/include.js" defer></script>
     <script src="scripts/button.js" defer></script>
     <script src="scripts/views.js" defer></script>
@@ -41,6 +42,7 @@
           <!-- Static filter buttons as per original HTML -->
           <div class="filter-button" data-page="posts" onclick="switchProfileTab('posts')"><p>Posts</p></div>
           <div class="filter-button" data-page="shared-posts" onclick="switchProfileTab('shared-posts')"><p>Shared Posts</p></div>
+          <div class="filter-button" data-page="shared-posts" onclick="switchProfileTab('comments')"><p>Comments</p></div>
           <div class="filter-button" data-page="upvotes" onclick="switchProfileTab('upvotes')"><p>Upvoted</p></div>
           <div class="filter-button" data-page="downvotes" onclick="switchProfileTab('downvotes')"><p>Downvoted</p></div>
         </div>
@@ -54,6 +56,12 @@
           {{#if isSharedPostsTab}}
             {{#each sharedPosts}}
               {{> posts}}
+            {{/each}}
+          {{/if}}
+
+          {{#if isCommentsTab}}
+            {{#each comments}}
+              {{> commentProfile}}
             {{/each}}
           {{/if}}
 

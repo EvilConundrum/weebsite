@@ -293,6 +293,7 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
     let data = {};
     let isPostsTab = false;
     let isSharedPostsTab = false;
+    let isCommentsTab = false;
     let isUpvotesTab = false;
     let isDownvotesTab = false;
 
@@ -308,6 +309,13 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
           _id: { $in: userData.sharedPosts },
         }).lean();
         isSharedPostsTab = true;
+        break;
+      case "comments":
+        console.log("Tab Name:", tabName);
+        data.comments = await Comment.find({
+          _id: { $in: userData.comments },
+        }).lean();
+        isCommentsTab = true;
         break;
       case "upvotes":
         console.log("Tab Name:", tabName);
@@ -332,6 +340,7 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
       ...data, // This spreads posts, upvotedPosts, etc.
       isPostsTab,
       isSharedPostsTab,
+      isCommentsTab,
       isUpvotesTab,
       isDownvotesTab,
     });
@@ -634,9 +643,6 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
   }
 
   const post = await Post.findById(req.params.id).lean();
-
-  console.log("Upvotes:", post.upvotes);
-  console.log("Downvotes:", post.downvotes);
 
   res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
 });
