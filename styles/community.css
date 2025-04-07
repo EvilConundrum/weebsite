@@ -25,6 +25,7 @@
   border: 1px solid var(--background-35);
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  text-align: center;
 }
 
 .communityHeaderImage {
@@ -40,8 +41,7 @@
   font-family: var(--primary-font), sans-serif;
   font-size: var(--XL);
   color: var(--primary-main);
-  margin-left: 30%;
-  margin-top: 6%;
+  margin-top: 5%;
 }
 
 .community-header {

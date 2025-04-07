@@ -9,7 +9,7 @@
   </head>
   <body>
     <div id="popup-container">
-     <form id="profile-form" action="/update-profile" method="POST" enctype="multipart/form-data">
+     <form id="profile-form" action="/update-profile" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
   <div id="main-content">
     <div id="profile-pic-submission-container">
       <img id="current-profile-pic" src="{{userData.profilePicture}}" alt="Profile Picture">
@@ -48,7 +48,7 @@
     <button 
       type="button"
       id="cancel-changes" 
-      onclick="window.location.href='/profile'"
+      onclick="window.location.href='/profile/{{userData.username}}?tabName=posts'"
     >
       Cancel
     </button>
@@ -78,14 +78,21 @@
         const fileInput = document.getElementById('profile-picture-input');
         const bioInput = document.getElementById('user-bio');
         const bio = bioInput.value.trim();
-        const originalBio = bioInput.defaultValue.trim();
 
-        const isBioChanged = bio !== originalBio;
-
-        if (!fileInput.files[0] && !isBioChanged) {
+        if (!fileInput.files[0] && bio === '') {
           alert('Please make at least one change before submitting');
           return false;
         }
+
+        // File type validation
+        if (fileInput.files[0]) {
+          const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+          if (!allowedTypes.includes(fileInput.files[0].type)) {
+            alert('Please upload only jpg, png, or gif files');
+            return false;
+          }
+        }
+
         return true;
       }
     </script>

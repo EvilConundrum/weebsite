@@ -27,10 +27,10 @@
             <p class="stat-value">{{community.onlineMembers}}</p>
             <p class="stat-name">Online</p>
           </div>
-          <div class="stat">
-            <p class="stat-value">{{community.dateCreated}}</p>
-            <p class="stat-name">Created</p>
-          </div>
+            <div class="stat">
+                <p class="stat-value">{{formatDate community.dateCreated}}</p>
+                <p class="stat-name">Created</p>
+            </div>
         </div>
         <button class="follow-com-button" onclick="toggleCommunityFollow(); followCommunity('{{community.name}}');">Follow</button>
         <button class="followed-com-button" onclick="toggleCommunityFollow(); unfollowCommunity('{{community.name}}');">Following</button>

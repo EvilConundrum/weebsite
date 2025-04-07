@@ -1,5 +1,4 @@
-
-    <div class="navBar">
+<div class="navBar">
       <div class="title">WEEBSITE</div>
       <div class="searchBarContainer">
         <input type="text" id="searchBar" class="searchBar" placeholder="Search Weebsite..." />
@@ -39,12 +38,20 @@
             />
           </svg>
         </button>
-        <button class="hiddenButton" onclick="switchPage('profile?tabName=posts')">
+        <button class="hiddenButton" onclick="switchPage('profile/{{userData.username}}?tabName=posts')">
           {{#if userData.profilePicture}}
-            <img id="layoutpfp" src="{{userData.profilePicture}}" alt="Profile Picture">
+            <img 
+              id="layoutpfp" 
+              src="{{userData.profilePicture}}" 
+              alt="Profile Picture"
+              onerror="this.onerror=null; this.src='/images/anonymous.png';"
+            >
           {{else}}
-            {{!-- Show default if profilePicture is null, undefined, or empty string --}}
-            <img id="layoutpfp" src="/images/anonymous.png" alt="Default Profile Picture">
+            <img 
+              id="layoutpfp" 
+              src="/images/anonymous.png" 
+              alt="Default Profile Picture"
+            >
           {{/if}}
         </button>
       </div>

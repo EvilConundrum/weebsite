@@ -40,6 +40,10 @@ app.use("/styles", express.static(path.join(__dirname, "../styles")));
 app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
+// Add these static middleware configurations
+app.use('/images', express.static(path.join(__dirname, '..', 'public', 'images')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
 // const MONGO_URI =
 //   "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/";
 
@@ -96,7 +100,25 @@ app.use(
 
 // Add JSON parsing middleware
 
-const upload = multer({ dest: "uploads/" }); // Temporary storage for uploaded files
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  fileFilter: function(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+      return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+  }
+});
 
 app.use(
   "/images/profile-pictures",
@@ -156,6 +178,13 @@ app.engine(
         return options.inverse(this);
       },
       timestamp: () => Date.now(),
+      formatDate: function(date) {
+        return new Date(date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+      }
     },
   })
 );
@@ -784,38 +813,37 @@ app.post("/create-nestedcomment", async (req, res) => {
 });
 
 // Profile update route
-app.post(
-  "/update-profile",
-  isAuthenticated,
-  profileUpload.single("profilePicture"), // Use profile-specific upload config
-  async (req, res) => {
-    try {
-      const updateData = {
-        bio: req.body.bio,
-      };
+app.post('/update-profile', isAuthenticated, upload.single('profilePicture'), async (req, res) => {
+  try {
+    const updates = {};
 
-      // Handle profile picture update
-      if (req.file) {
-        updateData.profilePicture = `/images/profile-pictures/${req.file.filename}`;
-      }
-
-      // Update user document
-      const updatedUser = await User.findByIdAndUpdate(
-        req.session.user._id,
-        { $set: updateData },
-        { new: true }
-      );
-
-      // Update session data
-      req.session.user = updatedUser;
-
-      res.redirect("/profile");
-    } catch (error) {
-      console.error("Profile update error:", error);
-      res.status(500).send("Error updating profile");
+    // Handle bio update
+    if (req.body.bio !== undefined) {
+      updates.bio = req.body.bio.trim();
     }
+
+    // Handle profile picture update
+    if (req.file) {
+      updates.profilePicture = `/uploads/${req.file.filename}`;
+    }
+
+    // Update user in database
+    const updatedUser = await User.findByIdAndUpdate(
+      req.session.user._id,
+      updates,
+      { new: true }
+    );
+
+    // Update session
+    req.session.user = updatedUser;
+
+    // Redirect back to profile
+    res.redirect(`/profile/${updatedUser.username}?tabName=posts`);
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).send('Error updating profile');
   }
-);
+});
 
 app.post("/logout", (req, res) => {
   req.session.destroy((err) => {
@@ -946,14 +974,37 @@ app.get("/community/:name", isAuthenticated, async (req, res) => {
 app.get("/popular", isAuthenticated, async (req, res) => {
   try {
     const user = await User.findById(req.session.user._id);
+    
+    // Get sorted posts
     const sortedPosts = await Post.find().sort({ upvotes: -1 }).lean();
 
-    res.render(path.join(__dirname, "../views/popular.hbs"), {
+    // Get all unique author usernames from posts
+    const usernames = [...new Set(sortedPosts.map(post => post.author))];
+
+    // Fetch profile pictures for all authors
+    const users = await User.find(
+      { username: { $in: usernames } },
+      "username profilePicture"
+    ).lean();
+
+    // Create profile picture map
+    const profilePictureMap = users.reduce((acc, user) => {
+      acc[user.username] = user.profilePicture || '/images/anonymous.png';
+      return acc;
+    }, {});
+
+    // Add author profile pictures to posts
+    const postsWithPictures = sortedPosts.map(post => ({
+      ...post,
+      authorProfilePicture: profilePictureMap[post.author]
+    }));
+
+    res.render("popular", {
       userData: {
         profilePicture: user.profilePicture,
         username: user.username,
       },
-      sortedPosts,
+      sortedPosts: postsWithPictures
     });
   } catch (error) {
     console.error(error);
@@ -1247,4 +1298,111 @@ app.put("/downvote-comment/:id", isAuthenticated, async (req, res) => {
   console.log("Downvotes:", comment.downvotes);
 
   res.json({ upvotes: comment.upvotes, downvotes: comment.downvotes });
+});
+
+app.get("/profile/:username", async (req, res) => {
+  try {
+    const tabName = req.query.tabName || 'posts';
+    const profileUser = await User.findOne({ username: req.params.username }).lean();
+
+    let data = {
+      profileData: profileUser,
+      userData: req.session.user,
+      isOwnProfile: req.session.user && req.session.user.username === req.params.username
+    };
+
+    switch (tabName) {
+      case "posts":
+        const posts = await Post.find({ author: profileUser.username })
+          .populate('community')
+          .lean();
+        data.posts = posts;
+        data.isPostsTab = true;
+        break;
+
+      case "upvotes":
+        // Get upvoted posts and populate both author and community
+        const upvotedPosts = await Post.find({ _id: { $in: profileUser.upvoteList } })
+          .populate({
+            path: 'community',
+            select: 'name communityPfp'
+          })
+          .lean();
+
+        // Get all unique author usernames
+        const upvoteAuthors = [...new Set(upvotedPosts.map(post => post.author))];
+        
+        // Get author profile pictures
+        const upvoteUsers = await User.find(
+          { username: { $in: upvoteAuthors } },
+          'username profilePicture'
+        ).lean();
+
+        // Create profile picture map
+        const upvoteProfilePicMap = upvoteUsers.reduce((acc, user) => {
+          acc[user.username] = user.profilePicture || '/images/anonymous.png';
+          return acc;
+        }, {});
+
+        // Add author profile pictures to posts
+        data.upvotedPosts = upvotedPosts.map(post => ({
+          ...post,
+          authorProfilePicture: upvoteProfilePicMap[post.author],
+          communityPfp: post.community?.communityPfp || '/images/anonymous.png'
+        }));
+        data.isUpvotesTab = true;
+        break;
+
+      case "downvotes":
+        // Similar process for downvoted posts
+        const downvotedPosts = await Post.find({ _id: { $in: profileUser.downvoteList } })
+          .populate({
+            path: 'community',
+            select: 'name communityPfp'
+          })
+          .lean();
+
+        const downvoteAuthors = [...new Set(downvotedPosts.map(post => post.author))];
+        
+        const downvoteUsers = await User.find(
+          { username: { $in: downvoteAuthors } },
+          'username profilePicture'
+        ).lean();
+
+        const downvoteProfilePicMap = downvoteUsers.reduce((acc, user) => {
+          acc[user.username] = user.profilePicture || '/images/anonymous.png';
+          return acc;
+        }, {});
+
+        data.downvotedPosts = downvotedPosts.map(post => ({
+          ...post,
+          authorProfilePicture: downvoteProfilePicMap[post.author],
+          communityPfp: post.community?.communityPfp || '/images/anonymous.png'
+        }));
+        data.isDownvotesTab = true;
+        break;
+
+      case "comments":
+        // Get comments made by the profile user
+        const userComments = await Comment.find({ author: profileUser.username })
+          .populate('postId', 'title')  // Get the post title for context
+          .lean();
+        
+        data.comments = userComments.map(comment => ({
+          ...comment,
+          authorProfilePicture: profileUser.profilePicture || '/images/anonymous.png'
+        }));
+        data.isCommentsTab = true;
+        break;
+
+      default:
+        data.posts = await Post.find({ author: profileUser.username }).lean();
+        data.isPostsTab = true;
+    }
+
+    res.render("profile", data);
+  } catch (error) {
+    console.error("Profile load error:", error);
+    res.status(500).send("Error loading profile");
+  }
 });

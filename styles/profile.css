@@ -108,6 +108,8 @@
 .filter-button:hover {
   border-radius: 12px;
   background: var(--background-25, #29363d);
+  color: var(--primary-color);
+  cursor: pointer;
 }
 
 .filter-button > p {
@@ -120,4 +122,9 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.filter-button.active {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
 }
