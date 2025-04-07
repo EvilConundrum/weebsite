@@ -62,7 +62,7 @@ app.use("/images", express.static(path.join(__dirname, "../images")));
 //   });
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/weebsiteDB")
+  .connect("mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/test")
   .then(() => {
     console.log("Connected to MongoDB");
   })
