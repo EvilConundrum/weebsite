@@ -157,6 +157,13 @@ app.engine(
         return options.inverse(this);
       },
       timestamp: () => Date.now(),
+      formatDate: function(date) {
+        return new Date(date).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+      }
     },
   })
 );
