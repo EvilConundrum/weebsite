@@ -374,9 +374,33 @@ app.get("/profile/", isAuthenticated, async (req, res) => {
   }
 });
 
-app.get("/edit-profile", isAuthenticated, (req, res) => {
-  const userData = req.session.user;
-  res.render("edit-profile", { userData });
+app.get("/edit-profile", isAuthenticated, async (req, res) => {
+  try {
+    const userData = await User.findById(req.session.user._id).lean();
+    res.render("edit-profile", { 
+      userData: userData,
+      profileData: userData // Add this line to maintain consistency
+    });
+  } catch (error) {
+    console.error("Error loading edit profile:", error);
+    res.status(500).send("Error loading edit profile page");
+  }
+});
+
+// Add POST route to handle profile updates
+app.post("/edit-profile", isAuthenticated, async (req, res) => {
+  try {
+    const updates = {
+      bio: req.body.bio,
+      // Add other fields you want to update
+    };
+
+    await User.findByIdAndUpdate(req.session.user._id, updates);
+    res.redirect('/profile/' + req.session.user.username);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).send("Error updating profile");
+  }
 });
 
 app.get("/create-post", isAuthenticated, (req, res) => {
@@ -1247,4 +1271,37 @@ app.put("/downvote-comment/:id", isAuthenticated, async (req, res) => {
   console.log("Downvotes:", comment.downvotes);
 
   res.json({ upvotes: comment.upvotes, downvotes: comment.downvotes });
+});
+
+app.get("/profile/:username", async (req, res) => {
+  try {
+    // Get the profile user's data
+    const profileUser = await User.findOne({ username: req.params.username })
+      .populate("posts")
+      .populate("comments")
+      .lean();
+
+    if (!profileUser) {
+      return res.status(404).send("User not found");
+    }
+
+    // Get the logged-in user's data for layout
+    let layoutUserData = null;
+    if (req.session.user) {
+      layoutUserData = await User.findById(req.session.user._id).lean();
+    }
+
+    let data = {
+      profileData: profileUser, // Data for the profile being viewed
+      userData: layoutUserData, // Data for the layout (logged-in user)
+      posts: await Post.find({ _id: { $in: profileUser.posts } }).lean(),
+      isOwnProfile: req.session.user && req.session.user.username === req.params.username,
+      isPostsTab: true
+    };
+
+    res.render("profile", data);
+  } catch (error) {
+    console.error("Profile load error:", error);
+    res.status(500).send("Error loading profile");
+  }
 });

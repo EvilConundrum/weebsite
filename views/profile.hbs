@@ -2,31 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>{{userData.username}}'s Profile</title>
-    <link rel="stylesheet" href="styles/profile.css" />
-    <link rel="stylesheet" href="styles/indexstyles.css" />
-    <link rel="stylesheet" href="styles/variables.css" />
-    <link rel="stylesheet" href="styles/post.css" />
-    <link rel="stylesheet" href="styles/layout.css" />
-    <script src="scripts/include.js" defer></script>
-    <script src="scripts/button.js" defer></script>
-    <script src="scripts/views.js" defer></script>
+    <title>{{profileData.username}}'s Profile</title>
+    <link rel="stylesheet" href="/styles/profile.css" />
+    <link rel="stylesheet" href="/styles/indexstyles.css" />
+    <link rel="stylesheet" href="/styles/variables.css" />
+    <link rel="stylesheet" href="/styles/post.css" />
+    <link rel="stylesheet" href="/styles/layout.css" />
+    <script src="/scripts/include.js" defer></script>
+    <script src="/scripts/button.js" defer></script>
+    <script src="/scripts/views.js" defer></script>
   </head>
   <body>
     {{> layout userData=userData}}
 
     <div id="page-content">
       <div id="main-content">
-        <div id="bio-header">u/{{userData.username}}</div>
+        <div id="bio-header">u/{{profileData.username}}</div>
         <div id="bio">
          <img id="bio-image" 
-          src="{{#if userData.profilePicture}}{{userData.profilePicture}}{{else}}/images/anonymous.png{{/if}}" 
-          alt="{{#if userData.profilePicture}}Profile Picture{{else}}Default Profile Picture{{/if}}"
+          src="{{#if profileData.profilePicture}}{{profileData.profilePicture}}{{else}}/images/anonymous.png{{/if}}" 
+          alt="{{#if profileData.profilePicture}}Profile Picture{{else}}Default Profile Picture{{/if}}"
           onerror="this.onerror=null; this.src='/images/anonymous.png'">
           <div id="bio-content">
             <p>
-              {{userData.bio}}
+              {{profileData.bio}}
             </p>
+            {{#if isOwnProfile}}
             <div class="button-bar">
               <button
                 id="edit-profile-button"
@@ -35,6 +36,7 @@
                 Edit Profile
               </button>
             </div>
+            {{/if}}
           </div>
         </div>
         <div id="filter-menu">
