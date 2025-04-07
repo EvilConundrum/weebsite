@@ -5,10 +5,10 @@ const mongoose = require("mongoose");
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const multer = require("multer");
 const fs = require("fs");
 const argon2 = require("argon2");
-const MongoStore = require("connect-mongo");
 
 const app = express();
 
@@ -23,28 +23,52 @@ app.engine(
   })
 );
 
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: "mongodb://127.0.0.1:27017/",
+    }),
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: false,
+    autoIndex: false,
+  })
+);
+
 app.use(express.static(path.join(__dirname, "..")));
 app.use("/styles", express.static(path.join(__dirname, "../styles")));
 app.use("/scripts", express.static(path.join(__dirname, "../scripts")));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/";
+// const MONGO_URI =
+//   "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/";
 
-if (!MONGO_URI) {
-    console.error("MONGO_URI is missing. Check your environment variables.");
-    process.exit(1);
-}
+// if (!MONGO_URI) {
+//   console.error("MONGO_URI is missing. Check your environment variables.");
+//   process.exit(1);
+// }
+// mongoose
+//   .connect(
+//     "mongodb+srv://weebsite-admin:sirartismygoat@weebsite-cluster.1kjr1.mongodb.net/",
+//     {
+//       serverSelectionTimeoutMS: 3000,
+//       tls: true,
+//     }
+//   )
+//   .then(() => console.log("MongoDB Connected"))
+//   .catch((err) => {
+//     console.error("MongoDB Connection Error:", err);
+//     process.exit(1);
+//   });
 
-mongoose.connect(MONGO_URI, {
-    serverSelectionTimeoutMS: 30000, 
-})
-.then(() => console.log('MongoDB Connected'))
-.catch(err => {
-    console.error('MongoDB Connection Error:', err);
-    process.exit(1);
-});
-
-
+mongoose
+  .connect("mongodb://127.0.0.1:27017/weebsiteDB")
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });
 
 const { User, Post, Notification, Comment, Community } = require("./db.js");
 const { createUser, createPost, createNotification } = require("./data.js");
@@ -58,11 +82,7 @@ app.use(cookieParser());
 app.set("trust proxy", 1);
 app.use(
   session({
-    store: MongoStore.create({
-      mongoUrl: MONGO_URI, // Use the same URI as mongoose connection
-      ttl: 24 * 60 * 60, // Session TTL (optional)
-    }),
-    secret: "0930bf6414bf7b802c18a165a151eeca015a4edf7a945aa75b365c716b99ecfd", // Use a strong secret
+    secret: "secret-key",
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -70,7 +90,8 @@ app.use(
       httpOnly: true,
       sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    }
+    },
+    user: null,
   })
 );
 
@@ -99,7 +120,10 @@ const profileUpload = multer({
 
 // Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
+  console.log("Session data:", req.session); // Debugging line
+  console.log("User data:", req.session.user); // Debugging line
   if (req.session.user) {
+    console.log("User is authenticated:", req.session.user);
     next();
   } else {
     // For API routes, return JSON error
@@ -110,12 +134,10 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
-
 
 app.engine(
   "hbs",
@@ -176,46 +198,30 @@ app.get("/home", isAuthenticated, async (req, res) => {
   }
 });
 
-// home for guests
-// app.get("/home", async (req, res) => {
-//   try {
-//     const posts = await Post.find().lean();
+function buildCommentTree(comments) {
+  const commentMap = {};
+  const roots = [];
 
-//     // Get all unique author usernames from posts
-//     const usernames = [...new Set(posts.map((post) => post.author))];
+  // Create a map of comments by their ID
+  comments.forEach((comment) => {
+    commentMap[comment._id] = { ...comment, children: [] };
+  });
 
-//     // Fetch profile pictures for all authors
+  // Build the tree structure
+  comments.forEach((comment) => {
+    if (comment.parentCommentId) {
+      // If the comment has a parent, add it to the parent's children array
+      commentMap[comment.parentCommentId]?.children.push(
+        commentMap[comment._id]
+      );
+    } else {
+      // If the comment has no parent, it's a root comment
+      roots.push(commentMap[comment._id]);
+    }
+  });
 
-//     const profilePictureMap = users.reduce((acc, user) => {
-//       acc[user.username] = user.profilePicture || "/images/anonymous.png"; // Fallback
-//       return acc;
-//     }, {});
-
-//     // Attach profile pictures to posts
-//     const postsWithProfilePictures = posts.map((post) => ({
-//       ...post,
-//       authorProfilePicture: profilePictureMap[post.author],
-//     }));
-
-//     res.render("index", {
-//       posts: postsWithProfilePictures, // Pass enriched posts
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Server error");
-//   }
-// });
-
-// app.get("/home", async (req, res) => {
-//   try {
-//     const posts = await Post.find().lean();
-//     console.log("Posts fetched successfully:", posts);
-//     res.render(path.join(__dirname, "../views/index.hbs"), { posts });
-//   } catch (error) {
-//     console.error("Error fetching posts:", error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
+  return roots;
+}
 
 app.get("/post/:id", isAuthenticated, async (req, res) => {
   const { id } = req.params;
@@ -234,7 +240,7 @@ app.get("/post/:id", isAuthenticated, async (req, res) => {
     post.authorProfilePicture =
       authorUser?.profilePicture || "/images/anonymous.png";
 
-    // Get comments with authors' profile pictures
+    // Fetch all comments for the post
     const comments = await Comment.find({ postId: id }).lean();
     const commentAuthors = [...new Set(comments.map((c) => c.author))];
     const commentUsers = await User.find(
@@ -247,16 +253,20 @@ app.get("/post/:id", isAuthenticated, async (req, res) => {
       return acc;
     }, {});
 
-    const commentsWithPictures = comments.map((comment) => ({
+    // Add profile pictures and isAuthor flag to comments
+    const enrichedComments = comments.map((comment) => ({
       ...comment,
       authorProfilePicture: commentProfileMap[comment.author],
       isAuthor: userData && userData.username === comment.author,
     }));
 
+    // Build the threaded comment structure
+    const threadedComments = buildCommentTree(enrichedComments);
+
     res.render("postView", {
       userData,
       post,
-      comments: commentsWithPictures,
+      comments: threadedComments, // Pass the threaded comments to the template
       isAuthor: userData && userData.username === post.author,
     });
   } catch (error) {
@@ -390,7 +400,6 @@ app.post("/login", async (req, res) => {
     console.log(password);
 
     const isMatch = await argon2.verify(user.password, password);
-   // const isMatch = user.password === password; // Use plain password for now 
 
     console.log("Password match:", isMatch);
     
@@ -427,6 +436,13 @@ app.post("/signup", async (req, res) => {
   try {
     const newUser = await createUser(username, password);
     console.log("User created successfully:", newUser);
+
+    if (!newUser) {
+      // Handle case where username already exists
+      return res
+        .status(400)
+        .send("Username already exists. Please choose another.");
+    }
 
     // Set session user after successful signup
    req.session.user = newUser.toObject();
@@ -568,9 +584,6 @@ app.put("/upvote/:id", isAuthenticated, async (req, res) => {
   if (!req.session.user._id)
     return res.status(401).json({ error: "Not authenticated" });
 
-  // console.log("Action:", action);
-  // console.log("Opposite Action:", oppaction);
-
   let update = {}; // Track vote count changes
 
   // SAVE USER AND POST RELATED DATA
@@ -628,9 +641,6 @@ app.put("/downvote/:id", isAuthenticated, async (req, res) => {
 
   if (!req.session.user._id)
     return res.status(401).json({ error: "Not authenticated" });
-
-  // console.log("Downvote Action:", action);
-  // console.log("Opposite Action:", oppaction);
 
   let update = {}; // Track vote count changes
 
@@ -711,6 +721,32 @@ app.post(
   }
 );
 
+app.post("/create-nestedcomment", async (req, res) => {
+  try {
+    const { content, parentCommentId, postId } = req.body;
+
+    console.log(req.body);
+
+    // Validate the content
+    if (!content || content.trim() === "") {
+      return res.status(400).json({ error: "Content cannot be empty." });
+    }
+
+    // Create the nested comment
+    const newComment = await Comment.create({
+      content,
+      parentCommentId,
+      postId,
+      author: req.session.user.username, // Assuming the user is logged in
+    });
+
+    res.status(201).json(newComment); // Return the created comment as JSON
+  } catch (error) {
+    console.error("Error creating nested comment:", error);
+    res.status(500).json({ error: "Failed to create nested comment." });
+  }
+});
+
 // Profile update route
 app.post(
   "/update-profile",
@@ -780,6 +816,9 @@ app.delete("/delete-comment/:id", async (req, res) => {
   const { id } = req.params;
 
   const deletedComment = await Comment.findByIdAndDelete(id);
+  const deletedCascadeComments = await Comment.deleteMany({
+    parentCommentId: id,
+  });
 
   if (!deletedComment) {
     return res.status(404).json({ error: "Comment not found." });
@@ -950,6 +989,14 @@ app.get("/user-votes", isAuthenticated, async (req, res) => {
   res.json(selectedUser);
 });
 
+app.get("/user-commentvotes", isAuthenticated, async (req, res) => {
+  const selectedUser = await User.findById(req.session.user._id)
+    .select("upvoteCommentList downvoteCommentList")
+    .lean();
+
+  res.json(selectedUser);
+});
+
 app.put("/share-post", isAuthenticated, async (req, res) => {
   const { postId } = req.body;
 
@@ -1038,4 +1085,124 @@ app.get("/search", isAuthenticated, async (req, res) => {
     console.error("Error in /search route:", error);
     res.status(500).send("Internal Server Error");
   }
+});
+
+// Upvotes comments
+app.put("/upvote-comment/:id", isAuthenticated, async (req, res) => {
+  const { action, oppaction, commentId } = req.body;
+  console.log("Action:", action);
+  console.log("Opp Action:", oppaction);
+
+  if (!req.session.user._id)
+    return res.status(401).json({ error: "Not authenticated" });
+
+  let update = {}; // Track vote count changes
+
+  // SAVE USER AND POST RELATED DATA
+  const user = await User.findById(req.session.user._id);
+
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  if (!user.upvoteCommentList.includes(commentId)) {
+    update.upvotes = action === "add" ? 1 : -1; // Upvote action
+
+    await User.findByIdAndUpdate(req.session.user._id, {
+      $addToSet: { upvoteCommentList: commentId },
+    });
+
+    await Comment.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { upvotes: 1 } },
+      { new: true }
+    );
+
+    if (user.downvoteCommentList.includes(commentId)) {
+      update.downvotes = -1; // Remove downvote if switching vote
+      await User.findByIdAndUpdate(req.session.user._id, {
+        $pull: { downvoteCommentList: commentId },
+      });
+      await Comment.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { downvotes: -1 } },
+        { new: true }
+      );
+    }
+  } else {
+    await Comment.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { upvotes: -1 } },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(req.session.user._id, {
+      $pull: { upvoteCommentList: commentId },
+    });
+  }
+
+  const comment = await Comment.findById(req.params.id).lean();
+
+  console.log("Upvotes:", comment.upvotes);
+  console.log("Downvotes:", comment.downvotes);
+
+  res.json({ upvotes: comment.upvotes, downvotes: comment.downvotes });
+});
+
+// Downvotes comments
+app.put("/downvote-comment/:id", isAuthenticated, async (req, res) => {
+  const { action, oppaction, commentId } = req.body;
+  console.log("Downvote Action:", action);
+  console.log("Opposite Action:", oppaction);
+
+  if (!req.session.user._id)
+    return res.status(401).json({ error: "Not authenticated" });
+
+  let update = {}; // Track vote count changes
+
+  // SAVE USER AND POST RELATED DATA
+
+  const user = await User.findById(req.session.user._id);
+
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  if (!user.downvoteCommentList.includes(commentId)) {
+    update.downvotes = action === "add" ? 1 : -1; // Downvote action
+
+    await User.findByIdAndUpdate(req.session.user._id, {
+      $addToSet: { downvoteCommentList: commentId },
+    });
+
+    await Comment.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { downvotes: 1 } },
+      { new: true }
+    );
+
+    if (user.upvoteCommentList.includes(commentId)) {
+      update.upvotes = -1; // Remove upvote if switching vote
+      await User.findByIdAndUpdate(req.session.user._id, {
+        $pull: { upvoteCommentList: commentId },
+      });
+
+      await Comment.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { upvotes: -1 } },
+        { new: true }
+      );
+    }
+  } else {
+    await Comment.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { downvotes: -1 } },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(req.session.user._id, {
+      $pull: { downvoteCommentList: commentId },
+    });
+  }
+
+  const comment = await Comment.findById(req.params.id).lean();
+
+  console.log("Upvotes:", comment.upvotes);
+  console.log("Downvotes:", comment.downvotes);
+
+  res.json({ upvotes: comment.upvotes, downvotes: comment.downvotes });
 });

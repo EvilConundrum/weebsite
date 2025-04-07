@@ -68,6 +68,7 @@ window.onload = async function () {
   };
 
   initializeVotes();
+  initializePostViewVotes();
 
   // console.log("Like Buttons found:", likeButtons.length);
   const likeButtons = document.querySelectorAll(".like-button");
@@ -111,6 +112,19 @@ async function getUserVoteData() {
   }
 }
 
+async function getUserCommentVoteData() {
+  try {
+    const res = await fetch("/user-commentvotes");
+    if (!res.ok) throw new Error("Failed to fetch user votes");
+
+    const userData = await res.json();
+    return userData;
+  } catch (error) {
+    console.error("Error fetching user votes:", error);
+    return null;
+  }
+}
+
 async function initializeVotes() {
   const userData = await getUserVoteData();
 
@@ -127,6 +141,42 @@ async function initializeVotes() {
   dislikeButtons.forEach((button) => {
     const postId = button.dataset.postId;
     if (userData.downvoteList.includes(postId)) {
+      button.classList.toggle("activeDislike");
+    }
+  });
+}
+
+async function initializePostViewVotes() {
+  const userCommentData = await getUserCommentVoteData();
+  const userData = await getUserVoteData();
+
+  const likeButtons = document.querySelectorAll(".like-button");
+  const dislikeButtons = document.querySelectorAll(".dislike-button");
+
+  likeButtons.forEach((button) => {
+    const postId = button.dataset.postId;
+    if (userData.upvoteList.includes(postId)) {
+      button.classList.toggle("activeLike");
+    }
+  });
+
+  dislikeButtons.forEach((button) => {
+    const postId = button.dataset.postId;
+    if (userData.downvoteList.includes(postId)) {
+      button.classList.toggle("activeDislike");
+    }
+  });
+
+  likeButtons.forEach((button) => {
+    const commentId = button.dataset.commentId;
+    if (userCommentData.upvoteCommentList.includes(commentId)) {
+      button.classList.toggle("activeLike");
+    }
+  });
+
+  dislikeButtons.forEach((button) => {
+    const commentId = button.dataset.commentId;
+    if (userCommentData.downvoteCommentList.includes(commentId)) {
       button.classList.toggle("activeDislike");
     }
   });

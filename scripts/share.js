@@ -44,6 +44,27 @@ function handleFile(event) {
   }
 }
 
+function toggleNestedComment(commentId) {
+  // Find the comment box for the specific comment
+  const commentBoxId = `commentNestBox-${commentId}`;
+  const commentBox = document.getElementById(commentBoxId);
+
+  // Check if the comment box already exists
+  if (commentBox) {
+    // Toggle visibility of the comment box
+    if (
+      commentBox.style.display === "none" ||
+      commentBox.style.display === ""
+    ) {
+      commentBox.style.display = "block";
+    } else {
+      commentBox.style.display = "none";
+    }
+  } else {
+    console.error(`Comment box with ID ${commentBoxId} not found.`);
+  }
+}
+
 async function getComment(postId) {
   window.location.reload();
   const comment = document.querySelector(".commentBar").value;
@@ -67,6 +88,57 @@ async function getComment(postId) {
     const errorText = await res.text();
     console.error("Failed to create comment:", errorText);
     alert("Failed to create comment: " + errorText);
+  }
+}
+
+async function getNestedComment(commentId, postId) {
+  // Get the input field for the specific comment
+  const replyBox = document.getElementById(`replyBox-${commentId}`);
+  if (!replyBox) {
+    console.error("Reply box not found for comment ID:", commentId);
+    return;
+  }
+
+  // Get the content of the reply
+  const content = replyBox.value.trim(); // Trim to remove extra spaces
+  if (!content) {
+    alert("Reply content cannot be empty!");
+    return;
+  }
+
+  // Create the JSON body
+  const body = {
+    content,
+    parentCommentId: commentId,
+    postId,
+  };
+
+  console.log("JSON body being sent:", body);
+
+  try {
+    // Send the request to the server
+    const res = await fetch("/create-nestedcomment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Set the content type to JSON
+      },
+      body: JSON.stringify(body), // Convert the body to a JSON string
+    });
+
+    if (res.ok) {
+      const result = await res.json();
+      console.log("Nested comment created:", result);
+
+      // Optionally, update the UI dynamically without reloading
+      window.location.reload(); // Reload the page to show the new comment
+    } else {
+      const errorText = await res.text();
+      console.error("Failed to create nested comment:", errorText);
+      alert("Failed to create nested comment: " + errorText);
+    }
+  } catch (error) {
+    console.error("Error creating nested comment:", error);
+    alert("An error occurred while creating the nested comment.");
   }
 }
 
@@ -212,7 +284,7 @@ async function sharePost(postId) {
   });
 
   if (res.ok) {
-    alert("Post shared successfully!");
+    switchPage("home");
     return res.status(200);
   }
 }
